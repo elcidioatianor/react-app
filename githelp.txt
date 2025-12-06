@@ -1,0 +1,7 @@
+git add .
+git commit -m "Mensagem" # se der erro dizendo que n ha mudancas porque nao rodei git add
+git push origin main # se der erro de push é porque o remoto tem mudancas novas:
+git pull origin main --rebase #depois push again
+# se erro de merge pendent:
+git merge --abort # dpos executar o fluxo add+commit+push
+

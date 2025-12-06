@@ -4,6 +4,8 @@ import Home from "./Home"
 import About from "./About"
 import Login from "./Login"
 import Registration from "./Registration"
+import Learn from "./Learn"
+import Profile from "./Profile"
 
 /***
  * Primeiro cria a página, e.g Login.jsx,
@@ -13,22 +15,30 @@ import Registration from "./Registration"
  */
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home/>
-  },
-  {
-    path: "/about",
-    element: <About/>
-  },
-  {
+    {
+        path: "/",
+        element: <Home/>
+    },
+    {
+        path: "/about",
+        element: <About/>
+    },
+    {
     path: "/login",
     element: <Login/>
-  },
-  {
-    path: "/registration",
-    element: <Registration/>
-  }
+    },
+    {
+        path: "/registration",
+        element: <Registration/>
+    },
+    {
+        path: "/learn",
+        element: <Learn/>
+    },
+    {
+        path: '/profile',
+        element: <Profile/>
+    }
 ])
 
 export default router
