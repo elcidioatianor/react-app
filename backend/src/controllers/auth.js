@@ -1,11 +1,13 @@
 const bcrypt = require("bcryptjs")
-const { User } = require("../models/user")
+const {sequelize} = require("../database/models/index")
+
+let User = require('../database/models/user')(sequelize);
 
 module.exports = {
   async register(req, res) {
     try {
       const { username, password } = req.body
-
+		console.log(req.body)
       const exists = await User.findOne({ where: { username } })
       if (exists) {
         return res.status(400).json({ error: "Usuário já existe" })
@@ -20,14 +22,16 @@ module.exports = {
 
       res.json({ message: "Usuário registrado", user })
     } catch (err) {
-      res.status(500).json({ error: err.message })
+		res.status(500).json({
+			error: err.message 
+		})
     }
   },
 
   async login(req, res) {
     try {
       const { username, password } = req.body
-
+		console.log(req.body)
       const user = await User.findOne({ where: { username } })
       if (!user) {
         return res.status(400).json({ error: "Usuário não encontrado" })

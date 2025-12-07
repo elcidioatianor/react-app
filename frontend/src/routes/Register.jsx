@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom';
 import bootstrapLogo from '../assets/bootstrap-logo.svg'
 //import * as bootstrap from '../assets/js/bootstrap.esm.min.js'
 import '../assets/css/bootstrap.min.css'
-import '../assets/css/signin.css'
+import '../assets/css/register.css'
 
 //import {submitForm} from '../assets/js/signin.js'
 
@@ -33,13 +33,13 @@ function Submit() {
 
     return (
         <button disabled={pending} className="btn btn-primary w-100 py-2">
-            {pending ? "Aguarde..." : "Iniciar sessão"}
+            {pending ? "Aguarde..." : "Cadastrar-se"}
         </button>
     )
 }
 
 //extract Form component
-function LoginForm() {
+function RegisterForm() {
 	function handleSubmit(e) {
     // Prevent the browser from reloading the page
     e.preventDefault();
@@ -50,7 +50,7 @@ function LoginForm() {
 
 	let jsonForm = Object.fromEntries(formData.entries());
     // You can pass formData as a fetch body directly:
-    fetch('http://localhost:3000/auth/login', {
+    fetch('http://localhost:3000/auth/register', {
 		method: form.method,
 		headers:{'Content-Type': 'application/json'},
 		body: JSON.stringify(jsonForm) 
@@ -90,12 +90,13 @@ function LoginForm() {
 }
 //inside form, extract each input into a component
 
-function Login() {
+function Register() {
     return(
 		<main className="form-signin w-100 m-auto">
-			<LoginForm/>
+			<RegisterForm/>
 		</main>
     )
 }
 
-export default Login
+
+export default Register

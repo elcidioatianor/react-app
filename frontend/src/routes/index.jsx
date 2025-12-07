@@ -3,7 +3,7 @@ import { createBrowserRouter } from "react-router-dom"
 import Home from "./Home"
 import About from "./About"
 import Login from "./Login"
-import Registration from "./Registration"
+import Register from "./Register"
 import Learn from "./Learn"
 import Profile from "./Profile"
 
@@ -28,8 +28,8 @@ const router = createBrowserRouter([
     element: <Login/>
     },
     {
-        path: "/registration",
-        element: <Registration/>
+        path: "/register",
+        element: <Register/>
     },
     {
         path: "/learn",
