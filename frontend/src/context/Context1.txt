@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
   }, []);
 
 
-  // Registro real (com chamada API)
+  // 🔥 Registro real (com chamada API)
   const register = async (formData) => {
     try {
       const response = await api.post("/auth/register", formData);
@@ -47,12 +47,9 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("token");
   };
 
-  //Funções serão usadas nas páginas de autenticação 
   return (
     <AuthContext.Provider value={{ user, register, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
-
-//3 - Criar hook para usar o Auth Context > ../hooks/useAuth.js

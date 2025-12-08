@@ -6,19 +6,19 @@ export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
 
   return (
-    <nav className="navbar navbar-expand navbar-dark bg-dark">
+    <nav className="navbar navbar-expand bg-lignt rounded">
       <div className="container">
-        <Link className="navbar-brand" to="/">MinhaApp</Link>
+        <Link className="navbar-brand" to="/">Aplicação</Link>
 
         <ul className="navbar-nav ms-auto">
-
+ 
           {!user && (
             <>
               <li className="nav-item">
-                <Link className="nav-link" to="/">Login</Link>
+                <Link className="nav-link" style={{fontSize: "13px"}} to="/">Entrar</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/register">Register</Link>
+                <Link className="nav-link" style={{fontSize: "13px"}} to="/register">Cadastro</Link>
               </li>
             </>
           )}
@@ -32,7 +32,7 @@ export default function Navbar() {
               </li>
               <li className="nav-item">
                 <button className="btn btn-danger btn-sm ms-3" onClick={logout}>
-                  Logout
+                  Sair
                 </button>
               </li>
             </>
