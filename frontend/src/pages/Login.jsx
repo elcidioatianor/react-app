@@ -1,50 +1,80 @@
 //assets
 import bootstrapLogo from '../assets/bootstrap-logo.svg'
-import '../assets/css/bootstrap.min.css'
 import '../assets/css/signin.css'
 
-//lógica 
-import { useState } from 'react'
-import useAuth from '../hooks/useAuth'
 
-//5 - Rotas de login e registro
+import { useState } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
+import toast from 'react-hot-toast';
+
+import useAuth from "../hooks/useAuth"
+
 export default function Login() {
-    const { login } = useAuth()
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-	const [saveLogin, setSaveLogin] = useState('')
-    const [error, setError] = useState('')
+	const { login } = useAuth()
+	const navigate = useNavigate() //usar redirecionamento
+	const location = useLocation() //acessar rota salva em RequireAuth.jsx
+	const [message, setMessage] = useState('');
+	const [username, setUsername] = useState("")
+	const [password, setPassword] = useState("")
 
-    async function handleSubmit(e) {
-        e.preventDefault()
+	//Obter rota original ou "/", para redirecionamento 
+	const stateFrom = location.state?.from;
+	const storageStateFrom = localStorage.getItem('stateFrom')
+	const fromRoute = stateFrom || storageStateFrom || "/"; //fallback to home
+	/*
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+	*/
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+	
+	//Mostrar toast durante processamento 
+	const loadingToast = toast.loading('A autenticar...')
 
-        try {
-			console.log(saveLogin)
-			//adicionar logica de guardar dados de sessao no navegador
+    try { //Melhorar error handling a partir do context até aqui
+      const ok = await login({username, password})
 
-            await login({username, password})
-            window.location.href = '/'   // redireciona após login
-        } catch (err) {
-            setError('Credenciais inválidas')
-        }
+		//Apos sucesso, redirecionar para página de origem ou /
+		if (!ok) {
+			return setMessage('Erro de login, credenciais inválidas?') //...
+		}
+
+		//Reportar
+		toast.success('Bem-vindo de volta!')
+		
+		//destruir toast
+		toast.dismiss(loadingToast);
+
+		//limpar redirecionamento salvo (boa prática)
+		localStorage.removeItem('stateFrom')
+		navigate(fromRoute, {replace: true})
+
+    } catch (err) {
+      console.error(err) //para inspecionar no console
+      setMessage("Credenciais inválidas")
     }
+  }
 
-    return (
-        <main className="form-signin w-100 m-auto">
+  return (
+    <main className="form-signin w-100 m-auto">
 		
             <form onSubmit={handleSubmit}>
 				<img className="mb-4" src={bootstrapLogo} alt="" width="72" height="57"/>
         		<h1 className="h3 mb-3 fw-normal">Iniciar sessão</h1>
 
-				{error && <div className="alert alert-danger py-3">{error}</div>}
+				{message && <div className="alert alert-danger py-3">{message}</div>}
 
 				<div className="form-floating">
-                	<input type="text" className="form-control" id="username" placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} />
+                	<input type="text" className="form-control" id="username" placeholder="Username" value={username} onChange={e=>setUsername(e.target.value)} />
 					<label htmlFor="username" >Nome de usuário</label>
 				</div>
 
 				<div className="form-floating">
-                	<input className="form-control" id="password" placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                	<input className="form-control" id="password" placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
 					<label htmlFor="password">Senha</label>
 				</div>
 
@@ -52,7 +82,7 @@ export default function Login() {
             </form>
 
         </main>
-    )
+  )
 }
 
 //6 - Configurar router > ../../App. jsx

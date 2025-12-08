@@ -1,30 +1,30 @@
 import React from "react";
 import {createRoot} from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-
-import App from "./App";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Profile from "./pages/Profile";
+import { Toaster } from 'react-hot-toast';
 
 import { AuthProvider } from "./context/authContext";
+import router from './router';
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,            // Layout principal
-    children: [
-      { index: true, element: <Login /> },
-      { path: "register", element: <Register /> },
-      { path: "profile", element: <Profile /> }
-    ]
-  }
-]);
+//Opções para toast notifications 
+const toastOptions= {
+	duration: 3000,
+	style: {
+		background: '#fff',
+		color: '#333',
+		borderRadius: '8px',
+		padding: '10px 14px',
+		border: '1px solid #ddd'
+	}
+}
 
 const appRoot = createRoot(document.getElementById("root"))
 
 appRoot.render(
-  <AuthProvider>
-    <RouterProvider router={router} />
-  </AuthProvider>
+	<React.StrictMode>
+		<AuthProvider>
+			<Toaster position="top-right" toastOptions={toastOptions}/>
+			<RouterProvider router={router} />
+		</AuthProvider>
+	</React.StrictMode>
 );

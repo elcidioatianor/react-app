@@ -9,7 +9,9 @@ export function AuthProvider({ children }) {
   // verifica se existe token armazenado
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
+    if (storedUser) {//se existe, usar os dados
+		setUser(JSON.parse(storedUser));
+	}
   }, []);
 
 
@@ -18,34 +20,49 @@ export function AuthProvider({ children }) {
     try {
       const response = await api.post("/auth/register", formData);
 
-      // Backend deverá retornar { user, accessToken }
-      const { user: newUser, accessToken } = response.data;
+      // Backend deverá retornar { user, accessToken, refreshToken }
+      const { user: newUser, accessToken, refreshToken } = response.data;
 
       // salvar token e usuário
       localStorage.setItem("user", JSON.stringify(newUser));
       localStorage.setItem("token", accessToken);
-
+		localStorage.setItem("refreshToken", refreshToken)
       setUser(newUser);
 
       return { success: true };
 
-    } catch (error) {
-      console.error("Erro ao registrar:", error);
-      return { success: false, message: error.response?.data?.message };
+    } catch (err) {
+		console.error(err);
+		return { success: false, message: err.response?.data?.message };
     }
   };
 
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-  };
+  const login = async (formData) => {
+	try {
+    const response = await api.post("/auth/login", formData)
+
+    const { user, accessToken, refreshToken } = response.data
+
+    localStorage.setItem("user", JSON.stringify(user))
+    localStorage.setItem("token", accessToken)
+    localStorage.setItem("refreshToken", refreshToken)
+
+    	setUser(user)
+
+    	return user
+	} catch (err) {
+		console.error(err);
+		return { success: false, message: err.response?.data?.message };
+	}
+  }
 
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-  };
+    localStorage.removeItem("user")
+    localStorage.removeItem("token")
+    localStorage.removeItem("refreshToken")
+    setUser(null)
+  }
 
   //Funções serão usadas nas páginas de autenticação 
   return (

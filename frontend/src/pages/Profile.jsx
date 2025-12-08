@@ -4,7 +4,7 @@ import { useFormStatus } from 'react-dom';
 //import reactLogo from '../assets/react.svg'
 import bootstrapLogo from '../assets/bootstrap-logo.svg'
 //import * as bootstrap from '../assets/js/bootstrap.esm.min.js'
-import '../assets/css/bootstrap.min.css'
+//import '../assets/css/bootstrap.min.css'
 import '../assets/css/profile.css'
 
 //import {submitForm} from '../assets/js/signin.js'
