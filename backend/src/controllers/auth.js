@@ -1,13 +1,17 @@
 const bcrypt = require("bcryptjs")
-const {sequelize} = require("../database/models/index")
+const jwt = require('jsonwebtoken')
 
-let User = require('../database/models/user')(sequelize);
+const { User } = require('../database/models/index');
 
 module.exports = {
   async register(req, res) {
     try {
       const { username, password } = req.body
-		console.log(req.body)
+
+	if (!username || !password) {
+            return res.status(400).json({ error: 'Username e password são obrigatórios' })
+        }
+
       const exists = await User.findOne({ where: { username } })
       if (exists) {
         return res.status(400).json({ error: "Usuário já existe" })
@@ -23,7 +27,7 @@ module.exports = {
       res.json({ message: "Usuário registrado", user })
     } catch (err) {
 		res.status(500).json({
-			error: err.message 
+			error: err.message || "Erro interno" 
 		})
     }
   },
@@ -42,7 +46,18 @@ module.exports = {
         return res.status(400).json({ error: "Senha incorreta" })
       }
 
-      res.json({ message: "Login bem-sucedido" })
+      //res.json({ message: "Login bem-sucedido" })
+		//Gerar payload e enviar ao frontend
+	const payload = { id: user.id, username: user.username }
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET || 'CHAVE_SUPER_SECRETA', {
+            expiresIn: '1d'
+        })
+
+        return res.json({
+            message: 'Login efetuado',
+            token: 'Bearer ' + token
+        })
     } catch (err) {
       res.status(500).json({ error: err.message })
     }

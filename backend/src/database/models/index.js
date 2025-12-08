@@ -27,7 +27,7 @@ fs
       file.indexOf('.test.js') === -1
     );
   })
-  .forEach(file => {
+  .forEach(file => {//Load each file in this directory and populate db with models
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });

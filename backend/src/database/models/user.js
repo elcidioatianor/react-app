@@ -3,9 +3,10 @@ const {
 	DataTypes,
 	Op
 } = require("sequelize")
+//const sequelize = require('./index')
 
-module.exports = (sequelize) => {
-  class User extends Model {
+module.exports = (sequelize, DataTypes) => {
+class User extends Model {
     static associate(models) {
 		//define associations here
 	}
@@ -35,5 +36,7 @@ module.exports = (sequelize) => {
     }
   );
 
-  return User
-};
+  return User;
+}
+
+//exports.User = User
