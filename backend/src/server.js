@@ -3,21 +3,50 @@ require("dotenv").config();
 var debug = require('debug')('react-app:server');
 var http = require('http');
 
-//CONECTAR À DB (ANTES DE CARREGAR MODELS)
-require("./config/connection");
-
 const app = require("./app");
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 //Create HTTP server.
-var server = http.createServer(app);
+const server = http.createServer(app);
 
-//Listen on provided port, on all network interfaces.
-server.listen(port);
+//connect to DB
+const {sequelize} = require("./database/models/index");
+
+function connect() {
+  return new Promise(async (resolve, reject) => {
+	try {
+	//Conectando ao servidor MariaDB
+    await sequelize.authenticate();
+
+	//Sincronizar models & tabelas
+	await sequelize.sync()
+	/*
+    app.listen(process.env.PORT, () => {
+      console.log(`🚀 Backend rodando na porta ${process.env.PORT}`);
+    });
+	*/
+	resolve()
+  } catch (err) {
+    reject(err);
+  }
+	})
+}
+
 server.on('error', onError);
-server.on('listening', onListening);
+//server.on('listening', onListening);
+
+connect()
+	.then(() => {
+		//Listen on provided port, on all network interfaces
+		server.listen(port);
+		console.log('\n[*] Servidor rodando na porta ' + port)
+	})
+	.catch(err => {
+		console.error('[!] Erro ao iniciar o servidor: ' + err.message)
+		console.error(err)
+	})
 
 //Normalize a port into a number, string, or false.
 function normalizePort(val) {

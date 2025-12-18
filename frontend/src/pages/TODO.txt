@@ -1,0 +1,6 @@
+Add /welcome page (navigate from /register)
+* Welcome user & upload photo (optional: Upload later (you can chang later in the settins page from your profile)
+* Email & phone number verification (otional) send login username & obfuscated password to email)(keep them in a safe place)
+* Account recovery
+* Live input balidation
+* ID card photo & Id details

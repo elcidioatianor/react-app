@@ -1,4 +1,4 @@
-//require('dotenv').config()
+require('dotenv').config()
 
 module.exports = {
 	"use_env_variable": false,
@@ -7,7 +7,11 @@ module.exports = {
     "password": process.env.DB_PASSWORD,
     "database": process.env.DEV_DATABASE,
     "host": process.env.DB_HOST,
-    "dialect": process.env.DB_DIALECT
+    "dialect": process.env.DB_DIALECT,
+	define: {
+		freezeTableName: true,
+		underscored: true
+	}
   },
   "test": {
     "username": process.env.DB_USERNAME,

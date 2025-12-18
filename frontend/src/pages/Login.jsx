@@ -1,88 +1,111 @@
-//assets
-import bootstrapLogo from '../assets/bootstrap-logo.svg'
-import '../assets/css/signin.css'
+import { useState } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+//import api from "../services/api";
+import toast from "react-hot-toast";
 
-
-import { useState } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
-import toast from 'react-hot-toast';
-
-import useAuth from "../hooks/useAuth"
 
 export default function Login() {
-	const { login } = useAuth()
-	const navigate = useNavigate() //usar redirecionamento
-	const location = useLocation() //acessar rota salva em RequireAuth.jsx
-	const [message, setMessage] = useState('');
-	const [username, setUsername] = useState("")
-	const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-	//Obter rota original ou "/", para redirecionamento 
-	const stateFrom = location.state?.from;
-	const storageStateFrom = localStorage.getItem('stateFrom')
-	const fromRoute = stateFrom || storageStateFrom || "/"; //fallback to home
-	/*
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
-	*/
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-	
-	//Mostrar toast durante processamento 
-	const loadingToast = toast.loading('A autenticar...')
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    try { //Melhorar error handling a partir do context até aqui
-      const ok = await login({username, password})
+  const prevLocation = location.state?.from?.pathname || '/';
 
-		//Apos sucesso, redirecionar para página de origem ou /
-		if (!ok) {
-			return setMessage('Erro de login, credenciais inválidas?') //...
-		}
+	const getInitials = (name) => {
+    if (!name) return "U"
+    const parts = name.trim().split(/\s+/)
+    return parts.length >= 2
+      ? (parts[0][0] + parts[1][0]).toUpperCase()
+      : parts[0][0].toUpperCase()
+}
 
-		//Reportar
-		toast.success('Bem-vindo de volta!')
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const loading = toast.loading("A autenticar...");
+
+    try {
+		//send data to backend using our authContext
+		const res = await login({ email, password })
 		
-		//destruir toast
-		toast.dismiss(loadingToast);
+        toast.dismiss(loading);
 
-		//limpar redirecionamento salvo (boa prática)
-		localStorage.removeItem('stateFrom')
-		navigate(fromRoute, {replace: true})
-
+		if (res.success) {//authContext returns an object from login method
+        	toast.success("Bem-vindo de volta!");
+        	navigate(prevLocation, { replace: true });
+		} else {
+			toast.error("Erro ao efectuar login")
+		}
     } catch (err) {
-      console.error(err) //para inspecionar no console
-      setMessage("Credenciais inválidas")
+		toast.dismiss(loading);
+		toast.error(err.message)
     }
   }
 
   return (
-    <main className="form-signin w-100 m-auto">
-		
-            <form onSubmit={handleSubmit}>
-				<img className="mb-4" src={bootstrapLogo} alt="" width="72" height="57"/>
-        		<h1 className="h3 mb-3 fw-normal">Iniciar sessão</h1>
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="card shadow p-4" style={{ width: "100%", maxWidth: "480px" }}>
+			   <div
+                  className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center border"
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    fontWeight: "bold"
+                  }}
+                >
+                  {getInitials(user.name)}
+                </div>
 
-				{message && <div className="alert alert-danger py-3">{message}</div>}
+        <h2 className="mb-4 fw-bold">Iniciar sessão</h2>
 
-				<div className="form-floating">
-                	<input type="text" className="form-control" id="username" placeholder="Username" value={username} onChange={e=>setUsername(e.target.value)} />
-					<label htmlFor="username" >Nome de usuário</label>
-				</div>
+        <form onSubmit={handleSubmit}>
+          
+          {/* Grupo responsivo */}
+          <div className="row mb-3 align-items-center">
+            <label className="col-sm-4 col-form-label text-sm-end">
+              Endereço de e-mail:
+            </label>
+            <div className="col-sm-8">
+              <input
+                type="email"
+                className="form-control"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
-				<div className="form-floating">
-                	<input className="form-control" id="password" placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
-					<label htmlFor="password">Senha</label>
-				</div>
+          <div className="row mb-4 align-items-center">
+            <label className="col-sm-4 col-form-label text-sm-end">
+              Senha:
+            </label>
+            <div className="col-sm-8">
+              <input
+                type="password"
+                className="form-control"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
-                <button className="btn btn-primary w-100 py-2 my-3" type="submit">Iniciar sessão</button>
-            </form>
+          <button className="btn btn-primary w-100 py-2 fw-semibold">
+            Entrar
+          </button>
+        </form>
 
-        </main>
-  )
+        <div className="text-center mt-3">
+          <small className="text-muted">
+            Não tens conta? <Link to="/register">Criar conta</Link>
+          </small>
+        </div>
+      </div>
+    </div>
+  );
 }
-
-//6 - Configurar router > ../../App. jsx

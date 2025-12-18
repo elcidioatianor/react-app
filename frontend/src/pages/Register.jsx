@@ -1,82 +1,166 @@
-//assets
-import bootstrapLogo from '../assets/bootstrap-logo.svg'
-import '../assets/css/signin.css'
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
-//
-import { useState } from 'react'
-import { useNavigate } from "react-router-dom"
-import toast from "react-hot-toast"
-
-import useAuth from "../hooks/useAuth"
-
-//5 - Rotas de login e registro
+import toast from "react-hot-toast";
+import useAuth from "../hooks/useAuth";
+//TODO: EM VEZ DE TOAST, USAR BUTTON EFFECTS (SPINNER, DISABLE)
+//E UM MODAL PARA DAR FEEDBACK (MODAL COM ICONES TIPO CUTEALERT)
+//MOVER LOGIN PARA UM MODAL (APENAS LOGIN)
 export default function Register() {
-    const { register } = useAuth()
-	const navigate = useNavigate()
-	const [message, setMessage] = useState('')
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  //const [avatarUrl, setAvatarUrl] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [username, setUsername] = useState("")
-	const [password, setPassword] = useState("")
+  const navigate = useNavigate();
+  const {register} = useAuth();
 
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+    if (password !== confirmPassword) {//usar alert-error
+      toast.error("As senhas não coincidem");
+      return;
+    }
 
-	const loadingToast = toast.loading('A criar conta...');
+    const loading = toast.loading("A criar conta...");
 
-    try {
-      let ok = await register(formData)
-		//Normalmente, mostrar um diálogo
-		//com botao para continuar após sucesso,
-		//e a função de redirecionamento deve acionar 
-		//apos o clique
-		//setMsg('Usuário criado com sucesso')
-		toast.dismiss(loadingToast)
-      if (!ok) {
-			toast.loading('Erro ao cadastrar usuário');
-			setMessage('Erro no cadastro. Tente novamente');
-		}
-		
-		toast.loading('Conta criada! Faça login.')
-		//Adicionar logica de lembrar dados digitados mesmo após refrescar a página 
-		//redirecionar para home
-		return navigate("/") 
+    try {//TODO: Refactor, or we navigate('/login') or we just save user data
+      let {user, accessToken, refreshToken } = await register({
+        name,
+        email,
+        password,
+        //avatarUrl
+      });
+
+      toast.dismiss(loading);
+      toast.success("Conta criada com sucesso!");
+      navigate("/login");
 
     } catch (err) {
-		toast.dismiss(loadingToast)
-      console.error(err)
-      setMessage('Erro ao criar usuário') //mais detalhes
-		toast.error(err.response?.data?.message || "Erro ao registrar")
+      toast.dismiss(loading);
+      toast.error("Falha ao criar conta!");
     }
   }
+	//depois refatorar para usar modal
+	//TODO: MULTI-STEP
+	//STEP1: EMAIL + PHONE NUMBER + ACCOUNT TYPE (SELLER, BUYER, BOTH)
+	//STEP3+4: CONFIRM EMAIL + CONFIRM PHONE
+	//STEP3: CHOOSE A STRONG PASSWORD
+	//FIELDS: FIRST NAME, SURNAME,GENDER, DATEOFBIRTH, PLACEOFBIRTH, ID CARD, ID PHOTO, PHOTO, ALT PHONE NUMBER, ETC
+	//THE USER MAY CREATE ACCOUNT AND LOGIN, BUT TO BUY OR SELL MUST COMPLETE THEIR PROFILE
+  return (
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="card p-4" style={{ width: "100%", maxWidth: "520px" }}>
+        
+        <h2 className="text-center mb-4 fw-bold">Criar Conta</h2>
 
-
-    return (
-		<main className="form-signin w-100 m-auto">
+        {/* Avatar Preview 
 		
-            <form onSubmit={handleSubmit}>
-				<img className="mb-4" src={bootstrapLogo} alt="" width="72" height="57"/>
-        		<h1 className="h3 mb-2 fw-normal">Cadastrar-se</h1>
-				
-				<p className="text-secondary" style={{fontSize: "13px"}}>Preencha os campos abaixo com os dados de acesso que pretende usar</p>
+        <div className="text-center mb-3">
+          <img
+            src={"/default-avatar.png"}
+            alt="avatar"
+            className="rounded-circle border"
+            style={{ width: 90, height: 90, objectFit: "cover" }}
+          />
+        </div>
+		*/}
+        <form onSubmit={handleSubmit}>
 
-				{message && <div className="alert alert-primary py-3">{message}</div>}
+          {/* Nome */}
+          <div className="row mb-3 align-items-center">
+            <label className="col-sm-4 col-form-label text-sm-end">
+              Nome Completo:
+            </label>
+            <div className="col-sm-8">
+              <input
+                type="text"
+                className="form-control"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
-				<div className="form-floating">
-                	<input type="text" className="form-control" id="username" placeholder="Username" value={username} onChange={e=>setUsername(e.target.value)} />
-					<label htmlFor="username" >Nome de usuário</label>
-				</div>
+          {/* Email */}
+          <div className="row mb-3 align-items-center">
+            <label className="col-sm-4 col-form-label text-sm-end">
+              Email:
+            </label>
+            <div className="col-sm-8">
+              <input
+                type="email"
+                className="form-control"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
-				<div className="form-floating">
-                	<input className="form-control" id="password" placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
-					<label htmlFor="password" >Senha</label>
-				</div> 
+          {/* Avatar URL */}
+          {/*<div className="row mb-3 align-items-center">
+            <label className="col-sm-4 col-form-label text-sm-end">
+              Avatar URL:
+            </label>
+            <div className="col-sm-8">
+              <input
+                type="text"
+                className="form-control"
+                value={avatarUrl}
+                onChange={e => setAvatarUrl(e.target.value)}
+              />
+            </div>
+          </div>*/}
 
-                <button className="btn btn-primary w-100 py-2 mt-3" type="submit">Cadastrar-se</button>
-            </form>
+          {/* Senha */}
+          <div className="row mb-3 align-items-center">
+            <label className="col-sm-4 col-form-label text-sm-end">
+              Senha: {/* Add validation */}
+            </label>
+            <div className="col-sm-8">
+              <input
+                type="password"
+                className="form-control"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
-        </main>
-    )
+          {/* Confirmar Senha */}
+          <div className="row mb-4 align-items-center">
+            <label className="col-sm-4 col-form-label text-sm-end">
+              Confirmar senha:
+            </label>
+            <div className="col-sm-8">
+              <input
+                type="password"
+                className="form-control"
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <button className="btn btn-primary w-100 py-2 fw-semibold">
+            Registrar
+          </button>
+
+        </form>
+
+        <div className="text-center mt-3">
+          <small className="text-muted">
+            Já tens conta? <Link to="/login">Entrar</Link>
+          </small>
+        </div>
+
+      </div>
+    </div>
+  );
 }
-
-//6 - Configurar router > ../../App. jsx

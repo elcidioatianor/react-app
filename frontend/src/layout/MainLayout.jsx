@@ -4,11 +4,10 @@ import { Outlet } from "react-router-dom"
 export default function MainLayout() {
   return (
     <div>
-      <Navbar />
-
-      <div style={{ padding: "20px" }}>
-        <Outlet />
-      </div>
+        <Navbar />
+		<main className="container-fluid pt-5 mt-3">
+			<Outlet />
+		</main>
     </div>
   )
 }

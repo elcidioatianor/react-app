@@ -1,26 +1,25 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt')
-//const {sequelize} = require("../database/models/index")
+const { User } = require('../database/models')
 
-let { User } = require('../database/models/index')//(sequelize);
+const opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET
+}
 
 module.exports = (passport) => {
+  passport.use(
+    new JwtStrategy(opts, async (jwtPayload, done) => {
+      try {
+        const user = await User.findByPk(jwtPayload.sub)
 
-    const opts = {
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-        secretOrKey: process.env.JWT_SECRET || 'CHAVE_SUPER_SECRETA'
-    }
+        if (!user || !user.isActive) {
+          return done(null, false)
+        }
 
-    passport.use(
-        new JwtStrategy(opts, async (jwt_payload, done) => {
-            try {
-                const user = await User.findByPk(jwt_payload.id)
-
-                if (user) return done(null, user)
-                return done(null, false)
-
-            } catch (err) {
-                return done(err, false)
-            }
-        })
-    )
+        return done(null, user)
+      } catch (err) {
+        return done(err, false)
+      }
+    })
+  )
 }

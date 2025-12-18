@@ -1,13 +1,12 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import "bootsrap/dist/js/bootstrap.bundle.min.js" 
 
 export default function App() {
   return (
     <>
       <Navbar />
-      <div className="container mt-4">
-        <Outlet />
-      </div>
+      <Outlet />
     </>
   );
 }

@@ -5,10 +5,16 @@ export default function Home() {
     const { user, logout } = useAuth()
 
     return (
-        <div>
-            <h1>Bem-vindo, {user?.username}</h1>
-
-            <button onClick={logout}>Sair</button>
+        <div className="container">
+			{user ? (
+            <h1>Olá {user.username}, seja bem vindo</h1>
+			) : (
+				<div className="alert alert-info mt-2">
+				<h1>Olá, seja bem vindo</h1>
+				<hr/>
+				<p className="py-0">Clique no botão lateral direito para se cadastrar</p>
+				</div>
+			)}
         </div>
     )
 }

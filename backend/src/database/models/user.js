@@ -1,42 +1,69 @@
-const { 
-	Model,
-	DataTypes,
-	Op
-} = require("sequelize")
-//const sequelize = require('./index')
+'use strict'
+const { Model } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-class User extends Model {
+  class User extends Model {
     static associate(models) {
-		//define associations here
-	}
+      // associações futuras
+    }
   }
 
   User.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+      name: {
+        type: DataTypes.STRING(80),
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [3, 50]
+        }
       },
-      username: {
-        type: DataTypes.STRING,
+
+      email: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
         unique: true,
-        allowNull: false
+        validate: {
+          isEmail: true
+        }
       },
+
       password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          len: [8, 255]
+        }
+      },
+
+      role: {
+        type: DataTypes.ENUM('user', 'admin'),
+        allowNull: false,
+        defaultValue: 'user'
+      },
+
+      refreshToken: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      },
+
+      lastLoginAt: {
+        type: DataTypes.DATE,
+        allowNull: true
       }
     },
     {
       sequelize,
-      modelName: "User",
-      tableName: "Users"
+      modelName: 'User',
+      tableName: 'users',
+      timestamps: true
     }
-  );
+  )
 
-  return User;
+  return User
 }
-
-//exports.User = User

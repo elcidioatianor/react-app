@@ -1,48 +1,67 @@
 import { createContext, useState, useEffect } from "react";
-import api from "../services/api";
+import {xhr} from "../services/api";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+	const [loading, setLoading] = useState(true);
 
-  // verifica se existe token armazenado
+  // verifica se existe usuário armazenado
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+
     if (storedUser) {//se existe, usar os dados
-		setUser(JSON.parse(storedUser));
+		try {
+			setUser(JSON.parse(storedUser));
+		} catch (err) {
+			console.log(err) //user is not a valid object
+		}
 	}
+
+	setLoading(false)
   }, []);
 
 
   // Registro real (com chamada API)
   const register = async (formData) => {
-    try {
-      const response = await api.post("/auth/register", formData);
+	let res = null;
 
+    try {
+		res = await xhr.post("/auth/register", {
+			body: formData
+		});
+
+		if (res.status ===201) {
       // Backend deverá retornar { user, accessToken, refreshToken }
-      const { user: newUser, accessToken, refreshToken } = response.data;
+      const { user, accessToken, refreshToken } = res.data;
 
       // salvar token e usuário
-      localStorage.setItem("user", JSON.stringify(newUser));
+      localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", accessToken);
 		localStorage.setItem("refreshToken", refreshToken)
-      setUser(newUser);
+
+      setUser(user);
 
       return { success: true };
-
+		} else {
+			throw new Error(res.data.message);
+		}
     } catch (err) {
-		console.error(err);
-		return { success: false, message: err.response?.data?.message };
+		console.error(err)
+		throw err;
     }
   };
 
 
   const login = async (formData) => {
-	try {
-    const response = await api.post("/auth/login", formData)
+	let res = null;
 
-    const { user, accessToken, refreshToken } = response.data
+	try {
+    	res = await xhr.post("/auth/login", {body: formData})
+	console.log(res)
+	if (res.status ===200) {
+    const { user, accessToken, refreshToken } = res.data
 
     localStorage.setItem("user", JSON.stringify(user))
     localStorage.setItem("token", accessToken)
@@ -50,10 +69,13 @@ export function AuthProvider({ children }) {
 
     	setUser(user)
 
-    	return user
+    	return {success: true}
+	} else {
+		throw new Error(res.data.message)
+	}
 	} catch (err) {
 		console.error(err);
-		return { success: false, message: err.response?.data?.message };
+		throw err;
 	}
   }
 

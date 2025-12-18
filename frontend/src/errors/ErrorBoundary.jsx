@@ -1,4 +1,4 @@
-import { useRouteError } from "react-router-dom"
+import { useRouteError, Link } from "react-router-dom"
 
 //Este componente captura erros inesperados de runtime
 //nas rotas

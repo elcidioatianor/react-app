@@ -1,4 +1,4 @@
-const createError = require('http-errors');
+//const createError = require('http-errors');
 const cors = require("cors");
 const express = require('express');
 const path = require('path');
@@ -37,21 +37,20 @@ app.use('/profile', profileRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     //TODO: refatorar isto para retornar json
-    next(createError(404));
+	res.status(404);
+    res.json({
+		error: '404 - Resource Not Found',
+		code: 404
+	});
  });
 
 // error handler
 app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    //res.locals.message = err.message;
-    //res.locals.error = req.app.get('env') === 'development'
-    
-    //TODO: ISTO TAMBEM
-    //render the error page
     res.status(err.status || 500);
+
     res.json({
 		error: error.message,
-		code: err.status || 5000,
+		code: err.status || 500,
 		stack: req.app.get('env') === 'development' ? error.stack : ''
 	});
 });
