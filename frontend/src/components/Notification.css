@@ -1,0 +1,48 @@
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+	--primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --success-color: #27ae60;
+    --danger-color: #e74c3c;
+    --warning-color: #f39c12;
+	--pink-color: #d80b43; /* USAR ESTA COR PARA ERROS OU APP SECONDARY COLOR (TITULOS,ETC) */
+}
+
+.notification {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    animation: slideIn 0.3s ease-out;
+}
+
+.notification-info {
+    background-color: var(--primary-color);
+}
+
+.notification-success {
+    background-color: var(--success-color);
+}
+
+.notification-error {
+    background-color: var(--pink-color);
+}
+
+.notification-warning {
+    background-color: var(--warning-color);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

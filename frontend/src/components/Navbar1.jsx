@@ -110,11 +110,12 @@ export default function Navbar() {
   }
 
   return (
+	<>
     <nav className="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
 		 <div className="container-fluid">
 
 		{/* Botão hambúrguer*/}
-        <buttonclassName="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
+        <button className="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
 		
@@ -304,5 +305,6 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
+	</>
   )
 }

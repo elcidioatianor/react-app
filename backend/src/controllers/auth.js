@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password) {//400 (Bad Request)
       return res.status(400).json({ message: 'Campos obrigatórios' })
     }
 
@@ -33,7 +33,7 @@ exports.register = async (req, res) => {
       where: { email }
     })
 
-    if (exists) {
+    if (exists) {//409
       return res.status(409).json({ message: 'Usuário já existe' })
     }
 
@@ -54,7 +54,7 @@ exports.register = async (req, res) => {
     user.lastLoginAt = new Date()
     await user.save()
 
-    return res.status(201).json({
+    return res.status(201).json({//201
       message: 'Usuário criado com sucesso',
       user: {
         id: user.id,
@@ -75,13 +75,13 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ where: { email } })
 
-    if (!user || !user.isActive) {
+    if (!user || !user.isActive) {//401
       return res.status(401).json({ message: 'Endereço de e-mail inválido' })
     }
 
     const match = await bcrypt.compare(password, user.password)
 
-    if (!match) {
+    if (!match) {//401
       return res.status(401).json({ message: 'A senha está incorrecta' })
     }
 
@@ -104,6 +104,6 @@ exports.login = async (req, res) => {
       refreshToken
     })
   } catch (err) {
-    return res.status(500).json({ message: 'Ocorreu um erro no servidor' })
+    return res.status(500).json({ message: 'Ocorreu um erro no nosso servidor. O erro foi registado e vamos corrigí-lo. Pedimos sinceras desculpas' })
   }
 }

@@ -1,30 +1,16 @@
-import {StrictMode} from "react";
-import {createRoot} from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import { Toaster } from 'react-hot-toast';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 
-import { AuthProvider } from "./context/authContext";
-import router from './router';
+//APP PRINCIPAL
+import App from "./App";
+import App1 from "./App1";
 
-//Opções para toast notifications 
-const toastOptions= {
-	duration: 3000,
-	style: {
-		background: '#fff',
-		color: '#333',
-		borderRadius: '8px',
-		padding: '10px 14px',
-		border: '1px solid #ddd'
-	}
-}
+const rootNode = document.getElementById("root");
+const appRoot = createRoot(rootNode);
 
-const {render} = createRoot(document.getElementById("root"))
-
-render(
-	<StrictMode>
-		<AuthProvider>
-			<Toaster position="top-right" toastOptions={toastOptions}/>
-			<RouterProvider router={router} />
-		</AuthProvider>
-	</StrictMode>
+//
+appRoot.render(
+    <StrictMode>
+        <App />
+    </StrictMode>,
 );

@@ -1,13 +1,19 @@
-import { Navigate } from 'react-router-dom'
-import useAuth from '../hooks/useAuth' //custom hook
+//4 - Criar wrapper para rotas privadas
+// src/components/PrivateRoute.jsx
+import { Navigate } from "react-router-dom";
+import { useAuthContext } from "../contexts/AuthContext";
+import { LoadingOverlay } from "./LoadingOverlay";
 
-//4 - Criar rota privada
-export default function PrivateRoute({ children }) {
-    const { user, loading } = useAuth()
+export const PrivateRoute = ({ children }) => {
+    const { isAuthenticated, loading } = useAuthContext();
 
-    if (loading) return <p>Carregando...</p>
+    if (loading) {
+        return (
+            <LoadingOverlay isLoading={true} message="Verificando acesso..." />
+        );
+    }
 
-    return user ? children : <Navigate to="/login" />
-}
+    return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
 //5 - Tela de login e registro > ../pages/Login.jsx

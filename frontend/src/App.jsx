@@ -1,16 +1,23 @@
-import { Outlet } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import "bootsrap/dist/js/bootstrap.bundle.min.js" 
+// src/App.jsx
+//import React from 'react';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom";
+import { AppProvider } from "./providers/AppProvider";
+import { RouterProvider } from "react-router-dom";
 
-export default function App() {
-  return (
-    <>
-      <Navbar />
-      <Outlet />
-    </>
-  );
+import { AppRouter } from "./router";
+import "./App.css";
+
+function App() {
+    return (
+        <AppProvider>
+            <RouterProvider router={AppRouter} />
+        </AppProvider>
+    );
 }
 
-//export default App
-
-//7 - Página protegida: src/pages/Home.jsx, src/pages/Profule
+export default App;

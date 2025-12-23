@@ -1,51 +1,60 @@
-import { createBrowserRouter } from "react-router-dom"
+import { createBrowserRouter } from "react-router-dom";
 
 // Layout
-import MainLayout from "./layout/MainLayout"
+import { MainLayout } from "./layouts/MainLayout";
 
-// Rotas públicas
-import Home from "./pages/Home"
-import About from "./pages/About"
-import Login from "./pages/Login"
-import Register from "./pages/Register"
-
-// Proteção
-import RequireAuth from "./components/RequireAuth"
-
-// Rotas protegidas
-import Learn from "./pages/Learn"
-import Profile from "./pages/Profile"
-
+// Rotas
+import { Home } from "./views/Home";
+import { Login } from "./views/Login";
+import { Register } from "./views/Register";
+import { Dashboard } from "./views/Dashboard";
+import { UserProfile } from "./components/UserProfile";
+//import { PrivateRoute } from "./components/PrivateRoute";
+import { RequireAuth } from "./components/RequireAuth";
+import { Dev } from "./views/Dev";
 // Erros
-import NotFound from "./errors/NotFound"
-import ErrorBoundary from "./errors/ErrorBoundary"
+import { NotFound } from "./errors/NotFound";
+import { ErrorBoundary } from "./errors/ErrorBoundary";
 
-const router = createBrowserRouter([
-  {
-    element: <MainLayout />,
-    errorElement: <ErrorBoundary />,
-    children: [
-      // Públicas COM navbar
-      { path: "/", element: <Home /> },
-      { path: "/about", element: <About /> },
-
-      // 🔐 Grupo protegido COM navbar
-      {
-        element: <RequireAuth />,
+export const AppRouter = createBrowserRouter([
+    {
+        // ROTAS COM NAVBAR
+        element: <MainLayout />,
+        errorElement: <ErrorBoundary />,
         children: [
-          { path: "/profile", element: <Profile /> },
-          { path: "/learn", element: <Learn /> }
-        ]
-      }
-    ]
-  },
+            //PÚBLICAS
+            { path: "/", element: <Home /> },
+            {
+                element: <RequireAuth/>, //<PrivateRoute/>,
+                children: [
+                    //PROTEGIDAS
+                    { path: "/profile", element: <UserProfile /> },
+                    { path: "/dashboard", element: <Dashboard /> },
+                ],
+            },
+        ],
+    },
 
-  // Públicas SEM navbar
-  { path: "/login", element: <Login />, errorElement: <ErrorBoundary /> },
-  { path: "/register", element: <Register />, errorElement: <ErrorBoundary /> },
+    // SEM NAVBAR & PÚBLICAS
+    { 
+		path: "/login", 
+		element: <Login />, 
+		errorElement: <ErrorBoundary /> 
+	},
+    {
+        path: "/register",
+        element: <Register />,
+        errorElement: <ErrorBoundary />,
+    },
+	{
+        path: "/dev",
+        element: <Dev />,
+        errorElement: <ErrorBoundary />,
+    },
 
-  // 404
-  { path: "*", element: <NotFound /> }
-])
-
-export default router
+    // 404
+    {
+		path: "*", 
+		element: <NotFound /> 
+	}
+]);

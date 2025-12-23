@@ -1,2 +1,0 @@
-Implement getUserFromStorage function in authContext
-to get & parse user from localstorage (for use in Navbar & other pages that require user data)

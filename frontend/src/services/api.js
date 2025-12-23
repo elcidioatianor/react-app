@@ -1,39 +1,35 @@
-/***
- * 1 - Criar serviço de API (AXIOS + TOKEN)
- *
- */
-import {XHR} from '../assets/js/xhr'
-import axios from 'axios'
+import { createXHRClient } from "./xhrClient";
 
-const api = axios.create({
-    baseURL: 'http://localhost:3001'   // tua API backend
-})
+// 1 - Criar serviço de API
+// Criar instância global do cliente
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
-// inserir token automaticamente em cada requisição
-api.interceptors.request.use(config => {
-    const token = localStorage.getItem('token')
+export const xhrClient = createXHRClient(API_BASE_URL);
 
-    if (token) {
-        config.headers.Authorization = token
+// Configurar opções padrão
+xhrClient.defaultOptions.timeout = 30000; // 30 segundos
+
+// Adicionar interceptor para logs
+xhrClient.useRequestInterceptor(async (config) => {
+    console.log(`[${new Date().toISOString()}] ${config.method} ${config.url}`);
+    return config;
+});
+
+// Interceptor para erros globais
+xhrClient.useResponseErrorInterceptor(async (error) => {
+    if (error.status === 403) {
+        // Redirecionar para página de acesso negado
+        window.location.href = "/access-denied";
     }
-    return config
-})
+    throw error;
+});
+
+// Interceptor para React Query/SWR (opcional)
+xhrClient.useResponseInterceptor(async (response) => {
+    // Adicionar metadata para React Query
+    response._timestamp = Date.now();
+    response._etag = response.headers["etag"];
+    return response;
+});
 
 //2 - Criar context de autenticação > ../context/authContext.js
-//export default api
-let token = localStorage.getItem('token')
-let headers = new Headers();
-
-if (token) {
-	headers.set('Authorization', token)
-}
-
-const xhr = new XHR({
-	url: 'http://localhost:3001',
-	headers,
-	responseType: 'json'
-})
-
-export {
-	xhr
-}
