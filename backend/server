@@ -1,3 +1,7 @@
+#!/usr/bin/node
+
+//TODO: HANDLE SERVER EVENTS (ONLISTENING, ONERROR, ETC) & SIGNALS (SIGNALS LIKE SIGHUP, SIGINT)
+
 require("dotenv").config();
 
 var debug = require('debug')('react-app:server');

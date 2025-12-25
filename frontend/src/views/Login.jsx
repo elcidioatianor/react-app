@@ -4,6 +4,9 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 //import { useFetch } from '../hooks/useApi';
 import { useNotification } from "../contexts/NotificationContext";
+//ICONES
+import { EyeFill, EyeSlashFill } from '../components/Svg';
+
 import "./Auth.css";
 
 export function Login() {
@@ -55,7 +58,7 @@ export function Login() {
         } else if (credentials.password.length < 6) {
             errors.password = "Senha deve ter pelo menos 6 caracteres";
         }
-
+		console.log(credentials)
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -102,8 +105,6 @@ export function Login() {
                 const from = location.state?.from?.pathname || "/";
                 navigate(from, { replace: true });
             } else {
-				console.log('Login.jsx:105')
-				console.log(result)
                 addNotification(result.error || "Falha no login", "error");
             }
         } catch (err) {
@@ -144,21 +145,15 @@ export function Login() {
                     <h1 className="auth-title">Bem-vindo de volta</h1>
                     <p className="auth-subtitle">Faça login para continuar</p>
                 </div>
-
-                {(authError || Object.keys(validationErrors).length > 0) && (
+				{authError && (
                     <div className="auth-error-alert">
                         {authError && <p>{authError}</p>}
-                        {Object.values(validationErrors).map(
-                            (error, index) =>
-                                error && <p key={index}>{error}</p>,
-                        )}
                     </div>
                 )}
-
                 <form onSubmit={handleSubmit} className="auth-form">
                     <div className="form-group">
                         <label htmlFor="email" className="form-label">
-                            Email
+                            Endereço de mail:
                         </label>
                         <input
                             type="email"
@@ -167,7 +162,7 @@ export function Login() {
                             value={credentials.email}
                             onChange={handleInputChange}
                             className={`form-input ${validationErrors.email ? "input-error" : ""}`}
-                            placeholder="seu@email.com"
+                            placeholder="Seu endereço de e-mail"
                             disabled={loading || isSubmitting}
                             autoComplete="email"
                         />
@@ -180,7 +175,7 @@ export function Login() {
 
                     <div className="form-group">
                         <label htmlFor="password" className="form-label">
-                            Senha
+                            Senha:
                         </label>
                         <div className="password-input-container">
                             <input
@@ -190,7 +185,7 @@ export function Login() {
                                 value={credentials.password}
                                 onChange={handleInputChange}
                                 className={`form-input ${validationErrors.password ? "input-error" : ""}`}
-                                placeholder=""
+                                placeholder="Sua senha de acesso"
                                 disabled={loading || isSubmitting}
                                 autoComplete="current-password"
                             />
@@ -200,7 +195,7 @@ export function Login() {
                                 onClick={() => setShowPassword(!showPassword)}
                                 disabled={loading || isSubmitting}
                             >
-                                {showPassword ? "👁️‍🗨️" : "👁️"}
+                                {showPassword ? <EyeSlashFill color='#888' width='20' height='20'/> : <EyeFill color='#888' width='20' height='20'/>}
                             </button>
                         </div>
                         {validationErrors.password && (
@@ -229,7 +224,7 @@ export function Login() {
                             className="forgot-password-link"
                             disabled={loading || isSubmitting}
                         >
-                            Esqueceu a senha?
+                            Esqueceste a senha?
                         </button>
                     </div>
 
@@ -295,7 +290,7 @@ export function Login() {
 
                     <div className="auth-footer">
                         <p className="auth-footer-text">
-                            Não tem uma conta?{" "}
+                            Não tes uma conta?{" "}
                             <Link to="/register" className="auth-link">
                                 Cadastre-se
                             </Link>

@@ -23,11 +23,31 @@ app.use(passport.initialize())
 //app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(cors());
+app.use(cors({
+	origin: true,
+	methods: ['HEAD', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+	credentials: true,
+	/*allowedHeaders: [
+		'Content-Type', 
+		'Authorization', 
+		'Accept', 
+		'X-Requested-With',
+		'Range',
+		'X-Content-Range'
+	],*/
+	exposedHeaders: [
+		'Content-Range',
+		'X-Content-Range'
+	],
+	credentials: true,
+	maxAge: 3600,
+	optionsSuccessStatus: 204
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//app.options('*', cors()) //Allow OPTIONS method
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

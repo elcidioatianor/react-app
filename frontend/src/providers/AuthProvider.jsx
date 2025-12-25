@@ -90,7 +90,7 @@ export function AuthProvider({ children }) {
             }
 
             setUser(userData);
-            return { success: true, data: result };
+            return { success: true, data: userData };
             //}
         } catch (err) {//TODO: HANDLE ERR.RESPONSE.JSON 
             let errorText;

@@ -11,7 +11,6 @@ export function Home() {
     const { user, isAuthenticated, logout } = useAuthContext();
     const { addNotification } = useNotification();
     const navigate = useNavigate();
-	console.log("Authentication: " + isAuthenticated())
     const [activeTab, setActiveTab] = useState("features");
     const [searchQuery, setSearchQuery] = useState("");
     const [showWelcomeModal, setShowWelcomeModal] = useState(false);

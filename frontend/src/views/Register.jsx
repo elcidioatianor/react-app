@@ -6,6 +6,9 @@ import { useAuthContext } from "../contexts/AuthContext"; //useAuthentication/Au
 import { useNotification } from "../contexts/NotificationContext";
 import "./Auth.css";
 
+//ICONES
+import { EyeFill, EyeSlashFill } from '../components/Svg';
+
 export function Register() {
     const [userData, setUserData] = useState({
         name: "",
@@ -150,10 +153,10 @@ export function Register() {
                 );
 
                 // Redirecionar para login
+				//TODO: REDIRECIONAR PARA CONFIRMAÇÃO DE E-MAIL/TELEFONE OU CARREGAR AVATAR
                 navigate("/login", {
                     state: {
-                        message:
-                            "Cadastro realizado com sucesso! Faça login para continuar.",
+                        message: "Cadastro realizado com sucesso! Faça login para continuar.",
                     },
                 });
             } else {
@@ -175,20 +178,16 @@ export function Register() {
                     <p className="auth-subtitle">Junte-se a nós hoje mesmo</p>
                 </div>
 
-                {(authError || Object.keys(validationErrors).length > 0) && (
+                {authError && (
                     <div className="auth-error-alert">
                         {authError && <p>{authError}</p>}
-                        {Object.values(validationErrors).map(
-                            (error, index) =>
-                                error && <p key={index}>{error}</p>,
-                        )}
                     </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="auth-form">
                     <div className="form-group">
                         <label htmlFor="name" className="form-label">
-                            Nome Completo
+                            Nome completo:
                         </label>
                         <input
                             type="text"
@@ -197,7 +196,7 @@ export function Register() {
                             value={userData.name}
                             onChange={handleInputChange}
                             className={`form-input ${validationErrors.name ? "input-error" : ""}`}
-                            placeholder="Seu nome"
+                            placeholder="Seu nome e apelido"
                             disabled={loading || isSubmitting}
                             autoComplete="name"
                         />
@@ -210,7 +209,7 @@ export function Register() {
 
                     <div className="form-group">
                         <label htmlFor="email" className="form-label">
-                            Email
+                            Endereço de e-mail:
                         </label>
                         <input
                             type="email"
@@ -219,7 +218,7 @@ export function Register() {
                             value={userData.email}
                             onChange={handleInputChange}
                             className={`form-input ${validationErrors.email ? "input-error" : ""}`}
-                            placeholder="seu@email.com"
+                            placeholder="Seu e-mail"
                             disabled={loading || isSubmitting}
                             autoComplete="email"
                         />
@@ -232,7 +231,7 @@ export function Register() {
 
                     <div className="form-group">
                         <label htmlFor="password" className="form-label">
-                            Senha
+                            Senha:
                         </label>
                         <div className="password-input-container">
                             <input
@@ -242,7 +241,7 @@ export function Register() {
                                 value={userData.password}
                                 onChange={handleInputChange}
                                 className={`form-input ${validationErrors.password ? "input-error" : ""}`}
-                                placeholder=""
+                                placeholder="Sua senha de acesso"
                                 disabled={loading || isSubmitting}
                                 autoComplete="new-password"
                             />
@@ -252,7 +251,7 @@ export function Register() {
                                 onClick={() => setShowPassword(!showPassword)}
                                 disabled={loading || isSubmitting}
                             >
-                                {showPassword ? "👁️‍🗨️" : "👁️"}
+                                 {showPassword ? <EyeSlashFill color='#888' width='20' height='20'/> : <EyeFill color='#888' width='20' height='20'/>}
                             </button>
                         </div>
 
@@ -288,16 +287,16 @@ export function Register() {
                         )}
 
                         <div className="password-hints">
-                            <p className="hint-title">Sua senha deve conter:</p>
+                            <p className="hint-title">A senha deve conter:</p>
                             <ul className="hint-list">
                                 <li
                                     className={
-                                        userData.password.length >= 8
+                                        userData.password.length >= 6
                                             ? "hint-valid"
                                             : ""
                                     }
                                 >
-                                    Pelo menos 8 caracteres
+                                    Pelo menos 6 caracteres
                                 </li>
                                 <li
                                     className={
@@ -335,7 +334,7 @@ export function Register() {
 
                     <div className="form-group">
                         <label htmlFor="confirmPassword" className="form-label">
-                            Confirmar Senha
+                            Confirmar senha:
                         </label>
                         <input
                             type={showPassword ? "text" : "password"}
@@ -344,7 +343,7 @@ export function Register() {
                             value={userData.confirmPassword}
                             onChange={handleInputChange}
                             className={`form-input ${validationErrors.confirmPassword ? "input-error" : ""}`}
-                            placeholder=""
+                            placeholder="Repita a senha anterior"
                             disabled={loading || isSubmitting}
                             autoComplete="new-password"
                         />
@@ -357,7 +356,7 @@ export function Register() {
                             userData.confirmPassword &&
                             userData.password === userData.confirmPassword && (
                                 <span className="success-message">
-                                    ✓ Senhas coincidem
+                                    As senhas coincidem
                                 </span>
                             )}
                     </div>
@@ -379,7 +378,7 @@ export function Register() {
                                     className="terms-link"
                                     target="_blank"
                                 >
-                                    Termos de Uso
+                                    Termos de uso
                                 </Link>{" "}
                                 e{" "}
                                 <Link
@@ -387,7 +386,7 @@ export function Register() {
                                     className="terms-link"
                                     target="_blank"
                                 >
-                                    Política de Privacidade
+                                    Política de privacidade
                                 </Link>
                             </span>
                         </label>
@@ -401,9 +400,6 @@ export function Register() {
                     <button
                         type="submit"
                         className="auth-button primary-button"
-                        disabled={
-                            loading || isSubmitting || !userData.acceptTerms
-                        }
                     >
                         {loading || isSubmitting ? (
                             <>

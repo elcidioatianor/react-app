@@ -15,6 +15,7 @@ export function createXHRClient(baseURL = "") {
             config.headers = {
                 ...config.headers,
                 Authorization: `Bearer ${token}`,
+				'Cache-Control': 'no-cache'
             };
         }
 

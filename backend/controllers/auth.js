@@ -33,8 +33,8 @@ exports.register = async (req, res) => {
       where: { email }
     })
 
-    if (exists) {//409
-      return res.status(409).json({ message: 'Usuário já existe' })
+    if (exists) {//409: TODO: HANDLE THIS CORRECTLY (PROMPT USER TO RECOVER ITS PASSWORD)
+      return res.status(409).json({ message: 'O e-mail já está cadastrado. Esqueceu a senha?' })
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)

@@ -20,7 +20,7 @@
 .auth-card {
     background: white; /*USAR THEME PROVIDER*/
     border-radius: 16px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     width: 100%;
     /*max-width: 480px;*/
     /*padding: 40px;*/
@@ -88,10 +88,31 @@ a, a:link {
     font-size: 0.9rem;
 }
 
+/* Change autofill background and text color in WebKit browsers (Chrome, Safari, Opera, Edge) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    /* Use a large inset box-shadow to cover the browser's default background */
+    -webkit-box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important; /* Change #ffffff to your desired background color */
+    
+    /* Change the text color */
+    -webkit-text-fill-color: #000000 !important; /* Change #000000 to your desired text color */
+    
+    /* Add a transition to prevent the default color from briefly showing on autofill */
+    /*transition: background-color 5000s ease-in-out 0s;*/
+	background: #fff;
+}
+
 .form-input {
 	color: #111;
     padding: 12px 16px;
-    border: 2px solid #e1e5e9;
+    border: 1px solid #e1e5e9;
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.3s ease;
@@ -101,7 +122,7 @@ a, a:link {
 .form-input:focus {
     outline: none;
     border-color: #667eea;
-    background: white;
+    background: #fff;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -111,28 +132,35 @@ a, a:link {
 }
 
 .password-input-container {
-	width: 100%;
-    position: relative;
+    position: relative; 
+}
+
+.password-input-container input {
+    width: 100%;
 }
 
 .password-toggle {
-    position: absolute;
-    right: 12px;
+    position: absolute; 
+    right: 12px; 
     top: 50%;
     transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
+    background-color: #fff0 !important;
+    border: 0;
+    cursor: pointer; 
     font-size: 1.2rem;
     padding: 4px;
-    opacity: 0.7;
-    transition: opacity 0.3s;
 }
 
-.password-toggle:hover {
-    opacity: 1;
+.password-toggle:hover,
+.password-toggle:focus,
+.password-toggle:focus-visible {
+	border: 0;
+	box-shadow: none;
+	background-color: #fff0 !important;
 }
-
+.password-toggle img { 
+	width: 20px;
+}
 .error-message {
     color: #e53e3e;
     font-size: 0.85rem;
@@ -175,12 +203,15 @@ a, a:link {
     color: #667eea;
     font-size: 0.9rem;
     cursor: pointer;
-    text-decoration: underline;
+    text-decoration: none;
     transition: color 0.3s;
 }
 
-.forgot-password-link:hover {
+.forgot-password-link:hover,
+.forgot-password-link:focus {
     color: #5a67d8;
+	background-color: #fff0 !important;
+	text-decoration: underline;
 }
 
 .auth-button {
@@ -197,14 +228,21 @@ a, a:link {
     gap: 8px;
 }
 
+/* FOCUS RING PARA BOTOES: DEPOIS UNIFICAR PARA TODOS BOTÕES*/
+.auth-button:hover,
+.auth-button:focus,
+.social-button:hover,
+.sociao-button:focus {
+	box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
 .primary-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: rgb(102, 126, 234);
     color: white;
 }
 
 .primary-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .primary-button:disabled {
@@ -213,40 +251,37 @@ a, a:link {
 }
 
 .auth-divider {
-    text-align: center;
-    position: relative;
-    margin: 20px 0;
+  display: flex; /* Aligns text and lines horizontally */
+  align-items: center; /* Vertically centers the text within the lines */
+  text-align: center; /* Ensures the text itself is centered within its available space */
+  margin: 20px 0; /* Adds some vertical spacing */
 }
 
-.auth-divider::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    height: 1px;
-    background: #e1e5e9;
+.auth-divider::before,
+.auth-divider::after {
+  content: ''; /* Required for pseudo-elements to render */
+  flex: 1; /* Allows lines to grow and fill available space */
+  border-top: 1px solid #ccc; /* Styles the line */
+  margin: 0 10px; /* Adds a small gap between the text and the line */
 }
 
 .auth-divider span {
-	display: inline-block;
-    background: #fff;
-    padding: 0 16px;
-    color: #666;
-    font-size: 0.9rem;
+	color: #666;
+	/*padding: 0 16px;*/
+	font-size: 0.9rem;
 }
 
 .social-login-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 16px;
 }
 
 .social-button {
     padding: 12px;
-    border: 2px solid #e1e5e9;
+    border: 1px solid #e1e5e9;
     border-radius: 8px;
-    background: white;
+    background: #fff;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -258,7 +293,7 @@ a, a:link {
 }
 
 .social-button:hover:not(:disabled) {
-    transform: translateY(-1px);
+	background: #fff !important;
     border-color: #667eea;
 }
 
@@ -291,7 +326,7 @@ a, a:link {
 .auth-link {
     color: #667eea;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 500;
     transition: color 0.3s;
 }
 
@@ -327,7 +362,7 @@ a, a:link {
 .password-hints {
     margin-top: 12px;
     padding: 12px;
-    background: #f8fafc;
+    /*background: #f8fafc;*/
     border-radius: 8px;
     border: 1px solid #e1e5e9;
 }
@@ -347,24 +382,25 @@ a, a:link {
 
 .hint-list li {
     font-size: 0.8rem;
-    color: #666;
+    color: #04A96D/*#666*/;
     margin-bottom: 4px;
     padding-left: 20px;
     position: relative;
 }
 
-.hint-list li:before {
-    content: "○";
+.hint-list li:before { /* TODO: USE A CSS CIRCLE */
+    content: "•";
     position: absolute;
     left: 0;
 }
 
 .hint-list li.hint-valid {
-    color: #38a169;
+    color: #909090;
+	/*opacity: .7;*/
 }
 
 .hint-list li.hint-valid:before {
-    content: "✓";
+    content: "•";
 }
 
 /* Terms Links */

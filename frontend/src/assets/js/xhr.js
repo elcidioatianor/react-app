@@ -82,7 +82,7 @@ export class XHR {
         this.defaultOptions = {
             method: "GET",
             headers: {
-                "X-Requested-With": "XMLHttpRequest",
+                //"X-Requested-With": "XMLHttpRequest",
                 Accept: "application/json",
             },
             credentials: "include", //'same-origin'
