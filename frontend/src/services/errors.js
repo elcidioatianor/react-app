@@ -20,6 +20,6 @@ export const errors =  {
 export const AUTH_ERROR = {
 	[errors.ENOACCESS]: 'Token de acesso não fornecido',
 	[errors.EPASSWD_INCORRECT]: 'Senha incorrecta',
-	[errors.ENOEXIST]: 'O e-mail já existe',
+	[errors.EEXIST]: 'O e-mail já existe',
 	[errors.ENOEXIST]: 'E-mail inválido ou não registado'
 }

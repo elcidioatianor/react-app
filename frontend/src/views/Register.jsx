@@ -130,6 +130,13 @@ export function Register() {
         if (passwordStrength === 3) return "#3498db";
         return "#27ae60";
     };
+    
+    const handleSocialLogin = (provider) => {
+        addNotification(
+            `Cadastro com ${provider} em desenvolvimento`,
+            "info",
+        );
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -146,7 +153,7 @@ export function Register() {
                 email: userData.email,
                 password: userData.password,
             });
-
+            console.log(res);
             if (res.done) {
                 addNotification(//
                     "Registrado com sucesso",
@@ -161,15 +168,15 @@ export function Register() {
                     },
                 });
             } else {
+                
                 addNotification(res.error || "Erro no registro", "error");
-				setError(null);
-
+                setIsSubmitting(false);
             }
         } catch (err) {
-            console.error("Erro no registro: " + err.message, err);
-            addNotification("Erro no registro", "error");
-        } finally {
+            console.error("Erro no registro: " + err.message);
+
             setIsSubmitting(false);
+            addNotification("Erro no registro", "error");
         }
     };
 

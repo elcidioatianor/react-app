@@ -1,0 +1,5 @@
+# 1 - Abrir janela de comandos aqui e digitar
+git pull origin main
+
+# 2 - Entrar na pasta /frontend e abrir janela de comandos e digitar:
+yarn dev

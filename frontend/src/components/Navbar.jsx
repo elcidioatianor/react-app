@@ -1,41 +1,13 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
-import {useNotification} from '../contexts/NotificationContext';
 
 import { 
   //Search, 
   PersonCircle, 
   Gear, 
   BoxArrowRight,
-  GraphUp,
-  /*ShieldCheck,
-  ArrowsFullscreen,
-  Phone,
-  CheckCircle,
-  ArrowRepeat,
-  Star,
-  People,
-  Award,
-  Clock,
-  ChevronRight,
-  Rocket,
-  Lock,
-  Cpu,
-  Heart,
-  Trophy,
-  Lightning,
-  Palette,
-  Globe,
-  Chat,
-  Envelope,
-	PlayCircle,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Github,
-	React*/
+  GraphUp
 } from '../components/Svg';
 export function Navbar() {
     const { user, isAuthenticated, logout } = useAuthContext();
@@ -52,10 +24,8 @@ export function Navbar() {
 	const handleLogout = async () => {
         try {
             await logout();
-            addNotification('Logout com sucesso', 'success');
-            //navigate('/login');
-        } catch (error) {
-            addNotification('Erro ao fazer logout', 'error');
+        } catch (err) {
+            console.log(err.message)
         }
     };
 
@@ -79,6 +49,68 @@ export function Navbar() {
 					Nexus
                 </Link>
 
+                {/* Offcanvas */}
+                <div
+                    className="offcanvas offcanvas-start offcanvas-lg text-bg-dark"
+                    tabIndex="-1"
+                    id="mainOffcanvas"
+                    aria-labelledby="mainOffcanvasLabel"
+                >
+                    <div className="offcanvas-header d-lg-none">
+                        <h5 className="offcanvas-title" id="mainOffcanvasLabel">
+                            {isAuthenticated? (
+								<span>Olá, {user.name.split(/\s+/)[0]}</span>
+							):(
+								<span>Nexus Pro</span>
+							)}
+                        </h5>
+                        <button
+                            type="button"
+                            className="btn-close btn-close-white"
+                            data-bs-dismiss="offcanvas"
+                            aria-label="Close"
+                        />
+                    </div>
+
+                    <div className="offcanvas-body">
+                        <ul className="navbar-nav flex-grow-1">
+                            <li className="nav-item">
+                                <NavLink
+                                    to="/dashboard"
+                                    className={({ isActive }) =>
+                                        isActive
+                                            ? "nav-link active"
+                                            : "nav-link"
+                                    }
+                                >
+                                    Dashboard
+                                </NavLink>
+                            </li>
+
+                            <li className="nav-item">
+                                <NavLink
+                                    className="nav-link"
+                                    to="/notifications"
+                                >
+                                    Notifications
+                                </NavLink>
+                            </li>
+
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/profile">
+                                    Profile
+                                </NavLink>
+                            </li>
+
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/accounts">
+                                    Switch account
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
                 {/* Área direita */}
                 {isAuthenticated ? (
                     <div className="dropdown ms-auto">
@@ -155,68 +187,6 @@ export function Navbar() {
                     	Entrar
                      </Link>
                 )}
-
-                {/* Offcanvas */}
-                <div
-                    className="offcanvas offcanvas-start offcanvas-lg text-bg-dark"
-                    tabIndex="-1"
-                    id="mainOffcanvas"
-                    aria-labelledby="mainOffcanvasLabel"
-                >
-                    <div className="offcanvas-header d-lg-none">
-                        <h5 className="offcanvas-title" id="mainOffcanvasLabel">
-                            {isAuthenticated? (
-								<span>Olá, {user.name.split(/\s+/)[0]}</span>
-							):(
-								<span>Nexus Pro</span>
-							)}
-                        </h5>
-                        <button
-                            type="button"
-                            className="btn-close btn-close-white"
-                            data-bs-dismiss="offcanvas"
-                            aria-label="Close"
-                        />
-                    </div>
-
-                    <div className="offcanvas-body">
-                        <ul className="navbar-nav flex-grow-1">
-                            <li className="nav-item">
-                                <NavLink
-                                    to="/dashboard"
-                                    className={({ isActive }) =>
-                                        isActive
-                                            ? "nav-link active"
-                                            : "nav-link"
-                                    }
-                                >
-                                    Dashboard
-                                </NavLink>
-                            </li>
-
-                            <li className="nav-item">
-                                <NavLink
-                                    className="nav-link"
-                                    to="/notifications"
-                                >
-                                    Notifications
-                                </NavLink>
-                            </li>
-
-                            <li className="nav-item">
-                                <NavLink className="nav-link" to="/profile">
-                                    Profile
-                                </NavLink>
-                            </li>
-
-                            <li className="nav-item">
-                                <NavLink className="nav-link" to="/accounts">
-                                    Switch account
-                                </NavLink>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
             </div>
         </nav>
     );

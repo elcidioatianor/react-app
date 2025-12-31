@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 //import {useNavigate} from 'react-router-dom';
 import { AuthContext } from "../contexts/AuthContext";
 import { xhr } from "../services/api";
@@ -58,7 +58,7 @@ export function AuthProvider({ children }) {
         //setLoading(true);
         try {
             const res = await xhr.post("/auth/register", formData);
-
+            console.log(res);
             //if (response.status === 201 && response.data) {
             const {
                 user: userData,
@@ -78,7 +78,8 @@ export function AuthProvider({ children }) {
             return {done: true}; //return boolean
             //}
         } catch (err) {//TODO: HANDLE ERR.RESPONSE.JSON 
-            let errorText = AUTH_ERROR[err.code] || 'Erro ao registar'
+            console.log(err)
+            let errorText = AUTH_ERROR[err.code] || err.message || 'Erro ao registrar usuário';
 
             setError(errorText)
             setAuthenticated(true);

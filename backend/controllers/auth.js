@@ -176,6 +176,7 @@ exports.login = async (req, res) => {
       //refreshToken
     })
   } catch (err) {
+		console.error(err)
 		return res.status(status).json({ code: error.code })
   }
 }
@@ -311,7 +312,7 @@ exports.logout = async (req, res) => {
     		})//'Acess token não existe'
 		}
 
-    	const user = await User.findByPk(req.payload.sub)
+    	const user = await User.findByPk(req.user.sub)
 
     	if (!user) {
         	// idempotente → não revela estado
@@ -335,4 +336,18 @@ exports.logout = async (req, res) => {
     		code: error_codes.ELOGOUT
     	})
 	}
+}
+
+exports.require_role = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Não autenticado' })
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ message: 'Acesso negado' })
+    }
+
+    next()
+  }
 }
