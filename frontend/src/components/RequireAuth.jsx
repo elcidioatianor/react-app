@@ -14,7 +14,7 @@ export function RequireAuth() {
     }
 
     // Se não estiver logado (usuário nãoexistir), redireciona para /login
-    if (!isAuthenticated()) {
+    if (!isAuthenticated) {
         //Armazenar url actual antes de redirecionar
         //const stateFrom = location.pathname + location.search;
         //para persistência (ter o url mesmo após F5 or page refresh)

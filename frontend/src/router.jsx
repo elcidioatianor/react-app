@@ -8,10 +8,8 @@ import { Home } from "./views/Home";
 import { Login } from "./views/Login";
 import { Register } from "./views/Register";
 import { Dashboard } from "./views/Dashboard";
-import { UserProfile } from "./components/UserProfile";
-//import { PrivateRoute } from "./components/PrivateRoute";
+import { Profile } from "./views/Profile";
 import { RequireAuth } from "./components/RequireAuth";
-import { Dev } from "./views/Dev";
 // Erros
 import { NotFound } from "./errors/NotFound";
 import { ErrorBoundary } from "./errors/ErrorBoundary";
@@ -25,10 +23,10 @@ export const AppRouter = createBrowserRouter([
             //PÚBLICAS
             { path: "/", element: <Home /> },
             {
-                element: <RequireAuth/>, //<PrivateRoute/>,
+                element: <RequireAuth/>,
                 children: [
                     //PROTEGIDAS
-                    { path: "/profile", element: <UserProfile /> },
+                    { path: "/profile", element: <Profile /> },
                     { path: "/dashboard", element: <Dashboard /> },
                 ],
             },
@@ -44,11 +42,6 @@ export const AppRouter = createBrowserRouter([
     {
         path: "/register",
         element: <Register />,
-        errorElement: <ErrorBoundary />,
-    },
-	{
-        path: "/dev",
-        element: <Dev />,
         errorElement: <ErrorBoundary />,
     },
 

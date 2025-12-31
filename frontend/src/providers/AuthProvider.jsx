@@ -1,221 +1,178 @@
 import { useState, useEffect, useCallback } from "react";
+//import {useNavigate} from 'react-router-dom';
 import { AuthContext } from "../contexts/AuthContext";
-import { xhrClient } from "../services/api";
-import { STORAGE_KEYS, secureStore } from "../services/secureStore";
+import { xhr } from "../services/api";
+//const {EREFRESH, ENOACCESS, EREFRESH_EXPIRED}  = errors;
 import { LoadingOverlay } from "../components/LoadingOverlay";
+import {AUTH_ERROR} from '../services/errors'
 
 //Provider é o elemento (wrapper) que encapsula o Context,
 //mas parq usar o valor temos que ler do proprio Context
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setAuthenticated] = useState(false);
     const [error, setError] = useState(null);
 
     // Verificar autenticação inicial
     useEffect(() => {
-        checkAuth();
+        chackAuthentication()
 
-        // Listener para evento de expiração de autenticação
-        const handleAuthExpired = () => {
-            logout();
-        };
-
-        window.addEventListener("auth-expired", handleAuthExpired);
-
-        // Listener para sincronizar entre abas (opcional)
-        //const handleStorageChange = (e) => {
-        //if (e.key === STORAGE_KEYS.USER || e.key === STORAGE_KEYS.TOKEN) {
-        //checkAuth();
-        //}
-        //};
-
-        //window.addEventListener('storage', handleStorageChange);
-
-        return () => {
-            window.removeEventListener("auth-expired", handleAuthExpired);
-            //window.removeEventListener('storage', handleStorageChange);
-        };
+		return () => {
+			//CLEANUP HERE (LISTENERS, ETC)
+		}
     }, []);
+	const chackAuthentication = async () =>{
+		try {
+            //TENTAR CARREGAR USUÁRIO 
+            const res = await xhr.post("/auth/profile", {});
 
-    const checkAuth = async () => {
-        const token = secureStore.get(STORAGE_KEYS.TOKEN);
+            const user = res.json();
 
-        if (!token) {
-            setLoading(false);
-            return;
+            if (user) {//SE CARREGOU USUÁRIO, ENTÃO TUDO ESTÁ BEM (NO ACTION NEEDED)
+                //setAccessToken(accessToken)
+
+                //TODO: SET USER
+                //const response = await('/auth/profile');
+                //let user = response.json();
+
+                setUser(user)
+                setAuthenticated(true);
+                setLoading(false)
+            }
+        } catch (err) {//ANALISAR ERRO: EREFRESH OU REFRESH_EXPIRY, ENOACCESS
+			if (window.location.path !== '/') {
+				//PERMITIR USUÁRIO SEM SESSÃO NA PÁGINA INICIAL:
+				//window.location.href = '/login'
+			}
+            console.error("Erro ao renovar sessão")
+			console.error(err);
+			
+			setLoading(false)
+            setError(err);
         }
 
-        try {
-            //ENVIAR CHAMADA API REAL PARA VERIFICAR SE O USUÁRIO ESTÁ LOGADO, TOKEN NÃO EXPIROU, ETC
-            const response = await xhrClient.get(
-                "/auth/IMPLEMENT_ME_ON_AUTHCONTEXT",
-            );
-            setUser(response.json());
-            setError(null);
-        } catch (err) {
-            console.error("Falha na verificação de autenticação:", err);
-            secureStore.remove(STORAGE_KEYS.TOKEN);
-            secureStore.remove(STORAGE_KEYS.REFRESH_TOKEN);
-        } finally {
-            setLoading(false);
-        }
-    };
-
+	}
     // Registrar
     const register = async (formData) => {
-        setLoading(true);
+        //setLoading(true);
         try {
-            const response = await xhrClient.post("/auth/register", formData);
+            const res = await xhr.post("/auth/register", formData);
 
             //if (response.status === 201 && response.data) {
             const {
                 user: userData,
-                accessToken,
-                refreshToken,
-            } = response.json();
+                accessToken
+            } = res.json();
 
             // Validar dados obrigatórios
             if (!userData || !accessToken) {
                 throw new Error("Dados de autenticação incompletos");
             }
-
-            // Armazenar de forma segura
-            secureStore.set(STORAGE_KEYS.USER, userData); //TODO: MAIS TARDE, APENAS ARMAZENAR TOKENS E ID, E BUSCAR USUÁRIO NO SERVIDOR SEMPRE QUE PRECISAR
-            secureStore.set(STORAGE_KEYS.TOKEN, accessToken);
-
+			
             // Refresh token pode ser armazenado em cookie httpOnly
-            // ou manter em sessionStorage para simplicidade
-            if (refreshToken) {
-                secureStore.set(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
-            }
+            setUser(userData); //TODO: PRECISAMOS MESMO DE RETORNAR DADOS, OU SETUSER() JÁ BASTA?
+            setAuthenticated(true);
+            setError(null)
 
-            setUser(userData);
-            return { success: true, data: userData };
+            return {done: true}; //return boolean
             //}
         } catch (err) {//TODO: HANDLE ERR.RESPONSE.JSON 
-            let errorText;
+            let errorText = AUTH_ERROR[err.code] || 'Erro ao registar'
 
-			if (err.name ==='XHRError') {
-				try {
-					const res = JSON.parse(err.xhr.response);
-					errorText = res.message
-				} catch {
-            		errorText = err.xhr.response || err.statusText || (err.status === 0 ? "Erro de rede. Verifique a sua conexão" : err.message) || 'Erro no cadastro. Tente novamente dentro de instantes';
-				}
-			} else {
-				errorText = err.message
-			}
-            return { success: false, error: errorText };
-        } finally {//REMOVE TIMER LATER
-			setTimeout(() => {
-            	setLoading(false);
-			}, 5000)
+            setError(errorText)
+            setAuthenticated(true);
+			//setLoading(false)
+            return {done: false, error: errorText}
         }
     };
 
     //LOGIN
     const login = async (credentials) => {
-        setLoading(true);
-        try {
-            const response = await xhrClient.post("/auth/login", credentials);
-            const {
-                accessToken,
-                refreshToken,
-                user: userData,
-            } = response.json();
+        //setLoading(true);
 
-            // Armazenar tokens
-            secureStore.set(STORAGE_KEYS.TOKEN, accessToken);
-            if (refreshToken) {
-                secureStore.set(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-            }
+        try {
+            const res = await xhr.post("/auth/login", credentials);
+            const {
+                user: userData
+            } = res.json();
 
             // Atualizar estado
             setUser(userData);
+            setAuthenticated(true);
             setError(null);
-            return { success: true, user: userData };
-        } catch (err) {//401 OU ERRO DE REDE
-			let errorText;
 
-			if (err.name ==='XHRError') {
-				try {
-					const res = JSON.parse(err.xhr.response);
-					errorText = res.message
-				} catch {
-            		errorText = err.xhr.response || err.statusText || (err.status === 0 ? "Erro de rede. Verifique a sua conexão" : err.message) || 'Erro de autenticação. Tente novamente dentro de instantes';
-				}
-			} else {
-				errorText = err.message
-			}
-			console.error(err)
+            return {done: true};
+        } catch (err) {//401 OU ERRO DE REDE
+			console.log(AUTH_ERROR)
+			console.log(err)
+            let errorText = AUTH_ERROR[err.code] || 'Erro ao entrar'
+			
             setError(errorText);
-            return { success: false, error: errorText };
-        } finally { //TODO: DEPOIS REMOVER TIMEOUT (APENAS PARA TESTES DE UI)
-			setTimeout(() => {
-            	setLoading(false);
-			}, 5000)
+            setAuthenticated(false)
+			//setLoading(false)
+            return {done: false, error: errorText};
         }
     };
 
     // Logout
-    const logout = useCallback(() => {
-        //É necessário usar callback??
-        // Limpar storage
-        secureStore.remove(STORAGE_KEYS.TOKEN);
-        secureStore.remove(STORAGE_KEYS.AUTH_TOKEN);
-        secureStore.remove(STORAGE_KEYS.USER);
+    const logout = async () => {
+		try {
+         	// 3. Opcional: Chamar API para invalidar token
+        	await xhr.post('/auth/logout', {})
 
-        // Limpar estado
-        setUser(null);
-        setError(null);
-
-        // 3. Opcional: Chamar API para invalidar token
-        // xhr.post('/auth/logout').catch(console.error);
+        	// Limpar estado
+        	setUser(null);
+        	setError(null);
+        	setAuthenticated(false)
 
         // 4. Redirecionar (se estiver usando router)
-        // window.location.href = '/login';
-
+        // navigate('/login');
+        console.log('Logout OK!')
         // Disparar evento global
-        window.dispatchEvent(new CustomEvent("user-logged-out"));
-    }, []);
+			return true
+		} catch(err) {
+			return { done: false, error: err.message};
+		}
+    };
 
+    //TODO: CONVERTER EM BOOLEAN
     // Verificar se está autenticado
-    const isAuthenticated = useCallback(() => {
-		//console.log(sessionStorage)
-        return (user !== null) && (secureStore.get(STORAGE_KEYS.TOKEN) !== undefined);
-    }, [user]);
+    //const isAuthenticated = useCallback(() => {
+    //console.log(sessionStorage)
+    //return (user !== null) && (getAccess() !== undefined);
+    //}, [user]);
 
-    // Obter token (para usar em requisições)
-    const getToken = useCallback(() => {
-        return secureStore.get(STORAGE_KEYS.TOKEN);
-    }, []);
-
+    //TODO: REMOVER, USAR setUser CRU
     // Função para atualizar dados do usuário
-    const updateUser = useCallback((updatedUser) => {
-        secureStore.set(STORAGE_KEYS.USER, updatedUser);
-        setUser(updatedUser);
-    }, []);
+    //const updateUser = useCallback((updatedUser) => {
+    //sessionStore.setItem('auth_user', updatedUser);
+    //setUser(updatedUser);
+    //}, []);
 
     // Valor do contexto
     const contextValue = {
         user,
+		error,
+		setError,
         loading,
         register,
         login,
         logout,
         isAuthenticated,
-        getToken,
-        updateUser,
+        //getToken, //REMOVE, USE TOKENSTORE
+        //updateUser, //CHANGE
     };
 
-    //TODO: USAR LOADER APENAS EM COMPONENTES ESPECÍFICOS 
+    //TODO: USAR LOADER APENAS EM COMPONENTES ESPECÍFICOS
+    //LOADER MOVIDO PARA APPPROVIDER 
     return (
         <AuthContext value={contextValue}>
-            {/*loading ? (
-                  <LoadingOverlay isLoading={loading} message="Carregando..."/>
-            ) : (*/
-            	children
-            /*)*/}
+            {loading ? (
+                <LoadingOverlay isLoading={loading} message="Carregando..." />
+            ) : (
+                children
+            )}
         </AuthContext>
     );
 }

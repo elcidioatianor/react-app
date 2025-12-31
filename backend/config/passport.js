@@ -6,6 +6,7 @@ const opts = {
   secretOrKey: process.env.JWT_SECRET
 }
 
+//USAR AUTHENTICATE ? OU REQUIREAUTH?
 module.exports = (passport) => {
   passport.use(
     new JwtStrategy(opts, async (jwtPayload, done) => {

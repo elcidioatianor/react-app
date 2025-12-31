@@ -1,11 +1,44 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
+import {useNotification} from '../contexts/NotificationContext';
 
-import bootstrapLogo from "../assets/bootstrap-logo.svg";
-
+import { 
+  //Search, 
+  PersonCircle, 
+  Gear, 
+  BoxArrowRight,
+  GraphUp,
+  /*ShieldCheck,
+  ArrowsFullscreen,
+  Phone,
+  CheckCircle,
+  ArrowRepeat,
+  Star,
+  People,
+  Award,
+  Clock,
+  ChevronRight,
+  Rocket,
+  Lock,
+  Cpu,
+  Heart,
+  Trophy,
+  Lightning,
+  Palette,
+  Globe,
+  Chat,
+  Envelope,
+	PlayCircle,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Github,
+	React*/
+} from '../components/Svg';
 export function Navbar() {
-    const { user, logout } = useAuthContext();
+    const { user, isAuthenticated, logout } = useAuthContext();
     const [imgError, setImgError] = useState(false);
 
     const getInitials = (name) => {
@@ -16,12 +49,22 @@ export function Navbar() {
             : parts[0][0].toUpperCase();
     };
 
+	const handleLogout = async () => {
+        try {
+            await logout();
+            addNotification('Logout com sucesso', 'success');
+            //navigate('/login');
+        } catch (error) {
+            addNotification('Erro ao fazer logout', 'error');
+        }
+    };
+
     return (
-        <nav className="navbar navbar-dark bg-dark navbar-expand-lg fixed-top">
+        <nav className="navbar navbar-expand-lg fixed-top bg-dark" data-bs-theme='dark'>
             <div className="container-fluid">
                 {/* Botão Offcanvas */}
                 <button
-                    className="navbar-toggler"
+                    className="navbar-toggler p-0 border-0 mx-0"
                     type="button"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#mainOffcanvas"
@@ -31,17 +74,13 @@ export function Navbar() {
                 </button>
 
                 {/* Logo */}
-                <Link className="navbar-brand ms-2" to="/">
-                    <img
-                        src={bootstrapLogo}
-                        width="42"
-                        height="32"
-                        alt="Bootstrap"
-                    />
+                <Link className="navbar-brand mx-2" to="/">
+					{/* ADD LOGO HERE */}
+					Nexus
                 </Link>
 
                 {/* Área direita */}
-                {user ? (
+                {isAuthenticated ? (
                     <div className="dropdown ms-auto">
                         <button
                             className="btn p-0 border-0 bg-transparent"
@@ -62,54 +101,59 @@ export function Navbar() {
                                 />
                             ) : (
                                 <div
-                                    className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center border-0"
+                                    className="rounded-circle bg-dark text-white d-flex justify-content-center align-items-center border-1"
                                     style={{
                                         width: "32px",
                                         height: "32px",
-                                        fontWeight: "300",
+                                        fontWeight: "800",
                                     }}
                                 >
-                                    {/*getInitials(user.name)*/}
+                                    {getInitials(user.name)}
                                 </div>
                             )}
                         </button>
 
-                        <ul className="dropdown-menu dropdown-menu-end shadow">
+                        <ul className="dropdown-menu dropdown-menu-end shadow" data-bs-theme='light'>
+							 <li className="dropdown-item p-0">
+								<div className="container my-0 py-0">
+                      		<h6 className="fw-bold">{user.name}</h6>
+                      		<small className="text-secondary">{user.email}</small>
+								</div>
+                    		</li>
+							<li>
+								<hr className='dropdown-divider'/>
+							</li>
+							 	<Link className="dropdown-item" to="/profile">
+                                     <GraphUp className="me-2" />Dashboard
+                                </Link>
                             <li>
                                 <Link className="dropdown-item" to="/profile">
-                                    Profile
+                                    <PersonCircle className="me-2" />Meu Perfil
                                 </Link>
                             </li>
                             <li>
                                 <Link className="dropdown-item" to="/settings">
-                                    Settings
+                                    <Gear className="me-2" />Configurações
                                 </Link>
                             </li>
                             <li>
                                 <hr className="dropdown-divider" />
                             </li>
                             <li>
-                                <button
+                                <button 
                                     type="button"
-                                    className="dropdown-item"
-                                    onClick={logout}
+                                    className="dropdown-item d-flex"
+                                    onClick={handleLogout}
                                 >
-                                    Sair
+                                    <span className='d-inline-block'>Sair</span><BoxArrowRight className="ms-auto" />
                                 </button>
                             </li>
                         </ul>
                     </div>
                 ) : (
-                    <ul className="navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <Link
-                                className="btn btn-outline-primary"
-                                to="/login"
-                            >
-                                Entrar
-                            </Link>
-                        </li>
-                    </ul>
+                     <Link to="/login" className="btn btn-outline-primary border-1 btn-sm ms-auto me-2">
+                    	Entrar
+                     </Link>
                 )}
 
                 {/* Offcanvas */}
@@ -121,7 +165,11 @@ export function Navbar() {
                 >
                     <div className="offcanvas-header d-lg-none">
                         <h5 className="offcanvas-title" id="mainOffcanvasLabel">
-                            Olá, {user.name.split(/\s+/)[0]}
+                            {isAuthenticated? (
+								<span>Olá, {user.name.split(/\s+/)[0]}</span>
+							):(
+								<span>Nexus Pro</span>
+							)}
                         </h5>
                         <button
                             type="button"
@@ -173,3 +221,4 @@ export function Navbar() {
         </nav>
     );
 }
+    

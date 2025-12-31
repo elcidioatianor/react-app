@@ -1,0 +1,6 @@
+#.prettierrc - when using tailwind add:
+
+}
+"plugins": ["prettier-plugin-tailwindcss"],
+"tailwindFunctions": ["clsx", "cva"]
+}

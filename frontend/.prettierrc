@@ -6,7 +6,5 @@
   "arrowParens": "avoid",
   "bracketSpacing": true,
   "jsxSingleQuote": true,
-  "printWidth": 120,
-  "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindFunctions": ["clsx", "cva"]
+  "printWidth": 80,
 }

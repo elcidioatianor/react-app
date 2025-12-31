@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 'user'
       },
 
-      refreshToken: {
+      refreshTokenHash: {
         type: DataTypes.TEXT,
         allowNull: true
       },

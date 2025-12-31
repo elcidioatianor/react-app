@@ -26,7 +26,8 @@ export function Register() {
     const {
         register,
         loading,
-        error: authError,
+        //error: authError,
+		//setError,
         isAuthenticated,
     } = useAuthContext();
     const { addNotification } = useNotification();
@@ -34,7 +35,7 @@ export function Register() {
 
     // Redirecionar se já estiver autenticado
     useEffect(() => {
-        if (isAuthenticated()) {
+        if (isAuthenticated) {
             navigate("/", { replace: true });
         }
     }, [isAuthenticated, navigate]);
@@ -140,15 +141,15 @@ export function Register() {
         setIsSubmitting(true);
 
         try {
-            const result = await register({
+            const res = await register({
                 name: userData.name,
                 email: userData.email,
                 password: userData.password,
             });
 
-            if (result.success) {
-                addNotification(
-                    "Cadastro realizado com sucesso! Faça login para continuar.",
+            if (res.done) {
+                addNotification(//
+                    "Registrado com sucesso",
                     "success",
                 );
 
@@ -156,15 +157,17 @@ export function Register() {
 				//TODO: REDIRECIONAR PARA CONFIRMAÇÃO DE E-MAIL/TELEFONE OU CARREGAR AVATAR
                 navigate("/login", {
                     state: {
-                        message: "Cadastro realizado com sucesso! Faça login para continuar.",
+                        message: "Registrado com sucesso!",
                     },
                 });
             } else {
-                addNotification(result.error || "Falha no cadastro", "error");
+                addNotification(res.error || "Erro no registro", "error");
+				setError(null);
+
             }
         } catch (err) {
-            console.error("Erro no cadastro:", err);
-            addNotification("Erro ao processar cadastro", "error");
+            console.error("Erro no registro: " + err.message, err);
+            addNotification("Erro no registro", "error");
         } finally {
             setIsSubmitting(false);
         }
@@ -177,12 +180,6 @@ export function Register() {
                     <h1 className="auth-title">Criar Conta</h1>
                     <p className="auth-subtitle">Junte-se a nós hoje mesmo</p>
                 </div>
-
-                {authError && (
-                    <div className="auth-error-alert">
-                        {authError && <p>{authError}</p>}
-                    </div>
-                )}
 
                 <form onSubmit={handleSubmit} className="auth-form">
                     <div className="form-group">

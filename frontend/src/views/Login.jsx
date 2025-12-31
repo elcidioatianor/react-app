@@ -1,5 +1,5 @@
 // src/pages/Login.jsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 //import { useFetch } from '../hooks/useApi';
@@ -22,7 +22,8 @@ export function Login() {
     const {
         login,
         loading,
-        error: authError,
+        //error: authError,
+		//setError,
         isAuthenticated,
     } = useAuthContext();
     const { addNotification } = useNotification();
@@ -31,7 +32,7 @@ export function Login() {
 
     // Redirecionar se já estiver autenticado
     useEffect(() => {
-        if (isAuthenticated()) {
+        if (isAuthenticated) {
             const from = location.state?.from?.pathname || "/";
             navigate(from, { replace: true });
         }
@@ -58,7 +59,7 @@ export function Login() {
         } else if (credentials.password.length < 6) {
             errors.password = "Senha deve ter pelo menos 6 caracteres";
         }
-		console.log(credentials)
+		//console.log(credentials)
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -89,10 +90,10 @@ export function Login() {
         setIsSubmitting(true);
 
         try {
-            const result = await login(credentials);
-
-            if (result.success) {
-                addNotification("Login realizado com sucesso!", "success");
+            const res = await login(credentials);
+			
+            if (res.done) {
+                addNotification("Sessão iniciada", "success");
 
                 // Armazenar preferência de "lembrar-me"
                 if (credentials.remember) {
@@ -105,11 +106,12 @@ export function Login() {
                 const from = location.state?.from?.pathname || "/";
                 navigate(from, { replace: true });
             } else {
-                addNotification(result.error || "Falha no login", "error");
+                addNotification(res.error || "Erro no login", "error");
+				//setError(null)
             }
         } catch (err) {
             console.error("Erro no login:", err);
-            addNotification("Erro ao processar login", "error");
+            addNotification("Erro no login: " + err.message, "error");
         } finally {
             setIsSubmitting(false);
         }
@@ -139,17 +141,13 @@ export function Login() {
     };
 
     return (
-        <div className="auth-container">
+        <div className="auth-container" data-bs-theme="dark">
             <div className="auth-card">
                 <div className="auth-header">
                     <h1 className="auth-title">Bem-vindo de volta</h1>
                     <p className="auth-subtitle">Faça login para continuar</p>
                 </div>
-				{authError && (
-                    <div className="auth-error-alert">
-                        {authError && <p>{authError}</p>}
-                    </div>
-                )}
+				
                 <form onSubmit={handleSubmit} className="auth-form">
                     <div className="form-group">
                         <label htmlFor="email" className="form-label">

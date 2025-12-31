@@ -21,7 +21,14 @@ export default defineConfig({
                 changeOrigin: true,
                 secure: false
             }
-        }
+        },
+		headers: {
+			'Cache-Control': 'no-store'
+		},
+		hmr: {
+			protocol: 'ws',
+			host: 'localhost'
+		}
     },
     envDir: './env',
     build: {
@@ -30,7 +37,7 @@ export default defineConfig({
             output: {
                 manualChunks: {
                     vendor: ['react', 'react-dom'],
-                    xhr: ['./src/assets/js/xhr.js']
+                    xhr: ['./src/services/xhr.js']
                 }
             }
         }

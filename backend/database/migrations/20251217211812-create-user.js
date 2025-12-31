@@ -34,7 +34,7 @@ module.exports = {
         defaultValue: 'user'
       },
 
-      refreshToken: {
+      refreshTokenHash: {
         type: Sequelize.TEXT,
         allowNull: true
       },

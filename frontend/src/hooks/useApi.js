@@ -1,6 +1,6 @@
 // src/hooks/useApi.js
 import { useState, useCallback, useEffect, useRef } from "react";
-import { xhrClient } from "../services/api";
+import { xhr } from "../services/api";
 import { useAuthContext } from "../contexts/AuthContext";
 
 export const useApi = (options = {}) => {
@@ -21,7 +21,7 @@ export const useApi = (options = {}) => {
     const execute = useCallback(
         async (path, config = {}) => {
             // Verificar autenticação se necessário
-            if (defaultOptions.requireAuth && !isAuthenticated()) {
+            if (defaultOptions.requireAuth && !isAuthenticated) {
                 throw new Error("Autenticação necessária");
             }
 
@@ -37,7 +37,7 @@ export const useApi = (options = {}) => {
             setError(null);
 
             try {
-                const response = await xhrClient.request(path, {
+                const response = await xhr.request(path, {
                     ...config,
                     signal: abortControllerRef.current.signal,
                 });

@@ -1,0 +1,193 @@
+body {
+            background-color: #f8f9fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 320px;
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            z-index: 1000;
+        }
+        
+        .main-content {
+            margin-left: 320px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .nav-link.active {
+            color: #0d6efd !important;
+            background-color: rgba(13, 110, 253, 0.1) !important;
+            border-right: 4px solid #0d6efd;
+        }
+        
+        .nav-link {
+            color: #6c757d;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            color: #0d6efd !important;
+        }
+        
+        .header {
+            background-color: white;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        .search-box {
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 20px;
+            padding-left: 40px;
+        }
+        
+        .search-box:focus {
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border-radius: 16px;
+        }
+        
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        .badge-sm {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        .avatar-group img {
+            width: 40px;
+            height: 40px;
+            border: 3px solid white;
+            margin-left: -10px;
+        }
+        
+        .avatar-group img:first-child {
+            margin-left: 0;
+        }
+        
+        .task-item {
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .calendar-day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .calendar-day.today {
+            background-color: #0d6efd;
+            color: white;
+            border-radius: 50%;
+        }
+        
+        .calendar-day.event {
+            position: relative;
+        }
+        
+        .calendar-day.event::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        
+        .calendar-day.event.blue::after {
+            background-color: #0d6efd;
+        }
+        
+        .calendar-day.event.yellow::after {
+            background-color: #ffc107;
+        }
+        
+        .calendar-day.event.red::after {
+            background-color: #dc3545;
+        }
+        
+        .message-item {
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .message-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Dark mode styles (simplified) */
+        .dark-mode .sidebar {
+            background-color: #343a40;
+        }
+        
+        .dark-mode .header {
+            background-color: #343a40;
+            color: white;
+        }
+        
+        .dark-mode .card {
+            background-color: #343a40;
+            color: white;
+        }
+        
+        .dark-mode .nav-link {
+            color: #adb5bd;
+        }
+        
+        .dark-mode .search-box {
+            background-color: #495057;
+            color: white;
+        }
+        
+        .dark-mode .search-box::placeholder {
+            color: #adb5bd;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar-mobile-show {
+                display: block !important;
+            }
+        }
