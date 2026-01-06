@@ -1,17 +1,18 @@
 require('dotenv').config()
 
 module.exports = {
-	"use_env_variable": false,
+  "use_env_variable": false,
   "development": {
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
     "database": process.env.DEV_DATABASE,
     "host": process.env.DB_HOST,
-    "dialect": process.env.DB_DIALECT,
-	define: {
-		freezeTableName: true,
-		underscored: true
-	}
+    "dialect": process.env.DB_DIALECT || 'sqlite',
+    "storage": process.env.DB_DIALECT === 'sqlite' ? './database.sqlite' : undefined,
+    define: {
+      freezeTableName: true,
+      underscored: true
+    }
   },
   "test": {
     "username": process.env.DB_USERNAME,

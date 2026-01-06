@@ -15,6 +15,7 @@ export function Register() {
         email: "",
         password: "",
         confirmPassword: "",
+        role: "client",
         acceptTerms: false,
     });
 
@@ -27,7 +28,7 @@ export function Register() {
         register,
         loading,
         //error: authError,
-		//setError,
+        //setError,
         isAuthenticated,
     } = useAuthContext();
     const { addNotification } = useNotification();
@@ -130,7 +131,7 @@ export function Register() {
         if (passwordStrength === 3) return "#3498db";
         return "#27ae60";
     };
-    
+
     const handleSocialLogin = (provider) => {
         addNotification(
             `Cadastro com ${provider} em desenvolvimento`,
@@ -152,6 +153,7 @@ export function Register() {
                 name: userData.name,
                 email: userData.email,
                 password: userData.password,
+                role: userData.role,
             });
             console.log(res);
             if (res.done) {
@@ -161,14 +163,14 @@ export function Register() {
                 );
 
                 // Redirecionar para login
-				//TODO: REDIRECIONAR PARA CONFIRMAÇÃO DE E-MAIL/TELEFONE OU CARREGAR AVATAR
+                //TODO: REDIRECIONAR PARA CONFIRMAÇÃO DE E-MAIL/TELEFONE OU CARREGAR AVATAR
                 navigate("/login", {
                     state: {
                         message: "Registrado com sucesso!",
                     },
                 });
             } else {
-                
+
                 addNotification(res.error || "Erro no registro", "error");
                 setIsSubmitting(false);
             }
@@ -234,6 +236,23 @@ export function Register() {
                     </div>
 
                     <div className="form-group">
+                        <label htmlFor="role" className="form-label">
+                            Eu quero:
+                        </label>
+                        <select
+                            id="role"
+                            name="role"
+                            value={userData.role}
+                            onChange={handleInputChange}
+                            className="form-input"
+                            disabled={loading || isSubmitting}
+                        >
+                            <option value="client">Comprar produtos (Cliente)</option>
+                            <option value="seller">Vender produtos (Vendedor)</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
                         <label htmlFor="password" className="form-label">
                             Senha:
                         </label>
@@ -255,7 +274,7 @@ export function Register() {
                                 onClick={() => setShowPassword(!showPassword)}
                                 disabled={loading || isSubmitting}
                             >
-                                 {showPassword ? <EyeSlashFill color='#888' width='20' height='20'/> : <EyeFill color='#888' width='20' height='20'/>}
+                                {showPassword ? <EyeSlashFill color='#888' width='20' height='20' /> : <EyeFill color='#888' width='20' height='20' />}
                             </button>
                         </div>
 
@@ -305,7 +324,7 @@ export function Register() {
                                 <li
                                     className={
                                         /[a-z]/.test(userData.password) &&
-                                        /[A-Z]/.test(userData.password)
+                                            /[A-Z]/.test(userData.password)
                                             ? "hint-valid"
                                             : ""
                                     }
@@ -462,7 +481,7 @@ export function Register() {
                             </svg>
                             GitHub
                         </button>
-						
+
                     </div>
 
                     <div className="auth-footer">
