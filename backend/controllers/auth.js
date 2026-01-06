@@ -74,9 +74,9 @@ exports.register = async (req, res) => {
   const error = new AuthError(error_codes.EREGISTER)
   let status = 500;
   try {
-    const { name, email, password, role } = req.body
+    const { name, phone, email, password, role } = req.body
 
-    if (!name || !email || !password) {//400 (Bad Request)
+    if (!name || !phone || !password) {//400 (Bad Request)
       error.code = error_codes.ENOCREDENTIALS;
       status = 400;
 
@@ -84,21 +84,30 @@ exports.register = async (req, res) => {
     }
 
     const exists = await User.findOne({
-      where: { email }
+      where: { phone }
     })
 
-    if (exists) {//409: TODO: HANDLE THIS CORRECTLY (PROMPT USER TO RECOVER ITS PASSWORD)
+    if (exists) {
       error.code = error_codes.EEXIST;
       status = 409;
+      throw error;
+    }
 
-      throw error; //'E-mail exists
+    if (email) {
+      const emailExists = await User.findOne({ where: { email } });
+      if (emailExists) {
+        error.code = error_codes.EEXIST;
+        status = 409;
+        throw error;
+      }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const user = await User.create({
       name,
-      email,
+      phone,
+      email: email || null,
       password: hashedPassword,
       role: role
     })
@@ -135,10 +144,13 @@ exports.login = async (req, res) => {
   const error = new AuthError(error_codes.ELOGIN)
   let status = 500;
   try {
-    const { email, password } = req.body
+    const { credential, password } = req.body
 
+    // Determinar se credential é email ou telefone
+    const isEmail = credential.includes('@');
+    const whereClause = isEmail ? { email: credential } : { phone: credential };
 
-    const user = await User.findOne({ where: { email } })
+    const user = await User.findOne({ where: whereClause })
 
     if (!user) {//401
       error.code = error_codes.ENOEXIST;

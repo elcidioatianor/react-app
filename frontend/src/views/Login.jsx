@@ -5,8 +5,8 @@ import { useAuthContext } from "../contexts/AuthContext";
 //import { useFetch } from '../hooks/useApi';
 import { useNotification } from "../contexts/NotificationContext";
 //ICONES
-import { 
-    EyeFill, 
+import {
+    EyeFill,
     EyeSlashFill,
     GithubLogo,
     GoogleLogo
@@ -16,7 +16,7 @@ import "./Auth.css";
 
 export function Login() {
     const [credentials, setCredentials] = useState({
-        email: "",
+        credential: "",
         password: "",
         rememberMe: false,
     });
@@ -28,7 +28,7 @@ export function Login() {
         login,
         loading,
         //error: authError,
-		//setError,
+        //setError,
         isAuthenticated,
     } = useAuthContext();
     const { addNotification } = useNotification();
@@ -53,10 +53,8 @@ export function Login() {
     const validateForm = () => {
         const errors = {};
 
-        if (!credentials.email.trim()) {
-            errors.email = "Email é obrigatório";
-        } else if (!/\S+@\S+\.\S+/.test(credentials.email)) {
-            errors.email = "Email inválido";
+        if (!credentials.credential.trim()) {
+            errors.credential = "Informe seu telefone ou email";
         }
 
         if (!credentials.password) {
@@ -64,7 +62,7 @@ export function Login() {
         } else if (credentials.password.length < 6) {
             errors.password = "Senha deve ter pelo menos 6 caracteres";
         }
-		//console.log(credentials)
+        //console.log(credentials)
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -96,7 +94,7 @@ export function Login() {
 
         try {
             const res = await login(credentials);
-			
+
             if (res.done) {
                 addNotification("Sessão iniciada", "success");
 
@@ -112,7 +110,7 @@ export function Login() {
                 navigate(from, { replace: true });
             } else {
                 addNotification(res.error || "Erro no login", "error");
-				//setError(null)
+                //setError(null)
             }
         } catch (err) {
             console.error("Erro no login:", err);
@@ -135,7 +133,7 @@ export function Login() {
             // Integração com endpoint de recuperação de senha
             // await api.post('/auth/forgot-password', { email: credentials.email });
             addNotification("Email de recuperação enviado!", "success");
-        } catch(err) {
+        } catch (err) {
             addNotification("Erro ao enviar email de recuperação: " + err.message, "error");
         }
     };
@@ -152,26 +150,26 @@ export function Login() {
                     <h1 className="auth-title">Bem-vindo de volta</h1>
                     <p className="auth-subtitle">Faça login para continuar</p>
                 </div>
-				
+
                 <form onSubmit={handleSubmit} className="auth-form">
                     <div className="form-group">
-                        <label htmlFor="email" className="form-label">
-                            Endereço de mail:
+                        <label htmlFor="credential" className="form-label">
+                            Número de Celular ou E-mail:
                         </label>
                         <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={credentials.email}
+                            type="text"
+                            id="credential"
+                            name="credential"
+                            value={credentials.credential}
                             onChange={handleInputChange}
-                            className={`form-input ${validationErrors.email ? "input-error" : ""}`}
-                            placeholder="Seu endereço de e-mail"
+                            className={`form-input ${validationErrors.credential ? "input-error" : ""}`}
+                            placeholder="Ex: +258841234567 ou email@exemplo.com"
                             disabled={loading || isSubmitting}
-                            autoComplete="email"
+                            autoComplete="username"
                         />
-                        {validationErrors.email && (
+                        {validationErrors.credential && (
                             <span className="error-message">
-                                {validationErrors.email}
+                                {validationErrors.credential}
                             </span>
                         )}
                     </div>
@@ -198,7 +196,7 @@ export function Login() {
                                 onClick={() => setShowPassword(!showPassword)}
                                 disabled={loading || isSubmitting}
                             >
-                                {showPassword ? <EyeSlashFill color='#888' width='20' height='20'/> : <EyeFill color='#888' width='20' height='20'/>}
+                                {showPassword ? <EyeSlashFill color='#888' width='20' height='20' /> : <EyeFill color='#888' width='20' height='20' />}
                             </button>
                         </div>
                         {validationErrors.password && (

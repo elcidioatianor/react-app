@@ -12,6 +12,8 @@ import { EyeFill, EyeSlashFill } from '../components/Svg';
 export function Register() {
     const [userData, setUserData] = useState({
         name: "",
+        name: "",
+        phone: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -75,9 +77,11 @@ export function Register() {
             errors.name = "Nome deve ter pelo menos 2 caracteres";
         }
 
-        if (!userData.email.trim()) {
-            errors.email = "Email é obrigatório";
-        } else if (!/\S+@\S+\.\S+/.test(userData.email)) {
+        if (!userData.phone.trim()) {
+            errors.phone = "Telefone é obrigatório";
+        }
+
+        if (userData.email && !/\S+@\S+\.\S+/.test(userData.email)) {
             errors.email = "Email inválido";
         }
 
@@ -151,6 +155,7 @@ export function Register() {
         try {
             const res = await register({
                 name: userData.name,
+                phone: userData.phone,
                 email: userData.email,
                 password: userData.password,
                 role: userData.role,
@@ -229,7 +234,7 @@ export function Register() {
                             value={userData.email}
                             onChange={handleInputChange}
                             className={`form-input ${validationErrors.email ? "input-error" : ""}`}
-                            placeholder="Seu e-mail"
+                            placeholder="Seu e-mail (Opcional)"
                             disabled={loading || isSubmitting}
                             autoComplete="email"
                         />
