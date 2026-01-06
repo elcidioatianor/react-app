@@ -157,18 +157,23 @@ export function Register() {
             });
             console.log(res);
             if (res.done) {
-                addNotification(//
+                addNotification(
                     "Registrado com sucesso",
                     "success",
                 );
 
+                addNotification(
+                    //"Verifique seu e-mail para confirmar o cadastro",
+                    "Faça login para continuar",
+                    "info"
+                );
                 // Redirecionar para login
                 //TODO: REDIRECIONAR PARA CONFIRMAÇÃO DE E-MAIL/TELEFONE OU CARREGAR AVATAR
-                navigate("/login", {
+                /*navigate("/login", {
                     state: {
                         message: "Registrado com sucesso!",
                     },
-                });
+                });*/
             } else {
 
                 addNotification(res.error || "Erro no registro", "error");

@@ -29,9 +29,9 @@ module.exports = {
       },
 
       role: {
-        type: Sequelize.ENUM('user', 'admin'),
+        type: Sequelize.ENUM('client', 'seller', 'admin'),
         allowNull: false,
-        defaultValue: 'user'
+        defaultValue: 'client'
       },
 
       refreshTokenHash: {

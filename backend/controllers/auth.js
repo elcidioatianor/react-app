@@ -74,7 +74,7 @@ exports.register = async (req, res) => {
   const error = new AuthError(error_codes.EREGISTER)
   let status = 500;
   try {
-    const { name, email, password } = req.body
+    const { name, email, password, role } = req.body
 
     if (!name || !email || !password) {//400 (Bad Request)
       error.code = error_codes.ENOCREDENTIALS;
@@ -100,7 +100,7 @@ exports.register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || 'client'
+      role: role
     })
 
     //LOGAR USUÁRIO IMEDIATAMENTE 
@@ -117,7 +117,7 @@ exports.register = async (req, res) => {
     setRefreshToken(res, refreshToken)
 
     return res.status(201).json({//201
-      message: 'Usuário criado com sucesso', //TODO; REMOVE THIS MESSAGE
+      message: 'Usuário criado com sucesso',
       user: {
         id: user.id,
         name: user.name,
@@ -126,6 +126,7 @@ exports.register = async (req, res) => {
       accessToken
     })
   } catch (err) {
+    console.error(err)
     return res.status(status).json({ code: error.code })
   }
 }

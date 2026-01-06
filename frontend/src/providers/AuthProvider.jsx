@@ -4,7 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { xhr } from "../services/api";
 //const {EREFRESH, ENOACCESS, EREFRESH_EXPIRED}  = errors;
 import { LoadingOverlay } from "../components/LoadingOverlay";
-import {AUTH_ERROR} from '../services/errors'
+import { AUTH_ERROR } from '../services/errors'
 
 //Provider é o elemento (wrapper) que encapsula o Context,
 //mas parq usar o valor temos que ler do proprio Context
@@ -16,14 +16,14 @@ export function AuthProvider({ children }) {
 
     // Verificar autenticação inicial
     useEffect(() => {
-        chackAuthentication()
+        checkAuthentication()
 
-		return () => {
-			//CLEANUP HERE (LISTENERS, ETC)
-		}
+        return () => {
+            //CLEANUP HERE (LISTENERS, ETC)
+        }
     }, []);
-	const chackAuthentication = async () =>{
-		try {
+    const checkAuthentication = async () => {
+        try {
             //TENTAR CARREGAR USUÁRIO 
             const res = await xhr.post("/auth/profile", {});
 
@@ -41,18 +41,18 @@ export function AuthProvider({ children }) {
                 setLoading(false)
             }
         } catch (err) {//ANALISAR ERRO: EREFRESH OU REFRESH_EXPIRY, ENOACCESS
-			if (window.location.path !== '/') {
-				//PERMITIR USUÁRIO SEM SESSÃO NA PÁGINA INICIAL:
-				//window.location.href = '/login'
-			}
+            if (window.location.path !== '/') {
+                //PERMITIR USUÁRIO SEM SESSÃO NA PÁGINA INICIAL:
+                //window.location.href = '/login'
+            }
             console.error("Erro ao renovar sessão")
-			console.error(err);
-			
-			setLoading(false)
+            console.error(err);
+
+            setLoading(false)
             setError(err);
         }
 
-	}
+    }
     // Registrar
     const register = async (formData) => {
         //setLoading(true);
@@ -69,22 +69,22 @@ export function AuthProvider({ children }) {
             if (!userData || !accessToken) {
                 throw new Error("Dados de autenticação incompletos");
             }
-			
+
             // Refresh token pode ser armazenado em cookie httpOnly
             setUser(userData); //TODO: PRECISAMOS MESMO DE RETORNAR DADOS, OU SETUSER() JÁ BASTA?
             setAuthenticated(true);
             setError(null)
 
-            return {done: true}; //return boolean
+            return { done: true }; //return boolean
             //}
         } catch (err) {//TODO: HANDLE ERR.RESPONSE.JSON 
             console.log(err)
             let errorText = AUTH_ERROR[err.code] || err.message || 'Erro ao registrar usuário';
 
             setError(errorText)
-            setAuthenticated(true);
-			//setLoading(false)
-            return {done: false, error: errorText}
+            setAuthenticated(false);
+            //setLoading(false)
+            return { done: false, error: errorText }
         }
     };
 
@@ -103,38 +103,38 @@ export function AuthProvider({ children }) {
             setAuthenticated(true);
             setError(null);
 
-            return {done: true};
+            return { done: true };
         } catch (err) {//401 OU ERRO DE REDE
-			console.log(AUTH_ERROR)
-			console.log(err)
+            console.log(AUTH_ERROR)
+            console.log(err)
             let errorText = AUTH_ERROR[err.code] || 'Erro ao entrar'
-			
+
             setError(errorText);
             setAuthenticated(false)
-			//setLoading(false)
-            return {done: false, error: errorText};
+            //setLoading(false)
+            return { done: false, error: errorText };
         }
     };
 
     // Logout
     const logout = async () => {
-		try {
-         	// 3. Opcional: Chamar API para invalidar token
-        	await xhr.post('/auth/logout', {})
+        try {
+            // 3. Opcional: Chamar API para invalidar token
+            await xhr.post('/auth/logout', {})
 
-        	// Limpar estado
-        	setUser(null);
-        	setError(null);
-        	setAuthenticated(false)
+            // Limpar estado
+            setUser(null);
+            setError(null);
+            setAuthenticated(false)
 
-        // 4. Redirecionar (se estiver usando router)
-        // navigate('/login');
-        console.log('Logout OK!')
-        // Disparar evento global
-			return true
-		} catch(err) {
-			return { done: false, error: err.message};
-		}
+            // 4. Redirecionar (se estiver usando router)
+            // navigate('/login');
+            console.log('Logout OK!')
+            // Disparar evento global
+            return true
+        } catch (err) {
+            return { done: false, error: err.message };
+        }
     };
 
     //TODO: CONVERTER EM BOOLEAN
@@ -154,8 +154,8 @@ export function AuthProvider({ children }) {
     // Valor do contexto
     const contextValue = {
         user,
-		error,
-		setError,
+        error,
+        setError,
         loading,
         register,
         login,
