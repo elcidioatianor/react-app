@@ -7,10 +7,10 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
     plugins: [
         react({
-			babel: {
-        		plugins: ['babel-plugin-react-compiler'],
-			},
-		}),
+            babel: {
+                plugins: ['babel-plugin-react-compiler'],
+            },
+        }),
         //tailwindcss()
     ],
     server: {
@@ -25,15 +25,35 @@ export default defineConfig({
                 target: 'http://localhost:3001',
                 changeOrigin: true,
                 secure: false
+            },
+            '/products': {
+                target: 'http://localhost:3001',
+                changeOrigin: true,
+                secure: false
+            },
+            '/orders': {
+                target: 'http://localhost:3001',
+                changeOrigin: true,
+                secure: false
+            },
+            '/chat': {
+                target: 'http://localhost:3001',
+                changeOrigin: true,
+                secure: false
+            },
+            '/stores': {
+                target: 'http://localhost:3001',
+                changeOrigin: true,
+                secure: false
             }
         },
-		headers: {
-			'Cache-Control': 'no-store'
-		},
-		hmr: {
-			protocol: 'ws',
-			host: 'localhost'
-		}
+        headers: {
+            'Cache-Control': 'no-store'
+        },
+        hmr: {
+            protocol: 'ws',
+            host: 'localhost'
+        }
     },
     envDir: './env',
     build: {

@@ -1,13 +1,12 @@
 // src/pages/Register.jsx
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../contexts/AuthContext"; //useAuthentication/AuthenticationProvider
-//import { useFetch } from '../hooks/useApi';
-import { useNotification } from "../contexts/NotificationContext";
-import "./Auth.css";
+import { useAuthContext } from "../../contexts/AuthContext"; //useAuthentication/AuthenticationProvider
+//import { useFetch } from '../../hooks/useApi';
+import { useNotification } from "../../contexts/NotificationContext";
 
 //ICONES
-import { EyeFill, EyeSlashFill } from '../components/Svg';
+import { EyeFill, EyeSlashFill } from '../../components/Svg';
 
 export function Register() {
     const [userData, setUserData] = useState({

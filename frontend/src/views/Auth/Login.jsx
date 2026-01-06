@@ -1,18 +1,17 @@
 // src/pages/Login.jsx
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuthContext } from "../contexts/AuthContext";
-//import { useFetch } from '../hooks/useApi';
-import { useNotification } from "../contexts/NotificationContext";
+import { useAuthContext } from "../../contexts/AuthContext";
+//import { useFetch } from '../../hooks/useApi';
+import { useNotification } from "../../contexts/NotificationContext";
 //ICONES
 import {
     EyeFill,
     EyeSlashFill,
     GithubLogo,
     GoogleLogo
-} from '../components/Svg';
+} from '../../components/Svg';
 
-import "./Auth.css";
 
 export function Login() {
     const [credentials, setCredentials] = useState({
@@ -106,7 +105,7 @@ export function Login() {
                 }
 
                 // Redirecionar para página anterior ou dashboard
-                const from = location.state?.from?.pathname || "/";
+                const from = location.state?.from?.pathname || (res.user?.role === 'seller' ? "/seller/dashboard" : "/");
                 navigate(from, { replace: true });
             } else {
                 addNotification(res.error || "Erro no login", "error");

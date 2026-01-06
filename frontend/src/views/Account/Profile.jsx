@@ -64,10 +64,10 @@ import {
   Instagram,
   Linkedin,
   Github
-} from '../components/Svg';
+} from '../../components/Svg';
 
-import { useAuthContext as useAuth } from '../contexts/AuthContext';
-import { useApi } from '../hooks/useApi';
+import { useAuthContext as useAuth } from '../../contexts/AuthContext';
+import { useApi } from '../../hooks/useApi';
 
 export const Profile = () => {
   const { user: currentUser, logout, updateProfile } = useAuth();

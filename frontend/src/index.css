@@ -1,46 +1,54 @@
 /*@import 'tailwindcss';*/
 @font-face {
-  font-family: 'Source Sans Pro'; /* A unique name for your font */
+  font-family: 'Source Sans Pro';
+  /* A unique name for your font */
   src: url('/fonts/SourceSansPro-Regular.woff2') format('woff2'),
-       url('fonts/MyCustomFont.woff') format('woff'); /* Path to font files with format hints */
-	font-display: swap;
+    url('fonts/MyCustomFont.woff') format('woff');
+  /* Path to font files with format hints */
+  font-display: swap;
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Source Sans Pro'; /* A unique name for your font */
+  font-family: 'Source Sans Pro';
+  /* A unique name for your font */
   src: url('/fonts/source-sans-pro-v14-latin-600.woff2') format('woff2'),
-       url('fonts/source-sans-pro-v14-latin-600.woff') format('woff'); /* Path to font files with format hints */
-	font-display: swap;
+    url('fonts/source-sans-pro-v14-latin-600.woff') format('woff');
+  /* Path to font files with format hints */
+  font-display: swap;
   font-weight: 600;
   font-style: normal;
 }
+
 @font-face {
-  font-family: 'Source Sans Pro'; /* A unique name for your font */
+  font-family: 'Source Sans Pro';
+  /* A unique name for your font */
   src: url('/fonts/source-sans-pro-v14-latin-700.woff2') format('woff2'),
-       url('fonts/source-sans-pro-v14-latin-700.woff') format('woff'); /* Path to font files with format hints */
-	font-display: swap;
+    url('fonts/source-sans-pro-v14-latin-700.woff') format('woff');
+  /* Path to font files with format hints */
+  font-display: swap;
   font-weight: 700;
   font-style: normal;
 }
 
 /* Then, apply the font using the defined name */
 body {
-	font-family: 'Source Sans Pro', -apple-system, system-ui, BlinkMacSystemFont, 'SegoeUI', Verdana, Avenir, Helvetica, Arial, Roboto, Oxygen, Ubuntu, sans-serif; /* Include a fallback font */
-	line-height: 1.5;
-	font-weight: 400;
-	font-synthesis: none;
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	background-color: #eee;
+  font-family: 'Source Sans Pro', -apple-system, system-ui, BlinkMacSystemFont, 'SegoeUI', Verdana, Avenir, Helvetica, Arial, Roboto, Oxygen, Ubuntu, sans-serif;
+  /* Include a fallback font */
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #eee;
 }
 
 .logo-cont {
-	width: 32px;
-	height: 32px;
-	border-radius: 50% !important;
+  width: 32px;
+  height: 32px;
+  border-radius: 50% !important;
 }
 
 .bg-gradient-primary {
@@ -48,22 +56,24 @@ body {
 }
 
 :root {
-	color-scheme: light dark;
-	color: rgba(255, 255, 255, 0.87);
-	background-color: #f5f5f5;
-	--bs-primary: #667eea;/*CUSTOM COLORS*/
-    --bs-secondary: #764ba2;
-  /*background-color: #242424; FOR DARK MODE*/
+  color-scheme: light dark;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #f5f5f5;
+  --bs-primary: #FF6000;
+  /* DUBANING ORANGE */
+  --bs-secondary: #333333;
+  --bs-primary-rgb: 255, 96, 0;
 }
 
 input {
-	font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 /* Standard syntax */
 ::placeholder {
   font-family: 'Source Sans Pro', sans-serif;
-  opacity: 1; /* Fixes Firefox's default opacity */
+  opacity: 1;
+  /* Fixes Firefox's default opacity */
 }
 
 /* Chrome, Safari, Opera */
@@ -85,26 +95,25 @@ input {
 /* src/index.css */
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-	-webkit-tap-highlight-color:transparent;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ORIGINAL */
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: var(--bs-primary);
+  text-decoration: none;
 }
+
 a:hover {
-  color: #535bf2;
+  opacity: 0.8;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -129,6 +138,7 @@ h6 {
     color: #213547;
     background-color: #fff;
   }
+
   a:hover {
     color: #747bff;
   }
