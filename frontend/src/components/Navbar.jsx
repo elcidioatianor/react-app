@@ -29,6 +29,7 @@ export function Navbar() {
         }
     };
 
+    //
     return (
         <nav className="navbar navbar-expand-lg fixed-top bg-dark" data-bs-theme='dark'>
             <div className="container-fluid">
@@ -184,7 +185,7 @@ export function Navbar() {
                     </div>
                 ) : (
                     <Link to="/login" className="btn btn-outline-primary border-1 btn-sm ms-auto me-2">
-                        Entrar
+                        Entrar agora
                     </Link>
                 )}
             </div>
