@@ -49,6 +49,7 @@ export function Navbar() {
         }
     };
 
+    //
     return (
         <nav className="navbar navbar-expand-lg fixed-top bg-dark" data-bs-theme='dark'>
             <div className="container-fluid">
