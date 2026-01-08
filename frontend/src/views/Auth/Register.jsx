@@ -1,16 +1,12 @@
-// src/pages/Register.jsx
-import React, { useState, useEffect } from "react";
+// src/views/Auth/Register.jsx
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../contexts/AuthContext"; //useAuthentication/AuthenticationProvider
-//import { useFetch } from '../../hooks/useApi';
+import { useAuthContext } from "../../contexts/AuthContext";
 import { useNotification } from "../../contexts/NotificationContext";
-
-//ICONES
 import { EyeFill, EyeSlashFill } from '../../components/Svg';
 
 export function Register() {
     const [userData, setUserData] = useState({
-        name: "",
         name: "",
         phone: "",
         email: "",
@@ -25,132 +21,61 @@ export function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const {
-        register,
-        loading,
-        //error: authError,
-        //setError,
-        isAuthenticated,
-    } = useAuthContext();
+    const { register, loading, isAuthenticated } = useAuthContext();
     const { addNotification } = useNotification();
     const navigate = useNavigate();
 
-    // Redirecionar se já estiver autenticado
     useEffect(() => {
         if (isAuthenticated) {
             navigate("/", { replace: true });
         }
     }, [isAuthenticated, navigate]);
 
-    // Calcular força da senha
     useEffect(() => {
         if (!userData.password) {
             setPasswordStrength(0);
             return;
         }
-
         let strength = 0;
-
-        // Comprimento mínimo
         if (userData.password.length >= 8) strength++;
-
-        // Contém números
         if (/\d/.test(userData.password)) strength++;
-
-        // Contém letras minúsculas e maiúsculas
-        if (/[a-z]/.test(userData.password) && /[A-Z]/.test(userData.password))
-            strength++;
-
-        // Contém caracteres especiais
+        if (/[a-z]/.test(userData.password) && /[A-Z]/.test(userData.password)) strength++;
         if (/[!@#$%^&*(),.?":{}|<>]/.test(userData.password)) strength++;
-
         setPasswordStrength(strength);
     }, [userData.password]);
 
     const validateForm = () => {
         const errors = {};
-
-        if (!userData.name.trim()) {
-            errors.name = "Nome é obrigatório";
-        } else if (userData.name.trim().length < 2) {
-            errors.name = "Nome deve ter pelo menos 2 caracteres";
-        }
-
-        if (!userData.phone.trim()) {
-            errors.phone = "Telefone é obrigatório";
-        }
-
-        if (userData.email && !/\S+@\S+\.\S+/.test(userData.email)) {
-            errors.email = "Email inválido";
-        }
-
-        if (!userData.password) {
-            errors.password = "Senha é obrigatória";
-        } else if (userData.password.length < 6) {
-            errors.password = "Senha deve ter pelo menos 6 caracteres";
-        }
-
-        if (!userData.confirmPassword) {
-            errors.confirmPassword = "Confirme sua senha";
-        } else if (userData.password !== userData.confirmPassword) {
-            errors.confirmPassword = "As senhas não coincidem";
-        }
-
-        if (!userData.acceptTerms) {
-            errors.acceptTerms = "Você deve aceitar os termos de uso";
-        }
-
+        if (!userData.name.trim()) errors.name = "Nome é obrigatório";
+        if (!userData.phone.trim()) errors.phone = "Telefone é obrigatório";
+        if (userData.email && !/\S+@\S+\.\S+/.test(userData.email)) errors.email = "Email inválido";
+        if (!userData.password) errors.password = "Senha é obrigatória";
+        else if (userData.password.length < 6) errors.password = "Mínimo 6 caracteres";
+        if (!userData.confirmPassword) errors.confirmPassword = "Confirme sua senha";
+        else if (userData.password !== userData.confirmPassword) errors.confirmPassword = "As senhas não coincidem";
+        if (!userData.acceptTerms) errors.acceptTerms = "Aceite os termos";
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
     };
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setUserData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
-
-        // Limpar erro do campo
-        if (validationErrors[name]) {
-            setValidationErrors((prev) => ({
-                ...prev,
-                [name]: "",
-            }));
-        }
-    };
-
-    const getPasswordStrengthText = () => {
-        if (passwordStrength === 0) return "Muito fraca";
-        if (passwordStrength === 1) return "Fraca";
-        if (passwordStrength === 2) return "Moderada";
-        if (passwordStrength === 3) return "Forte";
-        return "Muito forte";
+        setUserData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+        if (validationErrors[name]) setValidationErrors((prev) => ({ ...prev, [name]: "" }));
     };
 
     const getPasswordStrengthColor = () => {
-        if (passwordStrength <= 1) return "#e74c3c";
-        if (passwordStrength === 2) return "#f39c12";
-        if (passwordStrength === 3) return "#3498db";
-        return "#27ae60";
+        if (passwordStrength <= 1) return "#dc3545";
+        if (passwordStrength === 2) return "#ffc107";
+        if (passwordStrength === 3) return "#0d6efd";
+        return "#198754";
     };
-
-    const handleSocialLogin = (provider) => {
-        addNotification(
-            `Cadastro com ${provider} em desenvolvimento`,
-            "info",
-        );
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!validateForm() || isSubmitting) {
-            return;
-        }
+        if (!validateForm() || isSubmitting) return;
 
         setIsSubmitting(true);
-
         try {
             const res = await register({
                 name: userData.name,
@@ -159,357 +84,159 @@ export function Register() {
                 password: userData.password,
                 role: userData.role,
             });
-            console.log(res);
             if (res.done) {
-                addNotification(
-                    "Registrado com sucesso",
-                    "success",
-                );
-
-                addNotification(
-                    //"Verifique seu e-mail para confirmar o cadastro",
-                    "Faça login para continuar",
-                    "info"
-                );
-                // Redirecionar para login
-                //TODO: REDIRECIONAR PARA CONFIRMAÇÃO DE E-MAIL/TELEFONE OU CARREGAR AVATAR
-                /*navigate("/login", {
-                    state: {
-                        message: "Registrado com sucesso!",
-                    },
-                });*/
+                addNotification("Conta criada com sucesso! Faça login.", "success");
+                navigate("/login");
             } else {
-
                 addNotification(res.error || "Erro no registro", "error");
-                setIsSubmitting(false);
             }
         } catch (err) {
-            console.error("Erro no registro: " + err.message);
-
-            setIsSubmitting(false);
             addNotification("Erro no registro", "error");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="auth-container">
-            <div className="auth-card">
-                <div className="auth-header">
-                    <h1 className="auth-title">Criar Conta</h1>
-                    <p className="auth-subtitle">Junte-se a nós hoje mesmo</p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="auth-form">
-                    <div className="form-group">
-                        <label htmlFor="name" className="form-label">
-                            Nome completo:
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={userData.name}
-                            onChange={handleInputChange}
-                            className={`form-input ${validationErrors.name ? "input-error" : ""}`}
-                            placeholder="Seu nome e apelido"
-                            disabled={loading || isSubmitting}
-                            autoComplete="name"
-                        />
-                        {validationErrors.name && (
-                            <span className="error-message">
-                                {validationErrors.name}
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="email" className="form-label">
-                            Endereço de e-mail:
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={userData.email}
-                            onChange={handleInputChange}
-                            className={`form-input ${validationErrors.email ? "input-error" : ""}`}
-                            placeholder="Seu e-mail (Opcional)"
-                            disabled={loading || isSubmitting}
-                            autoComplete="email"
-                        />
-                        {validationErrors.email && (
-                            <span className="error-message">
-                                {validationErrors.email}
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="role" className="form-label">
-                            Eu quero:
-                        </label>
-                        <select
-                            id="role"
-                            name="role"
-                            value={userData.role}
-                            onChange={handleInputChange}
-                            className="form-input"
-                            disabled={loading || isSubmitting}
-                        >
-                            <option value="client">Comprar produtos (Cliente)</option>
-                            <option value="seller">Vender produtos (Vendedor)</option>
-                        </select>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="password" className="form-label">
-                            Senha:
-                        </label>
-                        <div className="password-input-container">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="password"
-                                name="password"
-                                value={userData.password}
-                                onChange={handleInputChange}
-                                className={`form-input ${validationErrors.password ? "input-error" : ""}`}
-                                placeholder="Sua senha de acesso"
-                                disabled={loading || isSubmitting}
-                                autoComplete="new-password"
-                            />
-                            <button
-                                type="button"
-                                className="password-toggle"
-                                onClick={() => setShowPassword(!showPassword)}
-                                disabled={loading || isSubmitting}
-                            >
-                                {showPassword ? <EyeSlashFill color='#888' width='20' height='20' /> : <EyeFill color='#888' width='20' height='20' />}
-                            </button>
+        <div className="min-vh-100 d-flex" style={{ marginTop: '56px' }}>
+            {/* Left Panel - Branding */}
+            <div className="d-none d-lg-flex col-lg-5 position-relative" style={{ background: 'linear-gradient(135deg, #FF6000 0%, #FF8C00 100%)' }}>
+                <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'url("/images/hero.png") center/cover', opacity: 0.15 }}></div>
+                <div className="position-relative d-flex flex-column justify-content-center p-5 text-white">
+                    <Link to="/" className="text-decoration-none mb-5">
+                        <h2 className="fw-bold" style={{ fontSize: '2rem' }}>
+                            <span style={{ color: '#fff' }}>DUBA</span>
+                            <span style={{ color: '#333' }}>NING</span>
+                        </h2>
+                    </Link>
+                    <h1 className="display-5 fw-bold mb-4">Junte-se a nós!</h1>
+                    <p className="lead mb-4">Crie sua conta gratuita e comece a comprar ou vender no maior marketplace de Moçambique.</p>
+                    <div className="mt-4">
+                        <div className="d-flex align-items-center gap-3 mb-3">
+                            <i className="bi bi-check-circle-fill fs-4"></i>
+                            <span>Cadastro rápido sem e-mail obrigatório</span>
                         </div>
+                        <div className="d-flex align-items-center gap-3 mb-3">
+                            <i className="bi bi-check-circle-fill fs-4"></i>
+                            <span>Pagamentos via M-Pesa, e-Mola e mKesh</span>
+                        </div>
+                        <div className="d-flex align-items-center gap-3">
+                            <i className="bi bi-check-circle-fill fs-4"></i>
+                            <span>Suporte 100% moçambicano</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        {userData.password && (
-                            <div className="password-strength">
-                                <div className="strength-bar">
-                                    <div
-                                        className="strength-fill"
-                                        style={{
-                                            width: `${passwordStrength * 25}%`,
-                                            backgroundColor:
-                                                getPasswordStrengthColor(),
-                                        }}
-                                    ></div>
-                                </div>
-                                <div className="strength-text">
-                                    Força:{" "}
-                                    <span
-                                        style={{
-                                            color: getPasswordStrengthColor(),
-                                        }}
-                                    >
-                                        {getPasswordStrengthText()}
-                                    </span>
+            {/* Right Panel - Form */}
+            <div className="col-12 col-lg-7 d-flex align-items-center justify-content-center bg-light py-4 px-3">
+                <div className="w-100" style={{ maxWidth: '500px' }}>
+                    <div className="text-center mb-4 d-lg-none">
+                        <Link to="/" className="text-decoration-none">
+                            <h2 className="fw-bold" style={{ fontSize: '2rem' }}>
+                                <span style={{ color: '#FF6000' }}>DUBA</span>
+                                <span style={{ color: '#333' }}>NING</span>
+                            </h2>
+                        </Link>
+                    </div>
+
+                    <div className="bg-white rounded-4 shadow-sm p-4 p-md-5">
+                        <h3 className="fw-bold mb-1">Criar Conta</h3>
+                        <p className="text-muted mb-4">Preencha os dados abaixo</p>
+
+                        {/* Role Selection Cards */}
+                        <div className="row g-3 mb-4">
+                            <div className="col-6">
+                                <div
+                                    onClick={() => setUserData(prev => ({ ...prev, role: 'client' }))}
+                                    className={`card h-100 text-center p-3 cursor-pointer ${userData.role === 'client' ? 'border-primary border-2' : 'border-light'}`}
+                                    style={{ cursor: 'pointer', transition: 'all 0.2s' }}
+                                >
+                                    <i className={`bi bi-cart3 fs-1 mb-2 ${userData.role === 'client' ? 'text-primary' : 'text-muted'}`}></i>
+                                    <h6 className="fw-bold mb-0">Quero Comprar</h6>
+                                    <small className="text-muted">Cliente</small>
                                 </div>
                             </div>
-                        )}
-
-                        {validationErrors.password && (
-                            <span className="error-message">
-                                {validationErrors.password}
-                            </span>
-                        )}
-
-                        <div className="password-hints">
-                            <p className="hint-title">A senha deve conter:</p>
-                            <ul className="hint-list">
-                                <li
-                                    className={
-                                        userData.password.length >= 6
-                                            ? "hint-valid"
-                                            : ""
-                                    }
+                            <div className="col-6">
+                                <div
+                                    onClick={() => setUserData(prev => ({ ...prev, role: 'seller' }))}
+                                    className={`card h-100 text-center p-3 ${userData.role === 'seller' ? 'border-primary border-2' : 'border-light'}`}
+                                    style={{ cursor: 'pointer', transition: 'all 0.2s' }}
                                 >
-                                    Pelo menos 6 caracteres
-                                </li>
-                                <li
-                                    className={
-                                        /[a-z]/.test(userData.password) &&
-                                            /[A-Z]/.test(userData.password)
-                                            ? "hint-valid"
-                                            : ""
-                                    }
-                                >
-                                    Letras maiúsculas e minúsculas
-                                </li>
-                                <li
-                                    className={
-                                        /\d/.test(userData.password)
-                                            ? "hint-valid"
-                                            : ""
-                                    }
-                                >
-                                    Pelo menos um número
-                                </li>
-                                <li
-                                    className={
-                                        /[!@#$%^&*(),.?":{}|<>]/.test(
-                                            userData.password,
-                                        )
-                                            ? "hint-valid"
-                                            : ""
-                                    }
-                                >
-                                    Pelo menos um caractere especial
-                                </li>
-                            </ul>
+                                    <i className={`bi bi-shop fs-1 mb-2 ${userData.role === 'seller' ? 'text-primary' : 'text-muted'}`}></i>
+                                    <h6 className="fw-bold mb-0">Quero Vender</h6>
+                                    <small className="text-muted">Vendedor</small>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="form-group">
-                        <label htmlFor="confirmPassword" className="form-label">
-                            Confirmar senha:
-                        </label>
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            value={userData.confirmPassword}
-                            onChange={handleInputChange}
-                            className={`form-input ${validationErrors.confirmPassword ? "input-error" : ""}`}
-                            placeholder="Repita a senha anterior"
-                            disabled={loading || isSubmitting}
-                            autoComplete="new-password"
-                        />
-                        {validationErrors.confirmPassword && (
-                            <span className="error-message">
-                                {validationErrors.confirmPassword}
-                            </span>
-                        )}
-                        {userData.password &&
-                            userData.confirmPassword &&
-                            userData.password === userData.confirmPassword && (
-                                <span className="success-message">
-                                    As senhas coincidem
-                                </span>
-                            )}
-                    </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="row g-3 mb-3">
+                                <div className="col-12">
+                                    <label className="form-label fw-semibold small text-muted">Nome Completo</label>
+                                    <input type="text" name="name" value={userData.name} onChange={handleInputChange} className={`form-control form-control-lg bg-light ${validationErrors.name ? 'is-invalid' : ''}`} placeholder="Ex: João Silva" disabled={isSubmitting} />
+                                    {validationErrors.name && <div className="text-danger small mt-1">{validationErrors.name}</div>}
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label fw-semibold small text-muted">Telefone</label>
+                                    <input type="tel" name="phone" value={userData.phone} onChange={handleInputChange} className={`form-control form-control-lg bg-light ${validationErrors.phone ? 'is-invalid' : ''}`} placeholder="+258 84 123 4567" disabled={isSubmitting} />
+                                    {validationErrors.phone && <div className="text-danger small mt-1">{validationErrors.phone}</div>}
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label fw-semibold small text-muted">E-mail (Opcional)</label>
+                                    <input type="email" name="email" value={userData.email} onChange={handleInputChange} className={`form-control form-control-lg bg-light ${validationErrors.email ? 'is-invalid' : ''}`} placeholder="seu@email.com" disabled={isSubmitting} />
+                                    {validationErrors.email && <div className="text-danger small mt-1">{validationErrors.email}</div>}
+                                </div>
+                            </div>
 
-                    <div className="form-group checkbox-group">
-                        <label className="checkbox-label">
-                            <input
-                                type="checkbox"
-                                name="acceptTerms"
-                                checked={userData.acceptTerms}
-                                onChange={handleInputChange}
-                                disabled={loading || isSubmitting}
-                                className={`checkbox-input ${validationErrors.acceptTerms ? "input-error" : ""}`}
-                            />
-                            <span className="checkbox-text">
-                                Eu concordo com os{" "}
-                                <Link
-                                    to="/terms"
-                                    className="terms-link"
-                                    target="_blank"
-                                >
-                                    Termos de uso
-                                </Link>{" "}
-                                e{" "}
-                                <Link
-                                    to="/privacy"
-                                    className="terms-link"
-                                    target="_blank"
-                                >
-                                    Política de privacidade
-                                </Link>
-                            </span>
-                        </label>
-                        {validationErrors.acceptTerms && (
-                            <span className="error-message">
-                                {validationErrors.acceptTerms}
-                            </span>
-                        )}
-                    </div>
+                            <div className="mb-3">
+                                <label className="form-label fw-semibold small text-muted">Senha</label>
+                                <div className="input-group input-group-lg">
+                                    <input type={showPassword ? "text" : "password"} name="password" value={userData.password} onChange={handleInputChange} className={`form-control bg-light border-end-0 ${validationErrors.password ? 'is-invalid' : ''}`} placeholder="Mínimo 6 caracteres" disabled={isSubmitting} />
+                                    <button type="button" className="input-group-text bg-light border-start-0" onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword ? <EyeSlashFill color='#888' width='18' height='18' /> : <EyeFill color='#888' width='18' height='18' />}
+                                    </button>
+                                </div>
+                                {userData.password && (
+                                    <div className="mt-2">
+                                        <div className="progress" style={{ height: '5px' }}>
+                                            <div className="progress-bar" role="progressbar" style={{ width: `${passwordStrength * 25}%`, backgroundColor: getPasswordStrengthColor() }}></div>
+                                        </div>
+                                    </div>
+                                )}
+                                {validationErrors.password && <div className="text-danger small mt-1">{validationErrors.password}</div>}
+                            </div>
 
-                    <button
-                        type="submit"
-                        className="auth-button primary-button"
-                    >
-                        {loading || isSubmitting ? (
-                            <>
-                                <span className="spinner-small"></span>
-                                Criando conta...
-                            </>
-                        ) : (
-                            "Criar Conta"
-                        )}
-                    </button>
+                            <div className="mb-3">
+                                <label className="form-label fw-semibold small text-muted">Confirmar Senha</label>
+                                <input type={showPassword ? "text" : "password"} name="confirmPassword" value={userData.confirmPassword} onChange={handleInputChange} className={`form-control form-control-lg bg-light ${validationErrors.confirmPassword ? 'is-invalid' : ''}`} placeholder="Repita a senha" disabled={isSubmitting} />
+                                {validationErrors.confirmPassword && <div className="text-danger small mt-1">{validationErrors.confirmPassword}</div>}
+                                {userData.password && userData.confirmPassword && userData.password === userData.confirmPassword && <div className="text-success small mt-1"><i className="bi bi-check-circle me-1"></i>Senhas coincidem</div>}
+                            </div>
 
-                    <div className="auth-divider">
-                        <span>ou cadastre-se com</span>
-                    </div>
+                            <div className="form-check mb-4">
+                                <input className={`form-check-input ${validationErrors.acceptTerms ? 'is-invalid' : ''}`} type="checkbox" name="acceptTerms" id="acceptTerms" checked={userData.acceptTerms} onChange={handleInputChange} />
+                                <label className="form-check-label small" htmlFor="acceptTerms">
+                                    Concordo com os <Link to="/terms" className="text-decoration-none" style={{ color: '#FF6000' }}>Termos de Uso</Link> e <Link to="/privacy" className="text-decoration-none" style={{ color: '#FF6000' }}>Política de Privacidade</Link>
+                                </label>
+                                {validationErrors.acceptTerms && <div className="text-danger small">{validationErrors.acceptTerms}</div>}
+                            </div>
 
-                    <div className="social-login-container">
-                        <button
-                            type="button"
-                            onClick={() =>
-                                addNotification(
-                                    "Cadastro com Google em desenvolvimento",
-                                    "info",
-                                )
-                            }
-                            className="social-button google-button"
-                            disabled={loading || isSubmitting}
-                        >
-                            <svg className="social-icon" viewBox="0 0 24 24">
-                                <path
-                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                                    fill="#4285F4"
-                                />
-                                <path
-                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                                    fill="#34A853"
-                                />
-                                <path
-                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                                    fill="#FBBC05"
-                                />
-                                <path
-                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                                    fill="#EA4335"
-                                />
-                            </svg>
-                            Google
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => handleSocialLogin("GitHub")}
-                            className="social-button github-button"
-                            disabled={loading || isSubmitting}
-                        >
-                            <svg className="social-icon" viewBox="0 0 24 24">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                            </svg>
-                            GitHub
-                        </button>
+                            <button type="submit" className="btn btn-lg w-100 fw-bold" style={{ backgroundColor: '#FFD814', color: '#0F1111', border: 'none' }} disabled={loading || isSubmitting}>
+                                {loading || isSubmitting ? (
+                                    <><span className="spinner-border spinner-border-sm me-2"></span>Criando...</>
+                                ) : (
+                                    "Criar Minha Conta"
+                                )}
+                            </button>
+                        </form>
 
-                    </div>
-
-                    <div className="auth-footer">
-                        <p className="auth-footer-text">
-                            Já tem uma conta?{" "}
-                            <Link to="/login" className="auth-link">
-                                Faça login
-                            </Link>
+                        <p className="text-center text-muted small mt-4 mb-0">
+                            Já tens uma conta? <Link to="/login" className="fw-bold text-decoration-none" style={{ color: '#FF6000' }}>Entrar agora</Link>
                         </p>
-                        {/*<p className="auth-footer-text">
-                            <Link to="/" className="auth-link">
-                                Voltar para Home
-                            </Link>
-                        </p>*/}
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     );
 }
-
-//export { Register };

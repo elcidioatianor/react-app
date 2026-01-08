@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/order');
-const authMiddleware = require('../middleware/auth');
+const passport = require('passport');
+const authenticate = passport.authenticate('jwt', { session: false });
 
 // All order routes require authentication
-router.use(authMiddleware);
+router.use(authenticate);
 
 router.post('/', orderController.createOrder);
 router.get('/my', orderController.getMyOrders);

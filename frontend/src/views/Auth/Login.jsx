@@ -1,17 +1,9 @@
-// src/pages/Login.jsx
+// src/views/Auth/Login.jsx
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
-//import { useFetch } from '../../hooks/useApi';
 import { useNotification } from "../../contexts/NotificationContext";
-//ICONES
-import {
-    EyeFill,
-    EyeSlashFill,
-    GithubLogo,
-    GoogleLogo
-} from '../../components/Svg';
-
+import { EyeFill, EyeSlashFill, GithubLogo, GoogleLogo } from '../../components/Svg';
 
 export function Login() {
     const [credentials, setCredentials] = useState({
@@ -23,18 +15,11 @@ export function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const {
-        login,
-        loading,
-        //error: authError,
-        //setError,
-        isAuthenticated,
-    } = useAuthContext();
+    const { login, loading, isAuthenticated } = useAuthContext();
     const { addNotification } = useNotification();
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Redirecionar se já estiver autenticado
     useEffect(() => {
         if (isAuthenticated) {
             const from = location.state?.from?.pathname || "/";
@@ -42,7 +27,6 @@ export function Login() {
         }
     }, [isAuthenticated, navigate, location]);
 
-    // Mostrar notificação de logout
     useEffect(() => {
         if (location.state?.message) {
             addNotification(location.state.message, "info");
@@ -51,17 +35,14 @@ export function Login() {
 
     const validateForm = () => {
         const errors = {};
-
         if (!credentials.credential.trim()) {
             errors.credential = "Informe seu telefone ou email";
         }
-
         if (!credentials.password) {
             errors.password = "Senha é obrigatória";
         } else if (credentials.password.length < 6) {
             errors.password = "Senha deve ter pelo menos 6 caracteres";
         }
-        //console.log(credentials)
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -72,47 +53,31 @@ export function Login() {
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
-
-        // Limpar erro do campo quando o usuário começar a digitar
         if (validationErrors[name]) {
-            setValidationErrors((prev) => ({
-                ...prev,
-                [name]: "",
-            }));
+            setValidationErrors((prev) => ({ ...prev, [name]: "" }));
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!validateForm() || isSubmitting) {
-            return;
-        }
+        if (!validateForm() || isSubmitting) return;
 
         setIsSubmitting(true);
-
         try {
             const res = await login(credentials);
-
             if (res.done) {
                 addNotification("Sessão iniciada", "success");
-
-                // Armazenar preferência de "lembrar-me"
-                if (credentials.remember) {
+                if (credentials.rememberMe) {
                     localStorage.setItem("remember", "true");
                 } else {
                     localStorage.removeItem("remember");
                 }
-
-                // Redirecionar para página anterior ou dashboard
                 const from = location.state?.from?.pathname || (res.user?.role === 'seller' ? "/seller/dashboard" : "/");
                 navigate(from, { replace: true });
             } else {
                 addNotification(res.error || "Erro no login", "error");
-                //setError(null)
             }
         } catch (err) {
-            console.error("Erro no login:", err);
             addNotification("Erro no login: " + err.message, "error");
         } finally {
             setIsSubmitting(false);
@@ -120,171 +85,143 @@ export function Login() {
     };
 
     const handleForgotPassword = async () => {
-        if (!credentials.email) {
-            addNotification(
-                "Digite seu email para recuperar a senha",
-                "warning",
-            );
+        if (!credentials.credential) {
+            addNotification("Digite seu email ou telefone para recuperar a senha", "warning");
             return;
         }
-
-        try {
-            // Integração com endpoint de recuperação de senha
-            // await api.post('/auth/forgot-password', { email: credentials.email });
-            addNotification("Email de recuperação enviado!", "success");
-        } catch (err) {
-            addNotification("Erro ao enviar email de recuperação: " + err.message, "error");
-        }
+        addNotification("Email de recuperação enviado!", "success");
     };
 
     const handleSocialLogin = (provider) => {
-        // Integração com OAuth providers (Google, Facebook, etc.)
         addNotification(`Login com ${provider} em desenvolvimento`, "info");
     };
 
     return (
-        <div className="auth-container" data-bs-theme="light">
-            <div className="auth-card">
-                <div className="auth-header">
-                    <h1 className="auth-title">Bem-vindo de volta</h1>
-                    <p className="auth-subtitle">Faça login para continuar</p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="auth-form">
-                    <div className="form-group">
-                        <label htmlFor="credential" className="form-label">
-                            Número de Celular ou E-mail:
-                        </label>
-                        <input
-                            type="text"
-                            id="credential"
-                            name="credential"
-                            value={credentials.credential}
-                            onChange={handleInputChange}
-                            className={`form-input ${validationErrors.credential ? "input-error" : ""}`}
-                            placeholder="Ex: +258841234567 ou email@exemplo.com"
-                            disabled={loading || isSubmitting}
-                            autoComplete="username"
-                        />
-                        {validationErrors.credential && (
-                            <span className="error-message">
-                                {validationErrors.credential}
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="password" className="form-label">
-                            Senha:
-                        </label>
-                        <div className="password-input-container">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="password"
-                                name="password"
-                                value={credentials.password}
-                                onChange={handleInputChange}
-                                className={`form-input ${validationErrors.password ? "input-error" : ""}`}
-                                placeholder="Sua senha de acesso"
-                                disabled={loading || isSubmitting}
-                                autoComplete="current-password"
-                            />
-                            <button
-                                type="button"
-                                className="password-toggle"
-                                onClick={() => setShowPassword(!showPassword)}
-                                disabled={loading || isSubmitting}
-                            >
-                                {showPassword ? <EyeSlashFill color='#888' width='20' height='20' /> : <EyeFill color='#888' width='20' height='20' />}
-                            </button>
+        <div className="min-vh-100 d-flex" style={{ marginTop: '56px' }}>
+            {/* Left Panel - Branding */}
+            <div className="d-none d-lg-flex col-lg-5 position-relative" style={{ background: 'linear-gradient(135deg, #FF6000 0%, #FF8C00 100%)' }}>
+                <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'url("/images/hero.png") center/cover', opacity: 0.15 }}></div>
+                <div className="position-relative d-flex flex-column justify-content-center p-5 text-white">
+                    <Link to="/" className="text-decoration-none mb-5">
+                        <h2 className="fw-bold" style={{ fontSize: '2rem' }}>
+                            <span style={{ color: '#fff' }}>DUBA</span>
+                            <span style={{ color: '#333' }}>NING</span>
+                        </h2>
+                    </Link>
+                    <h1 className="display-5 fw-bold mb-4">Bem-vindo de volta!</h1>
+                    <p className="lead mb-4">Aceda à sua conta para continuar a explorar milhares de produtos e serviços em Moçambique.</p>
+                    <div className="d-flex align-items-center gap-3 mt-4">
+                        <div className="d-flex align-items-center gap-2">
+                            <i className="bi bi-shield-check fs-4"></i>
+                            <span>Pagamento Seguro</span>
                         </div>
-                        {validationErrors.password && (
-                            <span className="error-message">
-                                {validationErrors.password}
-                            </span>
-                        )}
+                        <div className="d-flex align-items-center gap-2">
+                            <i className="bi bi-truck fs-4"></i>
+                            <span>Entrega Rápida</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Right Panel - Form */}
+            <div className="col-12 col-lg-7 d-flex align-items-center justify-content-center bg-light p-4 p-md-5">
+                <div className="w-100" style={{ maxWidth: '450px' }}>
+                    <div className="text-center mb-4 d-lg-none">
+                        <Link to="/" className="text-decoration-none">
+                            <h2 className="fw-bold" style={{ fontSize: '2rem' }}>
+                                <span style={{ color: '#FF6000' }}>DUBA</span>
+                                <span style={{ color: '#333' }}>NING</span>
+                            </h2>
+                        </Link>
                     </div>
 
-                    <div className="form-options">
-                        <label className="checkbox-label">
-                            <input
-                                type="checkbox"
-                                name="rememberMe"
-                                checked={credentials.rememberMe}
-                                onChange={handleInputChange}
-                                disabled={loading || isSubmitting}
-                                className="checkbox-input"
-                            />
-                            <span className="checkbox-text">Lembrar-me</span>
-                        </label>
+                    <div className="bg-white rounded-4 shadow-sm p-4 p-md-5">
+                        <h3 className="fw-bold mb-1">Entrar</h3>
+                        <p className="text-muted mb-4">Faça login para continuar</p>
 
-                        <button
-                            type="button"
-                            onClick={handleForgotPassword}
-                            className="forgot-password-link"
-                            disabled={loading || isSubmitting}
-                        >
-                            Esqueceste a senha?
-                        </button>
-                    </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-3">
+                                <label htmlFor="credential" className="form-label fw-semibold small text-muted">Telefone ou E-mail</label>
+                                <div className="input-group input-group-lg">
+                                    <span className="input-group-text bg-light border-end-0"><i className="bi bi-person text-muted"></i></span>
+                                    <input
+                                        type="text"
+                                        id="credential"
+                                        name="credential"
+                                        value={credentials.credential}
+                                        onChange={handleInputChange}
+                                        className={`form-control bg-light border-start-0 ${validationErrors.credential ? "is-invalid" : ""}`}
+                                        placeholder="+258 84 123 4567"
+                                        disabled={loading || isSubmitting}
+                                    />
+                                </div>
+                                {validationErrors.credential && <div className="text-danger small mt-1">{validationErrors.credential}</div>}
+                            </div>
 
-                    <button
-                        type="submit"
-                        className="auth-button primary-button"
-                        disabled={loading || isSubmitting}
-                    >
-                        {loading || isSubmitting ? (
-                            <>
-                                <span className="spinner-small"></span>
-                                Entrando...
-                            </>
-                        ) : (
-                            "Entrar"
-                        )}
-                    </button>
+                            <div className="mb-3">
+                                <label htmlFor="password" className="form-label fw-semibold small text-muted">Senha</label>
+                                <div className="input-group input-group-lg">
+                                    <span className="input-group-text bg-light border-end-0"><i className="bi bi-lock text-muted"></i></span>
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        id="password"
+                                        name="password"
+                                        value={credentials.password}
+                                        onChange={handleInputChange}
+                                        className={`form-control bg-light border-start-0 border-end-0 ${validationErrors.password ? "is-invalid" : ""}`}
+                                        placeholder="••••••••"
+                                        disabled={loading || isSubmitting}
+                                    />
+                                    <button type="button" className="input-group-text bg-light border-start-0" onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword ? <EyeSlashFill color='#888' width='18' height='18' /> : <EyeFill color='#888' width='18' height='18' />}
+                                    </button>
+                                </div>
+                                {validationErrors.password && <div className="text-danger small mt-1">{validationErrors.password}</div>}
+                            </div>
 
-                    <div className="auth-divider">
-                        <span>ou continue com</span>
-                    </div>
+                            <div className="d-flex justify-content-between align-items-center mb-4">
+                                <div className="form-check">
+                                    <input className="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" checked={credentials.rememberMe} onChange={handleInputChange} />
+                                    <label className="form-check-label small" htmlFor="rememberMe">Lembrar-me</label>
+                                </div>
+                                <button type="button" onClick={handleForgotPassword} className="btn btn-link p-0 text-decoration-none small fw-semibold" style={{ color: '#FF6000' }}>
+                                    Esqueceu a senha?
+                                </button>
+                            </div>
 
-                    <div className="social-login-container">
-                        <button
-                            type="button"
-                            onClick={() => handleSocialLogin("Google")}
-                            className="social-button google-button"
-                            disabled={loading || isSubmitting}
-                        >
-                            <GoogleLogo className="social-icon" />Google
-                        </button>
+                            <button type="submit" className="btn btn-lg w-100 fw-bold mb-3" style={{ backgroundColor: '#FFD814', color: '#0F1111', border: 'none' }} disabled={loading || isSubmitting}>
+                                {loading || isSubmitting ? (
+                                    <><span className="spinner-border spinner-border-sm me-2"></span>Entrando...</>
+                                ) : (
+                                    "Continuar"
+                                )}
+                            </button>
 
-                        <button
-                            type="button"
-                            onClick={() => handleSocialLogin("GitHub")}
-                            className="social-button github-button"
-                            disabled={loading || isSubmitting}
-                        >
-                            <GithubLogo className="social-icon" />
-                            GitHub
-                        </button>
-                    </div>
+                            <div className="text-center my-4">
+                                <span className="text-muted small px-2 position-relative" style={{ background: '#fff' }}>ou continue com</span>
+                                <hr className="mt-n2" style={{ borderColor: '#ddd' }} />
+                            </div>
 
-                    <div className="auth-footer">
-                        <p className="auth-footer-text">
-                            Não tes uma conta?{" "}
-                            <Link to="/register" className="auth-link">
-                                Cadastre-se
-                            </Link>
+                            <div className="d-flex gap-3">
+                                <button type="button" onClick={() => handleSocialLogin("Google")} className="btn btn-outline-secondary flex-grow-1 py-2" disabled={loading || isSubmitting}>
+                                    <GoogleLogo className="me-2" width="20" height="20" /> Google
+                                </button>
+                                <button type="button" onClick={() => handleSocialLogin("GitHub")} className="btn btn-outline-dark flex-grow-1 py-2" disabled={loading || isSubmitting}>
+                                    <GithubLogo className="me-2" width="20" height="20" /> GitHub
+                                </button>
+                            </div>
+                        </form>
+
+                        <p className="text-center text-muted small mt-4 mb-0">
+                            Não tens uma conta? <Link to="/register" className="fw-bold text-decoration-none" style={{ color: '#FF6000' }}>Crie agora aqui</Link>
                         </p>
-                        {/*<p className="auth-footer-text">
-                            <Link to="/" className="auth-link">
-                                Voltar para Home
-                            </Link>
-                        </p>*/}
                     </div>
-                </form>
+
+                    <p className="text-center text-muted small mt-4">
+                        Ao continuar, aceita os <Link to="/terms" className="text-decoration-none">Termos de Uso</Link> e a <Link to="/privacy" className="text-decoration-none">Política de Privacidade</Link> da DUBANING.
+                    </p>
+                </div>
             </div>
         </div>
     );
 }
-
-//export default Login;

@@ -1,114 +1,154 @@
 import { useState } from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
+import { Container, Row, Col, Nav, Navbar, Dropdown, Offcanvas, Button } from "react-bootstrap";
+import {
+    Speedometer2,
+    BoxSeam,
+    Cart3,
+    Wallet2,
+    FileEarmarkText,
+    Gear,
+    BoxArrowLeft,
+    List,
+    PersonCircle
+} from "react-bootstrap-icons";
 
 export function SellerLayout() {
     const { user, logout } = useAuthContext();
     const location = useLocation();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const navigate = useNavigate();
+    const [showSidebar, setShowSidebar] = useState(false);
 
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
+    const handleClose = () => setShowSidebar(false);
+    const handleShow = () => setShowSidebar(true);
+
+    const handleLogout = async () => {
+        await logout();
+        navigate('/login');
     };
 
-    const isActive = (path) => {
-        return location.pathname === path ? "active" : "";
-    };
+    const isActive = (path) => location.pathname === path ? "active bg-primary text-white" : "text-dark";
+
+    const SidebarContent = () => (
+        <div className="d-flex flex-column h-100">
+            <div className="p-3 text-center mb-4 border-bottom">
+                <h4 className="fw-bold text-dark">DUBANING <span className="text-warning">Seller</span></h4>
+            </div>
+            <Nav className="flex-column px-2 gap-1 flex-grow-1">
+                <Nav.Item>
+                    <Link to="/seller/dashboard" className={`nav-link rounded ${isActive("/seller/dashboard")}`} onClick={handleClose}>
+                        <Speedometer2 className="me-2" /> Visão Geral
+                    </Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link to="/seller/products" className={`nav-link rounded ${isActive("/seller/products")}`} onClick={handleClose}>
+                        <BoxSeam className="me-2" /> Produtos
+                    </Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link to="/seller/orders" className={`nav-link rounded ${isActive("/seller/orders")}`} onClick={handleClose}>
+                        <Cart3 className="me-2" /> Pedidos
+                    </Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link to="/seller/wallet" className={`nav-link rounded ${isActive("/seller/wallet")}`} onClick={handleClose}>
+                        <Wallet2 className="me-2" /> Financeiro
+                    </Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link to="/seller/documents" className={`nav-link rounded ${isActive("/seller/documents")}`} onClick={handleClose}>
+                        <FileEarmarkText className="me-2" /> Documentos
+                    </Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link to="/seller/settings" className={`nav-link rounded ${isActive("/seller/settings")}`} onClick={handleClose}>
+                        <Gear className="me-2" /> Definições
+                    </Link>
+                </Nav.Item>
+            </Nav>
+            <div className="p-3 border-top">
+                <Button variant="outline-danger" className="w-100 d-flex align-items-center justify-content-center gap-2" onClick={handleLogout}>
+                    <BoxArrowLeft /> Sair
+                </Button>
+            </div>
+        </div>
+    );
 
     return (
-        <div className="container-fluid dark-mode p-0">
-            {/* Sidebar */}
-            <div className={`sidebar d-lg-block ${isSidebarOpen ? "sidebar-mobile-show" : "d-none"}`}>
-                <div className="p-4">
-                    {/* Logo & Brand */}
-                    <div className="text-center mb-5">
-                        <h4 className="text-white fw-bold">DUBANING <span className="text-warning">Seller</span></h4>
-                    </div>
+        <div className="min-vh-100 bg-light">
+            {/* Mobile Header */}
+            <Navbar bg="white" expand={false} className="d-lg-none shadow-sm sticky-top px-3">
+                <Button variant="link" className="text-dark p-0" onClick={handleShow}>
+                    <List size={28} />
+                </Button>
+                <Navbar.Brand className="mx-auto fw-bold">Seller Panel</Navbar.Brand>
+                <Dropdown align="end">
+                    <Dropdown.Toggle variant="link" className="text-dark p-0 border-0 no-caret">
+                        {user?.avatarUrl ? (
+                            <img src={user.avatarUrl} alt="User" className="rounded-circle" width="32" height="32" />
+                        ) : (
+                            <PersonCircle size={28} />
+                        )}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item as={Link} to="/profile">Meu Perfil</Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item onClick={handleLogout} className="text-danger">Sair</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </Navbar>
 
-                    {/* Navigation */}
-                    <nav className="nav flex-column gap-2">
-                        <Link to="/seller/dashboard" className={`nav-link py-3 ${isActive("/seller/dashboard")}`}>
-                            <i className="bi bi-speedometer2 me-3"></i>
-                            <span>Visão Geral</span>
-                        </Link>
-                        <Link to="/seller/products" className={`nav-link py-3 ${isActive("/seller/products")}`}>
-                            <i className="bi bi-box-seam me-3"></i>
-                            <span>Produtos</span>
-                        </Link>
-                        <Link to="/seller/orders" className={`nav-link py-3 ${isActive("/seller/orders")}`}>
-                            <i className="bi bi-cart3 me-3"></i>
-                            <span>Pedidos</span>
-                        </Link>
-                        <Link to="/seller/wallet" className={`nav-link py-3 ${isActive("/seller/wallet")}`}>
-                            <i className="bi bi-wallet2 me-3"></i>
-                            <span>Financeiro</span>
-                        </Link>
-                        <Link to="/seller/documents" className={`nav-link py-3 ${isActive("/seller/documents")}`}>
-                            <i className="bi bi-file-earmark-text me-3"></i>
-                            <span>Documentos</span>
-                        </Link>
-                        <Link to="/seller/settings" className={`nav-link py-3 ${isActive("/seller/settings")}`}>
-                            <i className="bi bi-gear me-3"></i>
-                            <span>Definições</span>
-                        </Link>
-                        <button onClick={logout} className="nav-link py-3 text-start border-0 bg-transparent w-100 text-danger">
-                            <i className="bi bi-box-arrow-left me-3"></i>
-                            <span>Sair</span>
-                        </button>
-                    </nav>
-                </div>
-            </div>
+            <Container fluid>
+                <Row>
+                    {/* Desktop Sidebar */}
+                    <Col lg={2} className="d-none d-lg-block vh-100 bg-white shadow-sm position-fixed top-0 start-0 overflow-auto">
+                        <SidebarContent />
+                    </Col>
 
-            {/* Main Content */}
-            <div className="main-content">
-                {/* Header */}
-                <header className="header px-4">
-                    <div className="d-flex align-items-center justify-content-between h-100">
-                        {/* Mobile menu toggle */}
-                        <button
-                            className="btn btn-outline-secondary d-lg-none"
-                            onClick={toggleSidebar}
-                        >
-                            <i className="bi bi-list"></i>
-                        </button>
+                    {/* Mobile Offcanvas Sidebar */}
+                    <Offcanvas show={showSidebar} onHide={handleClose} responsive="lg">
+                        <Offcanvas.Header closeButton>
+                            <Offcanvas.Title>Menu</Offcanvas.Title>
+                        </Offcanvas.Header>
+                        <Offcanvas.Body className="p-0">
+                            <SidebarContent />
+                        </Offcanvas.Body>
+                    </Offcanvas>
 
-                        <div className="d-flex align-items-center ms-auto gap-3">
-                            <div className="dropdown">
-                                <button className="btn btn-link text-decoration-none dropdown-toggle text-dark" type="button" data-bs-toggle="dropdown">
-                                    Olá, {user?.name}
-                                </button>
-                                <ul className="dropdown-menu dropdown-menu-end">
-                                    <li><Link className="dropdown-item" to="/profile">Meu Perfil</Link></li>
-                                    <li><hr className="dropdown-divider" /></li>
-                                    <li><button className="dropdown-item text-danger" onClick={logout}>Sair</button></li>
-                                </ul>
+                    {/* Main Content */}
+                    <Col lg={{ span: 10, offset: 2 }} className="p-4" style={{ marginTop: '0px' }}>
+                        {/* Desktop Header */}
+                        <div className="d-none d-lg-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                            <h2 className="h4 fw-bold text-dark mb-0">Painel do Vendedor</h2>
+                            <div className="d-flex align-items-center gap-3">
+                                <div className="text-end">
+                                    <small className="d-block text-muted">Bem-vindo,</small>
+                                    <span className="fw-bold">{user?.name}</span>
+                                </div>
+                                <Dropdown align="end">
+                                    <Dropdown.Toggle variant="light" className="rounded-circle p-0 border-0" id="dropdown-profile">
+                                        {user?.avatarUrl ? (
+                                            <img src={user.avatarUrl} alt="User" className="rounded-circle shadow-sm" width="40" height="40" />
+                                        ) : (
+                                            <div className="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
+                                                <PersonCircle size={24} />
+                                            </div>
+                                        )}
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item as={Link} to="/profile">Meu Perfil</Dropdown.Item>
+                                        <Dropdown.Divider />
+                                        <Dropdown.Item onClick={handleLogout} className="text-danger">Sair</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
                             </div>
                         </div>
-                    </div>
-                </header>
 
-                {/* Page Content */}
-                <main className="p-4">
-                    <Outlet />
-                </main>
-            </div>
-
-            {/* Overlay for mobile sidebar */}
-            {isSidebarOpen && (
-                <div
-                    className="sidebar-overlay d-lg-none"
-                    onClick={() => setIsSidebarOpen(false)}
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundColor: 'rgba(0,0,0,0.5)',
-                        zIndex: 999
-                    }}
-                />
-            )}
+                        <Outlet />
+                    </Col>
+                </Row>
+            </Container>
         </div>
     );
 }

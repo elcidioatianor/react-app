@@ -6,7 +6,7 @@ exports.createStore = async (req, res) => {
         const ownerId = req.user.id;
 
         // Check if user already has a store
-        const existingStore = await Store.findOne({ where: { owner_id: ownerId } });
+        const existingStore = await Store.findOne({ where: { ownerId: ownerId } });
         if (existingStore) {
             return res.status(400).json({ message: 'Você já possui uma loja cadastrada.' });
         }
@@ -18,7 +18,8 @@ exports.createStore = async (req, res) => {
             description,
             city,
             province,
-            owner_id: ownerId
+            ownerId: ownerId,
+            logoUrl: null // Initialize with null if not provided
         });
 
         // Update user role to seller if it was client
@@ -34,7 +35,7 @@ exports.createStore = async (req, res) => {
 exports.getMyStore = async (req, res) => {
     try {
         const store = await Store.findOne({
-            where: { owner_id: req.user.id },
+            where: { ownerId: req.user.id },
             include: ['products']
         });
 
@@ -51,7 +52,7 @@ exports.getMyStore = async (req, res) => {
 exports.updateStore = async (req, res) => {
     try {
         const { name, description, city, province, logoUrl } = req.body;
-        const store = await Store.findOne({ where: { owner_id: req.user.id } });
+        const store = await Store.findOne({ where: { ownerId: req.user.id } });
 
         if (!store) {
             return res.status(404).json({ message: 'Loja não encontrada.' });

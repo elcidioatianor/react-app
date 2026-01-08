@@ -1,30 +1,35 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useApi } from "../../hooks/useApi";
 import { useNotification } from "../../contexts/NotificationContext";
+import { Container, Row, Col, Card, Table, Button, Modal, Form, Badge, InputGroup } from "react-bootstrap";
+import {
+    Plus,
+    Search,
+    PencilSquare,
+    Trash,
+    ThreeDotsVertical,
+    Image as ImageIcon
+} from "react-bootstrap-icons";
 
 export function ProductManager() {
     const api = useApi();
     const { addNotification } = useNotification();
 
-    // Data State
+    // State
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    // Modal State
     const [showModal, setShowModal] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const [currentId, setCurrentId] = useState(null);
+    const [editingProduct, setEditingProduct] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     // Form State
     const [formData, setFormData] = useState({
         name: "",
-        description: "",
         price: "",
-        discount: "",
-        stock: "",
         category: "Tecnologia",
-        images: "", // Using single URL for MVP or comma separated
-        isActive: true
+        stock: "",
+        description: "",
+        image: ""
     });
 
     useEffect(() => {
@@ -35,76 +40,38 @@ export function ProductManager() {
         try {
             const res = await api.get('/products/my-products');
             setProducts(res.data);
+            setLoading(false);
         } catch (error) {
-            console.error("Erro ao carregar produtos", error);
+            console.error(error);
             addNotification("Erro ao carregar produtos", "error");
-        } finally {
             setLoading(false);
         }
     };
 
-    const handleInputChange = (e) => {
-        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        setFormData({
-            ...formData,
-            [e.target.name]: value
-        });
+    const handleInput = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const openModal = (product = null) => {
-        if (product) {
-            setIsEditing(true);
-            setCurrentId(product.id);
-            setFormData({
-                name: product.name,
-                description: product.description || "",
-                price: product.price,
-                discount: product.discount || "",
-                stock: product.stock || 0,
-                category: product.category || "Tecnologia",
-                images: Array.isArray(product.images) ? product.images[0] : (product.images || ""),
-                isActive: product.isActive
-            });
-        } else {
-            setIsEditing(false);
-            setCurrentId(null);
-            setFormData({
-                name: "",
-                description: "",
-                price: "",
-                discount: "",
-                stock: "",
-                category: "Tecnologia",
-                images: "",
-                isActive: true
-            });
-        }
-        setShowModal(true);
-    };
-
-    const closeModal = () => {
-        setShowModal(false);
-    };
-
-    const handleSave = async (e) => {
-        e.preventDefault();
-
-        // Prepare payload - handle images as array
-        const payload = {
-            ...formData,
-            images: formData.images ? [formData.images] : [],
-            variations: [] // Placeholder for now
-        };
-
+    const handleSave = async () => {
         try {
-            if (isEditing) {
-                await api.put(`/products/${currentId}`, payload);
-                addNotification("Produto atualizado com sucesso!", "success");
+            const payload = {
+                ...formData,
+                stock: parseInt(formData.stock),
+                price: parseFloat(formData.price),
+                images: formData.image ? [formData.image] : [],
+                variations: [],
+                isActive: true
+            };
+
+            if (editingProduct) {
+                await api.put(`/products/${editingProduct.id}`, payload);
+                addNotification("Produto atualizado!", "success");
             } else {
                 await api.post('/products', payload);
                 addNotification("Produto criado com sucesso!", "success");
             }
-            closeModal();
+
+            handleCloseModal();
             loadProducts();
         } catch (error) {
             console.error(error);
@@ -113,165 +80,177 @@ export function ProductManager() {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("Tem certeza que deseja remover este produto?")) {
+        if (window.confirm("Tem certeza que deseja apagar este produto?")) {
             try {
                 await api.delete(`/products/${id}`);
-                addNotification("Produto removido", "success");
-                loadProducts();
+                addNotification("Produto removido.", "success");
+                setProducts(products.filter(p => p.id !== id));
             } catch (error) {
                 addNotification("Erro ao remover produto", "error");
             }
         }
     };
 
+    const openModal = (product = null) => {
+        if (product) {
+            setEditingProduct(product);
+            const img = product.images && Array.isArray(product.images) ? product.images[0] :
+                (product.images ? JSON.parse(product.images)[0] : "");
+            setFormData({
+                name: product.name,
+                price: product.price,
+                category: product.category,
+                stock: product.stock,
+                description: product.description || "",
+                image: img
+            });
+        } else {
+            setEditingProduct(null);
+            setFormData({ name: "", price: "", category: "Tecnologia", stock: "", description: "", image: "" });
+        }
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => setShowModal(false);
+
+    // Filter Logic
+    const filteredProducts = products.filter(p =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
-        <div className="container-fluid">
+        <Container fluid className="px-0">
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Meus Produtos</h2>
-                <button className="btn btn-primary" onClick={() => openModal()}>
-                    <i className="bi bi-plus-lg me-2"></i>
-                    Novo Produto
-                </button>
+                <h4 className="fw-bold mb-0">Meus Produtos</h4>
+                <Button variant="primary" className="d-flex align-items-center gap-2 bg-dubaning-orange border-0" onClick={() => openModal()}>
+                    <Plus size={20} /> Novo Produto
+                </Button>
             </div>
 
-            {loading ? (
-                <div className="text-center py-5">
-                    <div className="spinner-border text-primary"></div>
-                </div>
-            ) : products.length === 0 ? (
-                <div className="text-center py-5 bg-white rounded shadow-sm">
-                    <i className="bi bi-box-seam display-1 text-muted mb-3"></i>
-                    <h4>Nenhum produto cadastrado</h4>
-                    <p className="text-muted">Comece a vender adicionando seu primeiro produto.</p>
-                </div>
-            ) : (
-                <div className="card border-0 shadow-sm">
+            <Card className="border-0 shadow-sm">
+                <Card.Body>
+                    <div className="mb-4">
+                        <InputGroup>
+                            <InputGroup.Text className="bg-white border-end-0">
+                                <Search className="text-muted" />
+                            </InputGroup.Text>
+                            <Form.Control
+                                placeholder="Pesquisar por nome ou categoria..."
+                                className="border-start-0 ps-0"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </InputGroup>
+                    </div>
+
                     <div className="table-responsive">
-                        <table className="table table-hover align-middle mb-0">
+                        <Table hover className="align-middle">
                             <thead className="bg-light">
                                 <tr>
-                                    <th className="ps-4">Produto</th>
-                                    <th>Preço</th>
-                                    <th>Stock</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
+                                    <th className="border-0 ps-3">Produto</th>
+                                    <th className="border-0">Categoria</th>
+                                    <th className="border-0">Preço</th>
+                                    <th className="border-0 text-center">Estoque</th>
+                                    <th className="border-0 text-center">Status</th>
+                                    <th className="border-0 text-end pe-3">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {products.map(product => (
-                                    <tr key={product.id}>
-                                        <td className="ps-4">
-                                            <div className="d-flex align-items-center">
-                                                <div className="bg-light rounded d-flex align-items-center justify-content-center me-3" style={{ width: 40, height: 40 }}>
-                                                    {product.images && product.images.length > 0 ? (
-                                                        <img src={Array.isArray(product.images) ? product.images[0] : JSON.parse(product.images)[0]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none' }} />
-                                                    ) : (
-                                                        <i className="bi bi-image text-muted"></i>
-                                                    )}
+                                {loading ? (
+                                    <tr><td colSpan="6" className="text-center py-5">Carregando...</td></tr>
+                                ) : filteredProducts.length === 0 ? (
+                                    <tr><td colSpan="6" className="text-center py-5 text-muted">Nenhum produto encontrado.</td></tr>
+                                ) : (
+                                    filteredProducts.map(p => (
+                                        <tr key={p.id}>
+                                            <td className="ps-3">
+                                                <div className="d-flex align-items-center gap-3">
+                                                    <div className="bg-light rounded p-1 border">
+                                                        <img
+                                                            src={(p.images && Array.isArray(p.images) && p.images[0]) || (p.images && JSON.parse(p.images)[0]) || "https://via.placeholder.com/50"}
+                                                            alt=""
+                                                            style={{ width: 40, height: 40, objectFit: 'cover' }}
+                                                        />
+                                                    </div>
+                                                    <span className="fw-bold text-dark">{p.name}</span>
                                                 </div>
-                                                <div>
-                                                    <div className="fw-bold">{product.name}</div>
-                                                    <small className="text-muted text-truncate d-block" style={{ maxWidth: 200 }}>
-                                                        {product.category}
-                                                    </small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>{product.price} MT</div>
-                                            {product.discount > 0 && <small className="text-danger">Promo: {product.discount} MT</small>}
-                                        </td>
-                                        <td>{product.stock}</td>
-                                        <td>
-                                            {product.isActive ?
-                                                <span className="badge bg-success bg-opacity-10 text-success">Ativo</span> :
-                                                <span className="badge bg-secondary bg-opacity-10 text-secondary">Inativo</span>
-                                            }
-                                        </td>
-                                        <td>
-                                            <button className="btn btn-sm btn-light text-primary me-2" onClick={() => openModal(product)}>
-                                                <i className="bi bi-pencil"></i>
-                                            </button>
-                                            <button className="btn btn-sm btn-light text-danger" onClick={() => handleDelete(product.id)}>
-                                                <i className="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                            </td>
+                                            <td><Badge bg="light" text="dark" className="border">{p.category}</Badge></td>
+                                            <td className="fw-bold">{p.price.toLocaleString()} MT</td>
+                                            <td className="text-center">{p.stock}</td>
+                                            <td className="text-center">
+                                                <Badge bg={p.stock > 0 ? 'success' : 'danger'} className="bg-opacity-10 text-capitalize" style={{ color: p.stock > 0 ? 'green' : 'red' }}>
+                                                    {p.stock > 0 ? 'Ativo' : 'Esgotado'}
+                                                </Badge>
+                                            </td>
+                                            <td className="text-end pe-3">
+                                                <Button variant="link" className="text-primary p-1" onClick={() => openModal(p)}>
+                                                    <PencilSquare />
+                                                </Button>
+                                                <Button variant="link" className="text-danger p-1" onClick={() => handleDelete(p.id)}>
+                                                    <Trash />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
                             </tbody>
-                        </table>
+                        </Table>
                     </div>
-                </div>
-            )}
+                </Card.Body>
+            </Card>
 
-            {/* Modal */}
-            {showModal && (
-                <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-                    <div className="modal-dialog modal-lg modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">{isEditing ? 'Editar Produto' : 'Novo Produto'}</h5>
-                                <button type="button" className="btn-close" onClick={closeModal}></button>
-                            </div>
-                            <form onSubmit={handleSave}>
-                                <div className="modal-body">
-                                    <div className="row">
-                                        <div className="col-md-8 mb-3">
-                                            <label className="form-label">Nome do Produto</label>
-                                            <input type="text" className="form-control" name="name" value={formData.name} onChange={handleInputChange} required />
-                                        </div>
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Categoria</label>
-                                            <select className="form-select" name="category" value={formData.category} onChange={handleInputChange}>
-                                                <option value="Tecnologia">Tecnologia</option>
-                                                <option value="Moda">Moda</option>
-                                                <option value="Casa">Casa</option>
-                                                <option value="Agro">Agro</option>
-                                                <option value="Serviços">Serviços</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label">Descrição</label>
-                                        <textarea className="form-control" name="description" rows="3" value={formData.description} onChange={handleInputChange}></textarea>
-                                    </div>
-
-                                    <div className="row">
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Preço (MT)</label>
-                                            <input type="number" className="form-control" name="price" value={formData.price} onChange={handleInputChange} required />
-                                        </div>
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Preço Promocional (Opcional)</label>
-                                            <input type="number" className="form-control" name="discount" value={formData.discount} onChange={handleInputChange} />
-                                        </div>
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Estoque (Qtd)</label>
-                                            <input type="number" className="form-control" name="stock" value={formData.stock} onChange={handleInputChange} />
-                                        </div>
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label">URL da Imagem</label>
-                                        <input type="text" className="form-control" name="images" value={formData.images} onChange={handleInputChange} placeholder="https://..." />
-                                        <div className="form-text">Cole o link da imagem do produto. (Upload de arquivo será implementado em breve)</div>
-                                    </div>
-
-                                    <div className="form-check form-switch">
-                                        <input className="form-check-input" type="checkbox" name="isActive" checked={formData.isActive} onChange={handleInputChange} />
-                                        <label className="form-check-label">Produto Ativo (Visível na loja)</label>
-                                    </div>
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={closeModal}>Cancelar</button>
-                                    <button type="submit" className="btn btn-primary">{isEditing ? 'Salvar Alterações' : 'Criar Produto'}</button>
-                                </div>
-                            </form>
-                        </div>
+            {/* Product Modal */}
+            <Modal show={showModal} onHide={handleCloseModal} centered>
+                <Modal.Header closeButton className="border-0">
+                    <Modal.Title className="fw-bold">{editingProduct ? 'Editar Produto' : 'Novo Produto'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="px-4 pb-4">
+                    <Form>
+                        <Form.Group className="mb-3">
+                            <Form.Label className="small fw-bold text-muted">Nome do Produto</Form.Label>
+                            <Form.Control type="text" name="name" value={formData.name} onChange={handleInput} />
+                        </Form.Group>
+                        <Row>
+                            <Col md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label className="small fw-bold text-muted">Preço (MT)</Form.Label>
+                                    <Form.Control type="number" name="price" value={formData.price} onChange={handleInput} />
+                                </Form.Group>
+                            </Col>
+                            <Col md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label className="small fw-bold text-muted">Estoque</Form.Label>
+                                    <Form.Control type="number" name="stock" value={formData.stock} onChange={handleInput} />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Form.Group className="mb-3">
+                            <Form.Label className="small fw-bold text-muted">Categoria</Form.Label>
+                            <Form.Select name="category" value={formData.category} onChange={handleInput}>
+                                <option>Tecnologia</option>
+                                <option>Moda</option>
+                                <option>Casa</option>
+                                <option>Agro</option>
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label className="small fw-bold text-muted">Descrição</Form.Label>
+                            <Form.Control as="textarea" rows={3} name="description" value={formData.description} onChange={handleInput} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label className="small fw-bold text-muted">URL da Imagem</Form.Label>
+                            <Form.Control type="text" name="image" value={formData.image} onChange={handleInput} placeholder="https://..." />
+                        </Form.Group>
+                    </Form>
+                    <div className="d-grid mt-4">
+                        <Button variant="primary" className="bg-dubaning-orange border-0" onClick={handleSave}>
+                            Salvar Produto
+                        </Button>
                     </div>
-                </div>
-            )}
-        </div>
+                </Modal.Body>
+            </Modal>
+        </Container>
     );
 }

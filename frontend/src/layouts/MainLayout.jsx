@@ -2,11 +2,12 @@ import { Navbar } from "../components/Navbar";
 import { Outlet } from "react-router-dom";
 
 export function MainLayout() {
-    //rename to Main
     return (
-        <>
+        <div className="d-flex flex-column min-vh-100">
             <Navbar />
-            <Outlet />
-        </>
+            <main className="flex-grow-1" style={{ paddingTop: '100px' }}>
+                <Outlet />
+            </main>
+        </div>
     );
 }

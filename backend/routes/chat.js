@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const chatController = require('../controllers/chat');
-const authMiddleware = require('../middleware/auth');
+const passport = require('passport');
+const authenticate = passport.authenticate('jwt', { session: false });
 
-router.use(authMiddleware);
+router.use(authenticate);
 
 router.post('/send', chatController.sendMessage);
 router.get('/history/:otherId', chatController.getChatHistory);
