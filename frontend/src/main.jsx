@@ -9,11 +9,11 @@ import './index.css';
 //APP PRINCIPAL
 import App from './App.jsx';
 
-const rootNode = document.getElementById('root');
-const appRoot = createRoot(rootNode);
+const node = document.getElementById('root');
+const root = createRoot(node);
 
 //Mount App
-appRoot.render(
+root.render(
     <StrictMode>
         <App />
     </StrictMode>
