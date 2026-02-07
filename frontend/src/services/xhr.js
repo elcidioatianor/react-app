@@ -3,17 +3,14 @@
 //TODO: USE use() hook from socket
 class XHRError extends Error {
     constructor(xhr, message = null) {
-        super(message || xhr.statusText || "Network Error");
-        this.name = "XHRError";
+        super(message || xhr.statusText || 'Network Error');
+        this.name = 'XHRError';
         this.status = xhr.status;
         this.statusText = xhr.statusText;
-		try {
-        	this.response = JSON.parse(xhr.response);
-			this.code = this.response.code
-		} catch {
-			this.response = xhr.response;
-			this.code = 0
-		}
+        try {
+            const response = JSON.parse(xhr.response);
+            this.message = response.error;
+        } catch {}
         this.xhr = xhr;
     }
 }
@@ -33,8 +30,8 @@ class XHRResponse {
         if (headerStr) {
             const lines = headerStr.trim().split(/[\r\n]+/);
             for (const line of lines) {
-                const [key, ...valueParts] = line.split(": ");
-                headers[key.toLowerCase()] = valueParts.join(": ");
+                const [key, ...valueParts] = line.split(': ');
+                headers[key.toLowerCase()] = valueParts.join(': ');
             }
         }
         return headers;
@@ -44,7 +41,7 @@ class XHRResponse {
         try {
             return JSON.parse(this.xhr.responseText);
         } catch {
-            throw new XHRError(this.xhr, "Response is not valid JSON");
+            throw new XHRError(this.xhr, 'Response is not valid JSON');
         }
     }
 
@@ -58,18 +55,18 @@ class XHRResponse {
 }
 
 export class XHR {
-    constructor(baseURL = "", options = {}) {
+    constructor(baseURL = '', options = {}) {
         // Garante trailing slash
-        if (baseURL && !baseURL.endsWith("/")) baseURL += "/";
+        if (baseURL && !baseURL.endsWith('/')) baseURL += '/';
 
         this.baseURL = baseURL;
         this.defaultOptions = {
-            method: "GET",
+            method: 'GET',
             headers: {
-                Accept: "application/json",
+                Accept: 'application/json',
             },
-            credentials: "include",
-            responseType: "",
+            credentials: 'include',
+            responseType: '',
             timeout: 0,
             ...options,
         };
@@ -119,7 +116,6 @@ export class XHR {
         } catch {
             url = new URL(`${this.baseURL}${path}`);
         }
-
         // Query params
         if (requestOptions.params) {
             Object.entries(requestOptions.params).forEach(([k, v]) => {
@@ -166,7 +162,7 @@ export class XHR {
             if (config.timeout > 0) xhr.timeout = config.timeout;
 
             // Credentials
-            if (config.credentials === "include") xhr.withCredentials = true;
+            if (config.credentials === 'include') xhr.withCredentials = true;
 
             // Events
             xhr.onload = async () => {
@@ -183,7 +179,7 @@ export class XHR {
                         const error = new XHRError(xhr);
                         for (const errInterceptor of this.hook.responseError) {
                             const r = await errInterceptor(error, config);
-							if (r) return resolve(r);
+                            if (r) return resolve(r);
                         }
                         reject(error);
                     } else {
@@ -195,7 +191,7 @@ export class XHR {
             };
 
             xhr.onerror = async () => {
-                const error = new XHRError(xhr, "Network error occurred");
+                const error = new XHRError(xhr, 'Erro de rede');
                 try {
                     for (const errInterceptor of this.hook.responseError) {
                         await errInterceptor(error, config);
@@ -206,24 +202,29 @@ export class XHR {
                 reject(error);
             };
 
-            xhr.ontimeout = () => reject(new XHRError(xhr, "Request timeout"));
+            xhr.ontimeout = () => reject(new XHRError(xhr, 'Request timeout'));
 
             // Body auto-detect
             let bodyToSend = config.body;
             if (bodyToSend) {
                 if (
-                    typeof bodyToSend === "object" &&
+                    typeof bodyToSend === 'object' &&
                     !(bodyToSend instanceof FormData) &&
                     !(bodyToSend instanceof URLSearchParams) &&
                     !(bodyToSend instanceof Blob) &&
                     !(bodyToSend instanceof ArrayBuffer) &&
                     !ArrayBuffer.isView(bodyToSend)
                 ) {
-                    bodyToSend = JSON.stringify(bodyToSend);
                     const contentType = Object.keys(config.headers).find(
-                        k => k.toLowerCase() === "content-type",
+                        k => k.toLowerCase() === 'content-type'
                     );
-                    if (!contentType) xhr.setRequestHeader("Content-Type", "application/json");
+
+                    bodyToSend = JSON.stringify(bodyToSend);
+                    if (!contentType)
+                        xhr.setRequestHeader(
+                            'Content-Type',
+                            'application/json'
+                        );
                 }
             }
 
@@ -232,10 +233,22 @@ export class XHR {
     }
 
     // ===== Convenience Methods =====
-    get(path, options = {}) { return this.request(path, { ...options, method: "GET" }); }
-    post(path, body = null, options = {}) { return this.request(path, { ...options, method: "POST", body }); }
-    put(path, body = null, options = {}) { return this.request(path, { ...options, method: "PUT", body }); }
-    patch(path, body = null, options = {}) { return this.request(path, { ...options, method: "PATCH", body }); }
-    delete(path, options = {}) { return this.request(path, { ...options, method: "DELETE" }); }
-    head(path, options = {}) { return this.request(path, { ...options, method: "HEAD" }); }
+    get(path, options = {}) {
+        return this.request(path, { ...options, method: 'GET' });
+    }
+    post(path, body = null, options = {}) {
+        return this.request(path, { ...options, method: 'POST', body });
+    }
+    put(path, body = null, options = {}) {
+        return this.request(path, { ...options, method: 'PUT', body });
+    }
+    patch(path, body = null, options = {}) {
+        return this.request(path, { ...options, method: 'PATCH', body });
+    }
+    delete(path, options = {}) {
+        return this.request(path, { ...options, method: 'DELETE' });
+    }
+    head(path, options = {}) {
+        return this.request(path, { ...options, method: 'HEAD' });
+    }
 }

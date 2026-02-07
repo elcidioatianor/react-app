@@ -1,0 +1,106 @@
+/* components/LoadingOverlay.jsx */
+.loading-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+}
+
+.loading-spinner {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #ff6000 /*#3498db*/;
+    border-radius: 50%;
+    animation: spin 2.5s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-message {
+    margin: 0;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+/* components/Notification.jsx */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --success-color: #27ae60;
+    --danger-color: #e74c3c;
+    --warning-color: #f39c12;
+    --pink-color: #d80b43; /* USAR ESTA COR PARA ERROS OU APP SECONDARY COLOR (TITULOS,ETC) */
+}
+
+.notification {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    animation: slideIn 0.3s ease-out;
+}
+
+.notification-info {
+    background-color: var(--primary-color);
+}
+
+.notification-success {
+    background-color: var(--success-color);
+}
+
+.notification-error {
+    background-color: var(--pink-color);
+}
+
+.notification-warning {
+    background-color: var(--warning-color);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* views/Auth/(Login.jsx|Register.jsx) */
+.social-btn {
+    border: 1px solid #ddd8 !important;
+}
+
+.social-btn:hover {
+    background: #fff;
+    border-color: var(--bs-primary) !important;
+}

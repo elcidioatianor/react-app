@@ -8,13 +8,13 @@ module.exports = {
          * No MariaDB, temos um problema:
          * 1. Não podemos mudar o ENUM se houver dados 'user'.
          * 2. Não podemos mudar o dado 'user' para 'client' se o ENUM atual não aceitar 'client'.
-         * 
+         *
          * Solução: Converter temporariamente para VARCHAR, atualizar os dados e depois converter para o novo ENUM.
          */
 
         // 1. Converter para VARCHAR
         await queryInterface.sequelize.query(
-            "ALTER TABLE users MODIFY COLUMN role VARCHAR(50) NOT NULL;"
+            'ALTER TABLE users MODIFY COLUMN role VARCHAR(50) NOT NULL;'
         );
 
         // 2. Atualizar os dados
@@ -35,5 +35,5 @@ module.exports = {
         await queryInterface.sequelize.query(
             "ALTER TABLE users MODIFY COLUMN role ENUM('user', 'admin') NOT NULL DEFAULT 'user';"
         );
-    }
+    },
 };

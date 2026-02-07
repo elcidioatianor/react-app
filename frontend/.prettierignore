@@ -1,2 +1,3 @@
 # Ignore all MD files:
 **/*.md
+node_modules

@@ -1,12 +1,11 @@
-const router = require('express').Router()
-const passport = require('passport')
+const router = require('express').Router();
+const { authenticate } = require('../controllers/auth');
 
-router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
-        res.json({
-            message: 'Acesso autorizado',
-            user: req.user
-        })
-    }
-)
+router.get('/profile', authenticate, (req, res) => {
+	res.json({
+    	message: 'Acesso autorizado',
+        user: req.user,
+    });
+});
 
-module.exports = router
+module.exports = router;

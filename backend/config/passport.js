@@ -1,26 +1,26 @@
-const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt')
-const { User } = require('../database/models')
+const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
+const { User } = require('../database/models');
 
 const opts = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET
-}
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: process.env.JWT_SECRET,
+};
 
 //USAR AUTHENTICATE ? OU REQUIREAUTH?
 module.exports = (passport) => {
-  passport.use(
-    new JwtStrategy(opts, async (jwtPayload, done) => {
-      try {
-        const user = await User.findByPk(jwtPayload.sub)
+    passport.use(
+        new JwtStrategy(opts, async (jwtPayload, done) => {
+            try {
+                const user = await User.findByPk(jwtPayload.sub);
 
-        if (!user || !user.isActive) {
-          return done(null, false)
-        }
+                if (!user || !user.isActive) {
+                    return done(null, false);
+                }
 
-        return done(null, user)
-      } catch (err) {
-        return done(err, false)
-      }
-    })
-  )
-}
+                return done(null, user);
+            } catch (err) {
+                return done(err, false);
+            }
+        })
+    );
+};

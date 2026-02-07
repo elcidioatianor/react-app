@@ -5,12 +5,12 @@ import {
     Routes,
     Route,
     Navigate,
-} from "react-router-dom";
-import { AppProvider } from "./providers/AppProvider";
-import { RouterProvider } from "react-router-dom";
+} from 'react-router-dom';
+import { AppProvider } from './contexts/AppContext.jsx';
+import { RouterProvider } from 'react-router-dom';
 
-import { AppRouter } from "./router";
-import "./App.css";
+import { AppRouter } from './router.jsx';
+import './App.css';
 
 function App() {
     return (

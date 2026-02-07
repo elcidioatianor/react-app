@@ -1,15 +1,15 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { LoadingOverlay } from "./LoadingOverlay";
-import { useAuthContext } from "../contexts/AuthContext";
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { LoadingOverlay } from './LoadingOverlay';
+import { useAuthContext } from '../contexts/AuthContext';
 
-export function RequireAuth() {
+function RequireAuth() {
     //Verificar o user que vem do AuthContext
     const { isAuthenticated, loading } = useAuthContext();
     const location = useLocation();
 
     if (loading) {
         return (
-            <LoadingOverlay isLoading={true} message="Verificando acesso..." />
+            <LoadingOverlay isLoading={true} message='Verificando acesso...' />
         );
     }
 
@@ -24,7 +24,7 @@ export function RequireAuth() {
         //Se o usuário acessar /profile sem login
         //será redirecionado para /login com state: {from: "/profile" }
         //(altera ou define location.state.from)
-        return <Navigate to="/login" replace state={{ from: location }} />;
+        return <Navigate to='/login' replace state={{ from: location }} />;
         //replace evita voltar ao redirect com botao voltar
         /***
          * Isso permite escrever no Login.jsx
@@ -40,3 +40,5 @@ export function RequireAuth() {
     //(que representa os componentes filhos da rota protegida)
     return <Outlet />;
 }
+
+export default RequireAuth;
