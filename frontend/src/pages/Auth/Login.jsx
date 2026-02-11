@@ -1,8 +1,8 @@
 // src/views/Auth/Login.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuthContext } from '../../contexts/AuthContext';
-import { useNotification } from '../../contexts/NotificationContext';
+import { useAuth } from '../../hooks/useAuth';
+import { useNotification } from '../../hooks/useNotification';
 import {
     EyeFill,
     EyeSlashFill,
@@ -20,7 +20,7 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false); //TODO: USAR useFormStatus???
 
-    const { login, loading, isAuthenticated } = useAuthContext();
+    const { login, loading, isAuthenticated } = useAuth();
     const { addNotification } = useNotification();
     const navigate = useNavigate();
     const location = useLocation();
@@ -113,7 +113,7 @@ function Login() {
     };
 
     return (
-        <div className='min-vh-100 d-flex' style={{ marginTop: '56px' }}>
+        <div className='min-vh-100 d-flex'>
             {/* Left Panel - Branding */}
             <div
                 className='d-none d-lg-flex col-lg-5 position-relative'
@@ -162,8 +162,8 @@ function Login() {
                     <div className='text-center mb-4 d-lg-none'>
                         <Link to='/' className='text-decoration-none'>
                             <h2
-                                className='fw-bold'
-                                style={{ fontSize: '2rem' }}
+                                className='fw-bold mb-3'
+                                style={{ fontSize: '2rem'}}
                             >
                                 <span style={{ color: '#FF6000' }}>DUBA</span>
                                 <span style={{ color: '#333' }}>NING</span>

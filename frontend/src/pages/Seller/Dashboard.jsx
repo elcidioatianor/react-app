@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useApi } from '../../hooks/useApi';
+//import { useApi } from '../../hooks/useApi';
 import {
     Container,
     Row,
@@ -20,7 +20,7 @@ import {
 } from 'react-bootstrap-icons';
 
 function SellerDashboard() {
-    const api = useApi();
+    //const api = useApi();
     const [stats, setStats] = useState({
         revenue: 0,
         orders: 0,
@@ -28,7 +28,7 @@ function SellerDashboard() {
         views: 0,
     });
     const [recentOrders, setRecentOrders] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [, setLoading] = useState(true);
 
     useEffect(() => {
         // Mock data loading - Replace with real API calls later

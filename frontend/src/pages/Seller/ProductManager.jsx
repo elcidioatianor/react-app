@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useApi } from '../../hooks/useApi';
-import { useNotification } from '../../contexts/NotificationContext';
+import { useNotification } from '../../hooks/useNotification';
 import {
     Container,
     Row,
@@ -18,8 +18,8 @@ import {
     Search,
     PencilSquare,
     Trash,
-    ThreeDotsVertical,
-    Image as ImageIcon,
+    //ThreeDotsVertical,
+    //Image as ImageIcon,
 } from 'react-bootstrap-icons';
 
 function ProductManager() {
@@ -43,21 +43,25 @@ function ProductManager() {
         image: '',
     });
 
-    useEffect(() => {
-        loadProducts();
-    }, []);
+    const loadProducts = useCallback(() => {
+        return api.get('/products/my-products');
+    }, [api])
 
-    const loadProducts = async () => {
-        try {
-            const res = await api.get('/products/my-products');
-            setProducts(res.data);
-            setLoading(false);
-        } catch (error) {
-            console.error(error);
-            addNotification('Erro ao carregar produtos', 'error');
-            setLoading(false);
-        }
-    };
+    
+
+    useEffect(() => {
+        loadProducts()
+            .then(res => {
+                setProducts(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error(err);
+                addNotification('Erro ao carregar produtos', 'error');
+                setLoading(false);
+            });
+    }, [loadProducts, addNotification]);
+
 
     const handleInput = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -83,7 +87,17 @@ function ProductManager() {
             }
 
             handleCloseModal();
-            loadProducts();
+            loadProducts()
+            .then(res => {
+                setProducts(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error(err);
+                addNotification('Erro ao carregar produtos', 'error');
+                setLoading(false);
+            });
+            
         } catch (error) {
             console.error(error);
             addNotification('Erro ao salvar produto', 'error');
@@ -97,7 +111,7 @@ function ProductManager() {
                 addNotification('Produto removido.', 'success');
                 setProducts(products.filter(p => p.id !== id));
             } catch (error) {
-                addNotification('Erro ao remover produto', 'error');
+                addNotification('Erro ao remover produto: ' + error.message, 'error');
             }
         }
     };

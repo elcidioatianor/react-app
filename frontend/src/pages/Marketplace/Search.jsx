@@ -49,7 +49,7 @@ function Search() {
             }
         };
         fetchResults();
-    }, [query, filters]);
+    }, [query, api, filters]);
 
     const categories = ['Tecnologia', 'Moda', 'Casa', 'Agro', 'Serviços'];
     const cities = ['Maputo', 'Matola', 'Beira', 'Nampula', 'Tete'];

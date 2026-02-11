@@ -1,24 +1,13 @@
 // src/contexts/AuthContext.jsx
-import { createContext, useContext, useState, useEffect } from 'react';
-import { xhr } from '../services/api';
+import { createContext, useState, useEffect } from 'react';
 import { LoadingOverlay } from '../components/LoadingOverlay';
+import { xhr } from '../services/api';
 
 //CREATE THE CONTEXT
-export const AuthContext = createContext(null);
-
-//Create a hook to use the context in components
-export const useAuthContext = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new TypeError(
-            'useAuthContext deve ser usado dentro de AuthProvider'
-        );
-    }
-    return context;
-};
+const AuthContext = createContext(null);
 
 //Disponibilizar funcionalidades do contexto
-export function AuthProvider({ children }) {
+function AuthProvider({ children }) {
     //TODO: USAR useReducer ou [state, setState] = useState(null) (para evitar múltiplos set...)
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -134,4 +123,9 @@ export function AuthProvider({ children }) {
             )}
         </AuthContext>
     );
+}
+
+export {
+    AuthContext,
+    AuthProvider
 }

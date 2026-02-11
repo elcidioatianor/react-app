@@ -1,25 +1,18 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useState } from 'react';
 import { Notification } from '../components/Notification';
 
 const NotificationContext = createContext(null);
 
-const useNotification = () => {
-    const context = useContext(NotificationContext);
-
-    if (!context) {
-        throw new Error(
-            'useNotification deve ser usado dentro de NotificationProvider'
-        );
-    }
-    return context;
-};
+function createID() {
+    return crypto.randomUUID()
+}
 
 //TODO: USE BOOTSTRAP TOAST COMPONENT
 function NotificationProvider({ children }) {
     const [notifications, setNotifications] = useState([]);
 
     const addNotification = (message, type = 'info', duration = 5000) => {
-        const id = Date.now();
+        const id = createID();
         const notification = { id, message, type };
 
         setNotifications(prev => [...prev, notification]);
@@ -48,4 +41,7 @@ function NotificationProvider({ children }) {
     );
 }
 
-export { NotificationContext, useNotification, NotificationProvider };
+export { 
+    NotificationContext, 
+    NotificationProvider 
+};

@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useApi } from '../../hooks/useApi';
-import { useAuthContext } from '../../contexts/AuthContext';
+//import { useApi } from '../../hooks/useApi';
+import { useAuth } from '../../hooks/useAuth';
 import { Container, Card, Form, Button, Spinner } from 'react-bootstrap';
 import { SendFill, Paperclip, CheckAll, Check } from 'react-bootstrap-icons';
 
 function Chat() {
     const { partnerId } = useParams();
-    const { user } = useAuthContext();
-    const api = useApi();
+    const { user } = useAuth();
+    //const api = useApi();
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const [loading, setLoading] = useState(true);
+    //const [loading, setLoading] = useState(true);
     const scrollRef = useRef();
 
     // Mock partner info (In real app, fetch this)
@@ -21,7 +21,8 @@ function Chat() {
         avatar: null,
     };
 
-    const fetchMessages = async () => {
+    useEffect(() => {
+        const fetchMessages = async () => {
         try {
             // const res = await api.get(/chat/history/${partnerId});
             // setMessages(res.data);
@@ -56,17 +57,17 @@ function Chat() {
         } catch (error) {
             console.error(error);
         } finally {
-            setLoading(false);
+            //setLoading(false);
         }
     };
 
-    useEffect(() => {
+
         if (partnerId) {
             fetchMessages();
             const interval = setInterval(fetchMessages, 5000);
             return () => clearInterval(interval);
         }
-    }, [partnerId]);
+    }, [partnerId, messages.length, user.id]);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -90,7 +91,7 @@ function Chat() {
         try {
             // await api.post('/chat/send', { receiverId: partnerId, message: newMessage });
         } catch (error) {
-            console.error('Failed to send');
+            console.error('Failed to send: ' + error.message);
         }
     };
 

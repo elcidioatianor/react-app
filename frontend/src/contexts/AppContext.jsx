@@ -1,10 +1,11 @@
 // src/providers/AppProviders.jsx
-import { useAuthContext, AuthProvider } from './AuthContext';
+import { AuthProvider } from './AuthContext';
+import { useAuth } from '../hooks/useAuth.js';
 import { NotificationProvider } from './NotificationContext';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 
 function GlobalLoader() {
-    const { loading } = useAuthContext();
+    const { loading } = useAuth();
     return (
         <LoadingOverlay
             isLoading={loading}

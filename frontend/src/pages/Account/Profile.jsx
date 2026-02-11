@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Container,
     Row,
@@ -28,18 +28,18 @@ import {
     Message,
 } from '../../components/Svg';
 
-import { useAuthContext as useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { useApi } from '../../hooks/useApi';
 
 function Profile() {
-    const { user: currentUser, logout, updateProfile } = useAuth();
+    const { user: currentUser, updateProfile } = useAuth();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('orders');
     const [editMode, setEditMode] = useState(false);
     const [showSuccessToast, setShowSuccessToast] = useState(false);
     const [imgError, setImgError] = useState(false);
 
-    const { execute: saveProfile, loading: saving } = useApi();
+    const { loading: saving } = useApi();
 
     const [profileData, setProfileData] = useState({
         name: currentUser?.name || '',
@@ -48,7 +48,7 @@ function Profile() {
         avatarUrl: currentUser?.avatarUrl || '',
     });
 
-    const [orders, setOrders] = useState([
+    const [orders] = useState([
         {
             id: 'DB-1001',
             date: '2026-01-05',

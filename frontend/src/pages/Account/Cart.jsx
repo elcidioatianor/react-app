@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useNotification } from '../../contexts/NotificationContext';
+import { useNotification } from '../../hooks/useNotification';
 
 export default function Cart() {
     const { addNotification } = useNotification();
@@ -8,8 +8,20 @@ export default function Cart() {
     const [cartItems, setCartItems] = useState([]);
 
     useEffect(() => {
-        const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
-        setCartItems(savedCart);
+        function getCartItems() {
+            return new Promise(resolve => {
+                const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                
+                setTimeout(()=> {
+                    resolve(savedCart)
+                })
+            })
+        }
+        getCartItems()
+            .then(items => setCartItems(items))
+            .catch(() => {
+                setCartItems([])
+            })
     }, []);
 
     const updateQuantity = (id, delta) => {

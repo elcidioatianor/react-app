@@ -77,7 +77,7 @@ exports.register = async (req, res, next) => {
         }
 
         const exists = await User.findOne({
-            where: { phone },
+            where: { phoneNumber },
         });
 
         if (exists) {

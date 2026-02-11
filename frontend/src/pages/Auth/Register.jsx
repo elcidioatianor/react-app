@@ -1,8 +1,8 @@
 // src/views/Auth/Register.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../contexts/AuthContext';
-import { useNotification } from '../../contexts/NotificationContext';
+import { useAuth } from '../../hooks/useAuth';
+import { useNotification } from '../../hooks/useNotification';
 import { EyeFill, EyeSlashFill } from '../../components/Svg';
 
 function Register() {
@@ -22,7 +22,7 @@ function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { register, loading, isAuthenticated } = useAuthContext();
+    const { register, loading, isAuthenticated } = useAuth();
     const { addNotification } = useNotification();
     const navigate = useNavigate();
 
@@ -92,7 +92,7 @@ function Register() {
         try {
             const res = await register({
                 firstName: userData.firstName,
-                firstName: userData.lastName,
+                lastName: userData.lastName,
                 phoneNumber: userData.phoneNumber,
                 email: userData.email,
                 password: userData.password,
@@ -118,7 +118,7 @@ function Register() {
     };
 
     return (
-        <div className='min-vh-100 d-flex' style={{ marginTop: '56px' }}>
+        <div className='min-vh-100 d-flex'>
             {/* Left Panel - Branding */}
             <div
                 className='d-none d-lg-flex col-lg-5 position-relative'
@@ -134,7 +134,7 @@ function Register() {
                         opacity: 0.15,
                     }}
                 ></div>
-                <div className='position-relative d-flex flex-column justify-content-center p-5 text-white'>
+                <div className='d-flex flex-column justify-content-center align-items-center text-white'>
                     <Link to='/' className='text-decoration-none mb-5'>
                         <h2 className='fw-bold' style={{ fontSize: '2rem' }}>
                             <span style={{ color: '#fff' }}>DUBA</span>
@@ -142,7 +142,7 @@ function Register() {
                         </h2>
                     </Link>
                     <h1 className='display-5 fw-bold mb-4'>Junte-se a nós!</h1>
-                    <p className='lead mb-4'>
+                    <p className='lead text-center mb-4'>
                         Crie sua conta gratuita e comece a comprar ou vender no
                         maior marketplace de Moçambique.
                     </p>

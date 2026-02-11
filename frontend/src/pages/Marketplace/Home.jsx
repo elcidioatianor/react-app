@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
-import { useNotification } from '../../contexts/NotificationContext';
+//import { useNotification } from '../../hooks/useNotification';
 import {
     Container,
     Row,
@@ -17,7 +17,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 function Home() {
     const api = useApi();
     const navigate = useNavigate();
-    const { addNotification } = useNotification();
+    //const { addNotification } = useNotification();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -136,19 +136,20 @@ function Home() {
     ];
 
     useEffect(() => {
-        loadProducts();
-    }, []);
+        const loadProducts = async () => {
+            try {
+                const res = await api.get('/products');
+                setProducts(res.data || []);
+            } catch (error) {
+                console.error('Erro ao carregar produtos', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const loadProducts = async () => {
-        try {
-            const res = await api.get('/products');
-            setProducts(res.data || []);
-        } catch (error) {
-            console.error('Erro ao carregar produtos', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        loadProducts();
+    }, [api]);
+
 
     const handleSearch = e => {
         e.preventDefault();
@@ -157,7 +158,7 @@ function Home() {
         if (selectedCity) params.set('city', selectedCity);
         navigate(`/search?${params.toString()}`);
     };
-
+    /*
     const addToCart = (product, e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -179,7 +180,7 @@ function Home() {
         window.dispatchEvent(new Event('cartUpdated'));
         addNotification('Adicionado ao carrinho!', 'success');
     };
-
+    */
     return (
         <div className='bg-light min-vh-100 font-sans pb-5'>
             {/* Hero Section */}

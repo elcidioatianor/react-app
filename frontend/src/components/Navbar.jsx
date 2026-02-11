@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../contexts/AuthContext';
-import { PersonCircle, Gear, BoxArrowRight, GraphUp } from './Svg';
+import { Link/*, NavLink*/, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth.js';
+//import { PersonCircle, Gear, BoxArrowRight, GraphUp } from './Svg';
 
 export function Navbar() {
-    const { user, isAuthenticated, logout } = useAuthContext();
+    const { user, isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
     const [cartCount, setCartCount] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');

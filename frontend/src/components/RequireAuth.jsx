@@ -1,10 +1,10 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { LoadingOverlay } from './LoadingOverlay';
-import { useAuthContext } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth.js';
 
 function RequireAuth() {
     //Verificar o user que vem do AuthContext
-    const { isAuthenticated, loading } = useAuthContext();
+    const { isAuthenticated, loading } = useAuth();
     const location = useLocation();
 
     if (loading) {

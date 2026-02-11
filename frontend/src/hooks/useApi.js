@@ -1,22 +1,22 @@
 // src/hooks/useApi.js
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { xhr } from '../services/api';
-import { useAuthContext } from '../contexts/AuthContext';
+import { useAuth } from './useAuth.js';
 
 export const useApi = (options = {}) => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const abortControllerRef = useRef(null);
-    const { isAuthenticated } = useAuthContext();
+    const { isAuthenticated } = useAuth();
 
     // Opções padrão
-    const defaultOptions = {
+    const defaultOptions = useMemo(() => ({
         autoCancel: true,
         showErrors: true,
         requireAuth: false,
         ...options,
-    };
+    }), [options]);
 
     const execute = useCallback(
         async (path, config = {}) => {
@@ -121,7 +121,7 @@ export const useApi = (options = {}) => {
 };
 
 // Hook para fetch automático
-export const useFetch = (path, config = {}, deps = []) => {
+export const useFetch = (path, config = {}) => {
     const api = useApi(config);
     const { execute, ...rest } = api;
 
@@ -129,7 +129,7 @@ export const useFetch = (path, config = {}, deps = []) => {
         if (path) {
             execute(path, config);
         }
-    }, [path, ...deps]);
+    }, [path, config, execute]);
 
     return { ...rest, refetch: () => execute(path, config) };
 };

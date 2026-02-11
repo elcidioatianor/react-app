@@ -4,33 +4,33 @@ import { createBrowserRouter } from 'react-router-dom';
 import AppLayout from './layouts/AppLayout';
 
 // Rotas
-import Home from './views/Marketplace/Home';
-import Login from './views/Auth/Login';
-import Register from './views/Auth/Register';
-import Dashboard from './views/Account/Dashboard';
-import Profile from './views/Account/Profile';
+import Home from './pages/Marketplace/Home';
+import Login from './pages/Auth/Login';
+import Register from './pages/Auth/Register';
+import Dashboard from './pages/Account/Dashboard';
+import Profile from './pages/Account/Profile';
 
 //Auth
 import RequireAuth from './components/RequireAuth';
 
 // Erros
-import NotFound from './views/NotFound.jsx';
-import ErrorBoundary from './views/ErrorBoundary';
-import ProductDetails from './views/Marketplace/ProductDetails';
-import Cart from './views/Account/Cart';
-import Checkout from './views/Account/Checkout';
-import Search from './views/Marketplace/Search';
-import Chat from './views/Account/Chat';
-import DocumentViewer from './views/Account/DocumentViewer';
+import NotFound from './pages/NotFound.jsx';
+import ErrorBoundary from './pages/ErrorBoundary';
+import ProductDetails from './pages/Marketplace/ProductDetails';
+import Cart from './pages/Account/Cart';
+import Checkout from './pages/Account/Checkout';
+import Search from './pages/Marketplace/Search';
+import Chat from './pages/Account/Chat';
+import DocumentViewer from './pages/Account/DocumentViewer';
 
 // Vendedor
 import SellerLayout from './layouts/SellerLayout';
-import SellerDashboard from './views/Seller/Dashboard';
-import StoreOnboarding from './views/Seller/StoreOnboarding';
-import ProductManager from './views/Seller/ProductManager';
-import SellerOrderManager from './views/Seller/OrderManager';
+import SellerDashboard from './pages/Seller/Dashboard';
+import StoreOnboarding from './pages/Seller/StoreOnboarding';
+import ProductManager from './pages/Seller/ProductManager';
+import SellerOrderManager from './pages/Seller/OrderManager';
 
-export const AppRouter = createBrowserRouter([
+const router = createBrowserRouter([
     {
         // ROTAS COM NAVBAR
         element: <AppLayout />,
@@ -94,3 +94,5 @@ export const AppRouter = createBrowserRouter([
         element: <NotFound />,
     },
 ]);
+
+export default router;

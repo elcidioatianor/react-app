@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
-import { useNotification } from '../../contexts/NotificationContext';
+import { useNotification } from '../../hooks/useNotification';
 import {
     Container,
     Row,
@@ -65,7 +65,7 @@ function ProductDetails() {
             }
         };
         fetchProduct();
-    }, [id]);
+    }, [id, api, addNotification, navigate]);
 
     const addToCart = (redirect = false) => {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');

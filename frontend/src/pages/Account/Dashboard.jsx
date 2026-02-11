@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuthContext } from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { useApi } from '../../hooks/useApi';
 
 export default function Dashboard() {
-    const { user } = useAuthContext();
+    const { user } = useAuth();
     const api = useApi();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -20,8 +20,9 @@ export default function Dashboard() {
                 setLoading(false);
             }
         };
+        
         fetchOrders();
-    }, []);
+    }, [setOrders, setLoading, api]);
 
     return (
         <div className='container py-5' style={{ marginTop: '60px' }}>

@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useNotification } from '../../contexts/NotificationContext';
-import { useAuthContext } from '../../contexts/AuthContext';
-import { useApi } from '../../hooks/useApi';
+import { useNotification } from '../../hooks/useNotification.js';
+import { useAuth } from '../../hooks/useAuth.js';
+import { useApi } from '../../hooks/useApi.js';
 
 function Checkout() {
-    const { user } = useAuthContext();
+    const { user } = useAuth();
     const { addNotification } = useNotification();
     const navigate = useNavigate();
     const api = useApi();
     const [cartItems, setCartItems] = useState([]);
-    const [step, setStep] = useState(1);
+    //const [step, setStep] = useState(1);
 
     const [formData, setFormData] = useState({
         name: user?.name || '',
@@ -24,10 +24,25 @@ function Checkout() {
     });
 
     useEffect(() => {
-        const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
-        if (savedCart.length === 0) navigate('/');
-        setCartItems(savedCart);
-    }, []);
+        function getCartItems() {
+            return new Promise(resolve => {
+                const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                
+                setTimeout(()=> {
+                    resolve(savedCart)
+                })
+            })
+        }
+        getCartItems()
+            .then(items => {
+                setCartItems(items)
+                if (items.length === 0) navigate('/');
+            })
+            .catch(() => {
+                setCartItems([])
+            })
+        
+    }, [navigate]);
 
     const total = cartItems.reduce(
         (acc, item) => acc + item.price * item.quantity,

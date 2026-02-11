@@ -1,4 +1,4 @@
-import { useNotification } from '../contexts/NotificationContext';
+import { useNotification } from '../hooks/useNotification';
 
 //TODO: USE BOOTSTRAP TOAST COMPONENT
 export const Notification = () => {

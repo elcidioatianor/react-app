@@ -20,7 +20,7 @@ import {
     Truck,
     CheckCircle,
 } from 'react-bootstrap-icons';
-import { useNotification } from '../../contexts/NotificationContext';
+import { useNotification } from '../../hooks/useNotification';
 
 function OrderManager() {
     const api = useApi();
@@ -43,7 +43,7 @@ function OrderManager() {
             }
         };
         fetchOrders();
-    }, []);
+    }, [api, addNotification]);
 
     const handleStatusChange = async (orderId, newStatus) => {
         // Optimistic update

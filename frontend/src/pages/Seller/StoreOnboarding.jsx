@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
-import { useNotification } from '../../contexts/NotificationContext';
+import { useNotification } from '../../hooks/useNotification';
 import {
     Container,
     Row,

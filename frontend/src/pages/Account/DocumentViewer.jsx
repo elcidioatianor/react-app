@@ -24,7 +24,7 @@ function DocumentViewer() {
             }
         };
         fetchOrder();
-    }, [id]);
+    }, [id, api]);
 
     if (loading)
         return <div className='p-5 text-center'>Gerando Documento...</div>;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth.js';
 import {
     Container,
     Row,
@@ -24,7 +24,7 @@ import {
 } from 'react-bootstrap-icons';
 
 function SellerLayout() {
-    const { user, logout } = useAuthContext();
+    const { user, logout } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
     const [showSidebar, setShowSidebar] = useState(false);
@@ -41,81 +41,6 @@ function SellerLayout() {
         location.pathname === path
             ? 'active bg-primary text-white'
             : 'text-dark';
-
-    const SidebarContent = () => (
-        <div className='d-flex flex-column h-100'>
-            <div className='p-3 text-center mb-4 border-bottom'>
-                <h4 className='fw-bold text-dark'>
-                    DUBANING <span className='text-warning'>Seller</span>
-                </h4>
-            </div>
-            <Nav className='flex-column px-2 gap-1 flex-grow-1'>
-                <Nav.Item>
-                    <Link
-                        to='/seller/dashboard'
-                        className={`nav-link rounded ${isActive('/seller/dashboard')}`}
-                        onClick={handleClose}
-                    >
-                        <Speedometer2 className='me-2' /> Visão Geral
-                    </Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Link
-                        to='/seller/products'
-                        className={`nav-link rounded ${isActive('/seller/products')}`}
-                        onClick={handleClose}
-                    >
-                        <BoxSeam className='me-2' /> Produtos
-                    </Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Link
-                        to='/seller/orders'
-                        className={`nav-link rounded ${isActive('/seller/orders')}`}
-                        onClick={handleClose}
-                    >
-                        <Cart3 className='me-2' /> Pedidos
-                    </Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Link
-                        to='/seller/wallet'
-                        className={`nav-link rounded ${isActive('/seller/wallet')}`}
-                        onClick={handleClose}
-                    >
-                        <Wallet2 className='me-2' /> Financeiro
-                    </Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Link
-                        to='/seller/documents'
-                        className={`nav-link rounded ${isActive('/seller/documents')}`}
-                        onClick={handleClose}
-                    >
-                        <FileEarmarkText className='me-2' /> Documentos
-                    </Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Link
-                        to='/seller/settings'
-                        className={`nav-link rounded ${isActive('/seller/settings')}`}
-                        onClick={handleClose}
-                    >
-                        <Gear className='me-2' /> Definições
-                    </Link>
-                </Nav.Item>
-            </Nav>
-            <div className='p-3 border-top'>
-                <Button
-                    variant='outline-danger'
-                    className='w-100 d-flex align-items-center justify-content-center gap-2'
-                    onClick={handleLogout}
-                >
-                    <BoxArrowLeft /> Sair
-                </Button>
-            </div>
-        </div>
-    );
 
     return (
         <div className='min-vh-100 bg-light'>
@@ -174,7 +99,7 @@ function SellerLayout() {
                         lg={2}
                         className='d-none d-lg-block vh-100 bg-white shadow-sm position-fixed top-0 start-0 overflow-auto'
                     >
-                        <SidebarContent />
+                        <SidebarContent handleLogout={handleLogout} isActive={isActive} handleClose={handleClose}/>
                     </Col>
 
                     {/* Mobile Offcanvas Sidebar */}
@@ -257,6 +182,83 @@ function SellerLayout() {
                     </Col>
                 </Row>
             </Container>
+        </div>
+    );
+}
+
+function SidebarContent({handleClose, isActive, handleLogout}) {
+    return (
+        <div className='d-flex flex-column h-100'>
+            <div className='p-3 text-center mb-4 border-bottom'>
+                <h4 className='fw-bold text-dark'>
+                    DUBANING <span className='text-warning'>Seller</span>
+                </h4>
+            </div>
+            <Nav className='flex-column px-2 gap-1 flex-grow-1'>
+                <Nav.Item>
+                    <Link
+                        to='/seller/dashboard'
+                        className={`nav-link rounded ${isActive('/seller/dashboard')}`}
+                        onClick={handleClose}
+                    >
+                        <Speedometer2 className='me-2' /> Visão Geral
+                    </Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link
+                        to='/seller/products'
+                        className={`nav-link rounded ${isActive('/seller/products')}`}
+                        onClick={handleClose}
+                    >
+                        <BoxSeam className='me-2' /> Produtos
+                    </Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link
+                        to='/seller/orders'
+                        className={`nav-link rounded ${isActive('/seller/orders')}`}
+                        onClick={handleClose}
+                    >
+                        <Cart3 className='me-2' /> Pedidos
+                    </Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link
+                        to='/seller/wallet'
+                        className={`nav-link rounded ${isActive('/seller/wallet')}`}
+                        onClick={handleClose}
+                    >
+                        <Wallet2 className='me-2' /> Financeiro
+                    </Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link
+                        to='/seller/documents'
+                        className={`nav-link rounded ${isActive('/seller/documents')}`}
+                        onClick={handleClose}
+                    >
+                        <FileEarmarkText className='me-2' /> Documentos
+                    </Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link
+                        to='/seller/settings'
+                        className={`nav-link rounded ${isActive('/seller/settings')}`}
+                        onClick={handleClose}
+                    >
+                        <Gear className='me-2' /> Definições
+                    </Link>
+                </Nav.Item>
+            </Nav>
+            <div className='p-3 border-top'>
+                <Button
+                    variant='outline-danger'
+                    className='w-100 d-flex align-items-center justify-content-center gap-2'
+                    onClick={handleLogout}
+                >
+                    <BoxArrowLeft /> Sair
+                </Button>
+            </div>
         </div>
     );
 }
