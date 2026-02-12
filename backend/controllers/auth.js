@@ -65,7 +65,7 @@ exports.register = async (req, res, next) => {
     try {
         const { firstName, lastName, phoneNumber, email, password, role } =
             req.body;
-
+        console.log(req.body)
         if (!firstName || !lastName || !phoneNumber || !email || !password) {
             //400 (Bad Request)
             return next(
@@ -215,7 +215,7 @@ exports.forgotPassword = async (req, res, next) => {
     }
 };
 
-exports.refresh = async (req, res) => {
+exports.refresh = async (req, res, next) => {
     //TODO: REFATORAR DEPOIS
 
     if (req.headers.origin !== 'http://localhost:5173') {
@@ -305,7 +305,7 @@ exports.refresh = async (req, res) => {
 };
 
 //TODO: MOVER PARA ./api
-exports.profile = async (req, res) => {
+exports.profile = async (req, res, next) => {
     try {
         let user = await User.findByPk(req.payload.sub);
         res.json(user);
@@ -315,7 +315,7 @@ exports.profile = async (req, res) => {
 };
 
 //Invalidar refresh token
-exports.logout = async (req, res) => {
+exports.logout = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
         const [, accessToken] = authHeader.split(' ');

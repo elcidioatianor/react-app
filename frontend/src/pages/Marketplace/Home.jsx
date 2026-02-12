@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useApi } from '../../hooks/useApi';
+import { xhr } from '../../services/api';
 //import { useNotification } from '../../hooks/useNotification';
 import {
     Container,
@@ -15,7 +15,7 @@ import {
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Home() {
-    const api = useApi();
+    //const api = useApi();
     const navigate = useNavigate();
     //const { addNotification } = useNotification();
     const [products, setProducts] = useState([]);
@@ -138,18 +138,30 @@ function Home() {
     useEffect(() => {
         const loadProducts = async () => {
             try {
-                const res = await api.get('/products');
-                setProducts(res.data || []);
+                const res = await xhr.get('/products');
+                let data = [];
+                try {
+                    data = res.json();
+                } catch (e) {
+                    console.error('Invalid JSON response', e);
+                }
+
+                if (Array.isArray(data)) {
+                    setProducts(data);
+                } else {
+                    console.error('API returned non-array:', data);
+                    setProducts([]);
+                }
+                setLoading(false);
             } catch (error) {
                 console.error('Erro ao carregar produtos', error);
-            } finally {
+                setProducts([]);
                 setLoading(false);
             }
         };
 
-        loadProducts();
-    }, [api]);
-
+        loading && loadProducts();
+    }, [loading, setLoading]);
 
     const handleSearch = e => {
         e.preventDefault();

@@ -5,6 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     class User extends Model {
         static associate(models) {
             // associações futuras
+            User.hasMany(models.Store, {
+                as: 'stores'
+            })
         }
     }
 
@@ -52,9 +55,9 @@ module.exports = (sequelize, DataTypes) => {
             },
 
             role: {
-                type: DataTypes.ENUM('client', 'seller', 'admin'),
+                type: DataTypes.ENUM('buyer', 'seller', 'admin'),
                 allowNull: false,
-                defaultValue: 'client',
+                defaultValue: 'buyer',
             },
 
             refreshTokenHash: {

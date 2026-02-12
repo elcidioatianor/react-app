@@ -16,35 +16,29 @@ function AuthProvider({ children }) {
 
     // Verificar autenticação inicial
     useEffect(() => {
+            const checkAuthentication = async () => {
+                try {
+                    const res = await xhr.post('/auth/profile', {});
+                    const user = res.json();
+        
+                    if (user) {
+                        setUser(user);
+                        setAuthenticated(true);
+                        setLoading(false);
+                    }
+                } catch (err) {
+                    //TODO: USAR APENAS isAuthenticated PARA CONTROLAR REDIRECT
+                    if (isAuthenticated) setAuthenticated(false);
+                    
+                    setLoading(false);
+                    setError(err.message);
+                }
+            };
         checkAuthentication();
         return () => {
             //CLEANUP HERE (LISTENERS, ETC)
         };
-    }, []);
-
-    const checkAuthentication = async () => {
-        try {
-            const res = await xhr.post('/auth/profile', {});
-            const user = res.json();
-
-            if (user) {
-                setUser(user);
-                setAuthenticated(true);
-                setLoading(false);
-            }
-        } catch (err) {
-            //TODO: USAR APENAS isAuthenticated PARA CONTROLAR REDIRECT
-            setAuthenticated(false);
-
-            // E REMOVER O CÓDIGO A SEGUIR
-            if (window.location.path !== '/') {
-                //PERMITIR USUÁRIO SEM SESSÃO NA PÁGINA INICIAL:
-                //window.location.href = '/'
-            }
-            setLoading(false);
-            setError(err.message);
-        }
-    };
+    }, [isAuthenticated]);
 
     // Registrar
     const register = async formData => {
@@ -56,7 +50,7 @@ function AuthProvider({ children }) {
             if (!userData || !accessToken) {
                 throw new Error('Dados de autenticação incompletos');
             }
-            setAuthenticated(true);
+            //setAuthenticated(true);
             //setError(null)
             return { done: true };
         } catch (err) {
@@ -80,7 +74,7 @@ function AuthProvider({ children }) {
         } catch (err) {
             console.log(err);
             //setError(err.message);
-            setAuthenticated(false);
+            //setAuthenticated(false);
             return { done: false, error: err.message };
         }
     };

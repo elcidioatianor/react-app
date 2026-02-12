@@ -6,6 +6,19 @@ import { XHR } from './xhr';
 const baseURL = import.meta.env.VITE_API_URL;
 const xhr = new XHR(baseURL);
 let accessToken = null;
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+    failedQueue = [];
+};
 
 //Evitar loop: refresh lock
 // Configurar opções padrão
@@ -35,36 +48,58 @@ xhr.transformResponse(async res => {
     try {
         let { accessToken: newToken } = res.json(); //CAPTURAR NOVO ACCESS TOKEN
         if (newToken) accessToken = newToken;
-    } catch {}
+    } catch(err) {
+        console.log('Error parsing response: ' + err.message)
+    }
 
     return res;
 });
 
 // Interceptor para refresh token
 xhr.interceptError(async (error, config) => {
-    //TODO: HANDLE REFRESH QUEUE
-    //Refresh token é httpOnly, portanto, sem acesso JS
-    if (error.status === 401 && error.code === 'EEXPIRY') {
-        //
-        // Solicitar novo access token
-        const response = await xhr.post('/auth/refresh', {});
-        const { accessToken: token } = response.json();
+    // Refresh token code check (adjust based on actual API error code)
+    if (error.status === 401 && (error.code === 'EEXPIRY' || error.message === 'Token expired')) {
+        const originalRequest = config;
 
-        if (token) {
-            try {
-                let res = await xhr.request(config.url, config);
-
-                return res;
-            } catch (err) {
-                throw err;
-            }
-        } else {
-            throw error;
+        if (isRefreshing) {
+            return new Promise((resolve, reject) => {
+                failedQueue.push({ resolve, reject });
+            })
+                .then(token => {
+                    originalRequest.headers['Authorization'] = `Bearer ${token}`;
+                    return xhr.request(originalRequest.url, originalRequest);
+                })
+                .catch(err => {
+                    throw err;
+                });
         }
-    } else {
-        //REDIRECIONAR ERRO
-        throw error;
-    }
+
+        isRefreshing = true;
+
+        try {
+            const response = await xhr.post('/auth/refresh', {});
+            const { accessToken: token } = response.json();
+
+            if (token) {
+                accessToken = token;
+                processQueue(null, token);
+                
+                // Retry original request
+                originalRequest.headers['Authorization'] = `Bearer ${token}`;
+                return await xhr.request(originalRequest.url, originalRequest);
+            } else {
+                throw new Error('Refresh failed');
+            }
+        } catch (err) {
+            processQueue(err, null);
+            // Optional: Redirect to login or clear storage
+            throw err;
+        } finally {
+            isRefreshing = false;
+        }
+    } 
+    
+    throw error;
 });
 
 export { xhr };

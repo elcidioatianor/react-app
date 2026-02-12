@@ -113,10 +113,10 @@ function Login() {
     };
 
     return (
-        <div className='min-vh-100 d-flex'>
+        <div className='vh-100 d-flex'>
             {/* Left Panel - Branding */}
             <div
-                className='d-none d-lg-flex col-lg-5 position-relative'
+                className='d-none d-lg-flex col-lg-6 position-relative top-0 left-0 vh-100'
                 style={{
                     background:
                         'linear-gradient(135deg, #FF6000 0%, #FF8C00 100%)',
@@ -129,7 +129,7 @@ function Login() {
                         opacity: 0.15,
                     }}
                 ></div>
-                <div className='position-relative d-flex flex-column justify-content-center p-5 text-white'>
+                <div className='d-flex flex-column justify-content-center align-items-center text-white'>
                     <Link to='/' className='text-decoration-none mb-5'>
                         <h2 className='fw-bold' style={{ fontSize: '2rem' }}>
                             <span style={{ color: '#fff' }}>DUBA</span>
@@ -139,7 +139,7 @@ function Login() {
                     <h1 className='display-5 fw-bold mb-4'>
                         Bem-vindo de volta!
                     </h1>
-                    <p className='lead mb-4'>
+                    <p className='lead mb-4 text-center w-75'>
                         Aceda à sua conta para continuar a explorar milhares de
                         produtos e serviços em Moçambique.
                     </p>
@@ -157,8 +157,9 @@ function Login() {
             </div>
 
             {/* Right Panel - Form */}
-            <div className='col-12 col-lg-7 d-flex align-items-center justify-content-center bg-light p-4 p-md-5'>
-                <div className='w-100' style={{ maxWidth: '450px' }}>
+            <div className='col-12 col-lg-6 d-flex align-items-center bg-light overflow-y-auto'>
+                <div className='w-100 d-flex flex-column bg-light align-items-center justify-content-center py-3'>
+                    <div  style={{maxWidth: '450px'}}>
                     <div className='text-center mb-4 d-lg-none'>
                         <Link to='/' className='text-decoration-none'>
                             <h2
@@ -171,7 +172,7 @@ function Login() {
                         </Link>
                     </div>
 
-                    <div className='bg-white rounded-4 shadow-sm p-4 p-md-5'>
+                    <div className='bg-white rounded-4 shadow-sm p-4'>
                         <h3 className='fw-bold mb-1'>Entrar</h3>
                         <p className='text-muted mb-4'>
                             Faça login para continuar
@@ -309,15 +310,16 @@ function Login() {
 
                             <div className='text-center my-4'>
                                 <span
-                                    className='text-muted small px-2 position-relative'
+                                    className='text-muted small px-2 d-inline-block position-relative'
                                     style={{ background: '#fff' }}
                                 >
                                     ou continue com
                                 </span>
-                                <hr
-                                    className='mt-n2'
-                                    style={{ borderColor: '#ddd' }}
+                                 <hr
+                                    className='position-relative'
+                                    style={{ borderColor: '#ddd', marginTop: '-10px'}}
                                 />
+                               
                             </div>
 
                             <div className='d-flex gap-3'>
@@ -329,8 +331,7 @@ function Login() {
                                 >
                                     <GoogleLogo
                                         className='me-2'
-                                        width='20'
-                                        height='20'
+                                        size='20'
                                     />{' '}
                                     Google
                                 </button>
@@ -342,8 +343,7 @@ function Login() {
                                 >
                                     <GithubLogo
                                         className='me-2'
-                                        width='20'
-                                        height='20'
+                                        size='20'
                                     />{' '}
                                     GitHub
                                 </button>
@@ -373,6 +373,7 @@ function Login() {
                         </Link>{' '}
                         da DUBANING.
                     </p>
+                    </div>
                 </div>
             </div>
         </div>

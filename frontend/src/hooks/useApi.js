@@ -1,7 +1,7 @@
 // src/hooks/useApi.js
-import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { xhr } from '../services/api';
-import { useAuth } from './useAuth.js';
+import { useState, useCallback, useEffect, useRef } from "react";
+import { xhr } from "../services/api";
+import { useAuth } from "./useAuth";
 
 export const useApi = (options = {}) => {
     const [data, setData] = useState(null);
@@ -11,18 +11,18 @@ export const useApi = (options = {}) => {
     const { isAuthenticated } = useAuth();
 
     // Opções padrão
-    const defaultOptions = useMemo(() => ({
+    const defaultOptions = { 
         autoCancel: true,
         showErrors: true,
         requireAuth: false,
         ...options,
-    }), [options]);
+    };
 
     const execute = useCallback(
         async (path, config = {}) => {
             // Verificar autenticação se necessário
             if (defaultOptions.requireAuth && !isAuthenticated) {
-                throw new Error('Autenticação necessária');
+                throw new Error("Autenticação necessária");
             }
 
             // Cancelar requisição anterior se existir
@@ -47,7 +47,7 @@ export const useApi = (options = {}) => {
                 return result;
             } catch (err) {
                 // Ignorar erros de cancelamento
-                if (err.name === 'AbortError') {
+                if (err.name === "AbortError") {
                     return;
                 }
 
@@ -55,7 +55,7 @@ export const useApi = (options = {}) => {
 
                 if (defaultOptions.showErrors) {
                     // Aqui você pode integrar com um sistema de notificações
-                    console.error('API Error:', err);
+                    console.error("API Error:", err);
                 }
 
                 throw err;
@@ -63,35 +63,35 @@ export const useApi = (options = {}) => {
                 setLoading(false);
             }
         },
-        [defaultOptions, isAuthenticated]
+        [defaultOptions, isAuthenticated],
     );
 
     const get = useCallback(
-        (path, config = {}) => execute(path, { ...config, method: 'GET' }),
-        [execute]
+        (path, config = {}) => execute(path, { ...config, method: "GET" }),
+        [execute],
     );
 
     const post = useCallback(
         (path, body, config = {}) =>
-            execute(path, { ...config, method: 'POST', body }),
-        [execute]
+            execute(path, { ...config, method: "POST", body }),
+        [execute],
     );
 
     const put = useCallback(
         (path, body, config = {}) =>
-            execute(path, { ...config, method: 'PUT', body }),
-        [execute]
+            execute(path, { ...config, method: "PUT", body }),
+        [execute],
     );
 
     const patch = useCallback(
         (path, body, config = {}) =>
-            execute(path, { ...config, method: 'PATCH', body }),
-        [execute]
+            execute(path, { ...config, method: "PATCH", body }),
+        [execute],
     );
 
     const del = useCallback(
-        (path, config = {}) => execute(path, { ...config, method: 'DELETE' }),
-        [execute]
+        (path, config = {}) => execute(path, { ...config, method: "DELETE" }),
+        [execute],
     );
 
     // Limpeza na desmontagem
@@ -121,7 +121,7 @@ export const useApi = (options = {}) => {
 };
 
 // Hook para fetch automático
-export const useFetch = (path, config = {}) => {
+export const useFetch = (path, config = {}, deps = []) => {
     const api = useApi(config);
     const { execute, ...rest } = api;
 
@@ -129,7 +129,7 @@ export const useFetch = (path, config = {}) => {
         if (path) {
             execute(path, config);
         }
-    }, [path, config, execute]);
+    }, [path, ...deps]);
 
     return { ...rest, refetch: () => execute(path, config) };
 };
