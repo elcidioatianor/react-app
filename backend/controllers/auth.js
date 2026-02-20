@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const { User } = require('../database/models');
 const { ResponseError } = require('./error');
 
@@ -32,6 +34,42 @@ const setRefreshToken = (res, refreshToken) => {
         path: '/auth/refresh',
         maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+};
+
+// Email service for password reset
+const sendPasswordResetEmail = async (email, resetToken) => {
+    try {
+        const transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST || 'smtp.gmail.com',
+            port: process.env.SMTP_PORT || 587,
+            secure: process.env.SMTP_SECURE === 'true',
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
+            },
+        });
+
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+        const mailOptions = {
+            from: process.env.SMTP_FROM || process.env.SMTP_USER,
+            to: email,
+            subject: 'Recuperação de Senha',
+            html: `
+                <h2>Recuperação de Senha</h2>
+                <p>Clique no link abaixo para redefinir sua senha:</p>
+                <a href="${resetLink}">${resetLink}</a>
+                <p>Este link expira em 1 hora.</p>
+                <p>Se você não solicitou isso, ignore este email.</p>
+            `,
+        };
+
+        await transporter.sendMail(mailOptions);
+        return true;
+    } catch (err) {
+        console.error('Erro ao enviar email:', err);
+        return false;
+    }
 };
 
 // middleware requireAuth
@@ -367,4 +405,105 @@ exports.authenticate = (req, res, next) => {
     return passport.authenticate('jwt', {
         session: false,
     })(req, res, next);
+};
+
+// Request password reset
+exports.requestPasswordReset = async (req, res, next) => {
+    try {
+        const { phoneNumber, email } = req.body;
+
+        if (!phoneNumber && !email) {
+            return next(
+                new ResponseError(400, 'Telefone ou email é obrigatório')
+            );
+        }
+
+        const user = await User.findOne({
+            where: phoneNumber ? { phoneNumber } : { email },
+        });
+
+        if (!user) {
+            // Don't reveal if user exists
+            return res.status(200).json({
+                message:
+                    'Se a conta existir, receberá um email com instruções',
+            });
+        }
+
+        // Generate reset token
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+        user.resetToken = resetToken;
+        user.resetTokenExpiry = resetTokenExpiry;
+        await user.save();
+
+        // Send email
+        const emailToSend = user.email || phoneNumber;
+        const emailSent = await sendPasswordResetEmail(emailToSend, resetToken);
+
+        if (!emailSent) {
+            return next(new ResponseError(500, 'Erro ao enviar email'));
+        }
+
+        res.status(200).json({
+            message: 'Email de recuperação enviado com sucesso',
+        });
+    } catch (err) {
+        console.error(err);
+        next(new ResponseError(500, 'Erro interno no servidor'));
+    }
+};
+
+// Reset password with token
+exports.resetPassword = async (req, res, next) => {
+    try {
+        const { resetToken, newPassword, confirmPassword } = req.body;
+
+        if (!resetToken || !newPassword || !confirmPassword) {
+            return next(
+                new ResponseError(400, 'Todos os campos são obrigatórios')
+            );
+        }
+
+        if (newPassword !== confirmPassword) {
+            return next(new ResponseError(400, 'As senhas não conferem'));
+        }
+
+        if (newPassword.length < 6) {
+            return next(
+                new ResponseError(
+                    400,
+                    'A senha deve conter pelo menos 6 caracteres'
+                )
+            );
+        }
+
+        const user = await User.findOne({ where: { resetToken } });
+
+        if (!user) {
+            return next(new ResponseError(400, 'Token inválido ou expirado'));
+        }
+
+        if (new Date() > user.resetTokenExpiry) {
+            user.resetToken = null;
+            user.resetTokenExpiry = null;
+            await user.save();
+            return next(new ResponseError(400, 'Token expirado'));
+        }
+
+        // Hash new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        user.resetToken = null;
+        user.resetTokenExpiry = null;
+        await user.save();
+
+        res.status(200).json({
+            message: 'Senha redefinida com sucesso',
+        });
+    } catch (err) {
+        console.error(err);
+        next(new ResponseError(500, 'Erro interno no servidor'));
+    }
 };

@@ -27,6 +27,7 @@
         "multer": "^2.0.2",
         "mysql2": "^3.16.0",
         "node-sqlite3-wasm": "^0.8.53",
+        "nodemailer": "^8.0.1",
         "passport": "^0.7.0",
         "passport-jwt": "^4.0.1",
         "pug": "^3.0.3",
