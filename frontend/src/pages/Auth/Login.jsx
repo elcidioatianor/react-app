@@ -279,7 +279,7 @@ function Login() {
                                 </div>
                                 <button
                                     type='button'
-                                    onClick={handleForgotPassword}
+                                    onClick={() => navigate('/forgot-password')}
                                     className='btn btn-link p-0 text-decoration-none small fw-semibold'
                                     style={{ color: '#FF6000' }}
                                 >

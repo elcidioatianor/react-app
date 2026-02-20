@@ -7,6 +7,8 @@ import AppLayout from './layouts/AppLayout';
 import Home from './pages/Marketplace/Home';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import ForgotPassword from './pages/Auth/ForgotPassword';
+import ResetPassword from './pages/Auth/ResetPassword';
 import Dashboard from './pages/Account/Dashboard';
 import Profile from './pages/Account/Profile';
 
@@ -67,6 +69,16 @@ const router = createBrowserRouter([
     {
         path: '/register',
         element: <Register />,
+        errorElement: <ErrorBoundary />,
+    },
+    {
+        path: '/forgot-password',
+        element: <ForgotPassword />,
+        errorElement: <ErrorBoundary />,
+    },
+    {
+        path: '/reset-password/:token',
+        element: <ResetPassword />,
         errorElement: <ErrorBoundary />,
     },
 

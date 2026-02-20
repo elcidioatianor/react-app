@@ -329,32 +329,30 @@ function Step2({data, setData, setStep}) {
                                     )}
             </div>
 
-            <div className='mt-4 row g-3'>
+            <div className='d-flex gap-3 mt-4'>
                 <button
-                                type='button'
-                                className='btn btn-lg fw-bold'
-                                style={{
-                                    backgroundColor: '#FFD814',
-                                    color: '#0F1111',
-                                    border: 'none',
-                                    marginRight: 'auto !important'
-                                }}
-                                onClick={()=> setStep(prev => prev - 1)}
-                                >
-                                Anterior
-                            </button>
-                    <button
-                                type='submit'
-                                className='btn btn-lg fw-bold'
-                                style={{
-                                    backgroundColor: '#FFD814',
-                                    color: '#0F1111',
-                                    border: 'none',
-                                }}
-                                
-                            >
-                               Próximo 
-                            </button>
+                    type='button'
+                    className='btn btn-lg fw-bold'
+                    style={{
+                        backgroundColor: '#FFD814',
+                        color: '#0F1111',
+                        border: 'none',
+                    }}
+                    onClick={() => setStep(prev => prev - 1)}
+                >
+                    Anterior
+                </button>
+                <button
+                    type='submit'
+                    className='btn btn-lg fw-bold flex-grow-1'
+                    style={{
+                        backgroundColor: '#FFD814',
+                        color: '#0F1111',
+                        border: 'none',
+                    }}
+                >
+                    Próximo
+                </button>
             </div>
         </form>
     )
@@ -468,233 +466,232 @@ function Step3({data, setData, setStep}) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className='flex g-3 mb-3'>
-                <div className='row mb-3'>
-                                <div className='col-6'>
-                                    <label className='form-label fw-semibold small text-muted'>
-                                        Telefone
-                                    </label>
-                                    <input
-                                        type='tel'
-                                        name='phoneNumber'
-                                        value={data.phoneNumber}
-                                        onChange={handleInputChange}
-                                        className={`form-control form-control-lg bg-light ${errors.has('phoneNumber') ? 'is-invalid' : ''}`}
-                                        placeholder='+258 86 123 4567'
-                                        disabled={submitting}
-                                    />
-                                    {errors.has('phoneNumber') && (
-                                        <div className='text-danger small mt-1'>
-                                            {errors.get('phoneNumber')}
-                                        </div>
-                                    )}
-                                </div>
-                                <div className='col-6'>
-                                    <label className='form-label fw-semibold small text-muted'>
-                                        Telefone alternativo
-                                    </label>
-                                    <input
-                                        type='tel'
-                                        name='alternatePhoneNumber'
-                                        value={data.alternatePhoneNumber}
-                                        onChange={handleInputChange}
-                                        className={`form-control form-control-lg bg-light ${errors.has('alternatePhoneNumber') ? 'is-invalid' : ''}`}
-                                        placeholder='+258 84 123 4567'
-                                        disabled={submitting}
-                                    />
-                                    {errors.has('alternatePhoneNumber') && (
-                                        <div className='text-danger small mt-1'>
-                                            {errors.get('alternatePhoneNumber')}
-                                        </div>
-                                    )}
-                                </div>
-                                </div>
-                                <div className='col-md-12'>
-                                    <label className='form-label fw-semibold small text-muted'>
-                                        E-mail
-                                    </label>
-                                    <input
-                                        type='email'
-                                        name='email'
-                                        value={data.email}
-                                        onChange={handleInputChange}
-                                        className={`form-control form-control-lg bg-light ${errors.has('email') ? 'is-invalid' : ''}`}
-                                        placeholder='seu.email@exemplo.com'
-                                        disabled={submitting}
-                                    />
-                                    {errors.has('email') && (
-                                        <div className='text-danger small mt-1'>
-                                            {errors.get('email')}
-                                        </div>
-                                    )}
-                                </div>
-            </div>
-
-            <div className='mb-3'>
-                                <label className='form-label fw-semibold small text-muted'>
-                                    Senha
-                                </label>
-                                <div className='input-group input-group-lg'>
-                                    <input
-                                        type={
-                                            showPassword ? 'text' : 'password'
-                                        }
-                                        name='password'
-                                        value={data.password}
-                                        onChange={handleInputChange}
-                                        className={`form-control bg-light border-end-0 ${errors.has('password') ? 'is-invalid' : ''}`}
-                                        placeholder='Mínimo 6 caracteres'
-                                        disabled={submitting}
-                                    />
-                                    <button
-                                        type='button'
-                                        className='input-group-text bg-light border-start-0'
-                                        onClick={() =>
-                                            setShowPassword(!showPassword)
-                                        }
-                                    >
-                                        {showPassword ? (
-                                            <EyeSlashFill
-                                                color='#888'
-                                                width='18'
-                                                height='18'
-                                            />
-                                        ) : (
-                                            <EyeFill
-                                                color='#888'
-                                                width='18'
-                                                height='18'
-                                            />
-                                        )}
-                                    </button>
-                                </div>
-                                {data.password && (
-                                    <div className='mt-3'>
-                                        <div
-                                            className='progress'
-                                            style={{ height: '5px' }}
-                                        >
-                                            <div
-                                                className='progress-bar'
-                                                role='progressbar'
-                                                style={{
-                                                    width: `${passwordStrength * 25}%`,
-                                                    backgroundColor:
-                                                        getPasswordStrengthColor(),
-                                                }}
-                                            ></div>
-                                        </div>
-                                    </div>
-                                )}
-                                {errors.has('password') && (
-                                    <div className='text-danger small mt-1'>
-                                        {errors.get('password')}
-                                    </div>
-                                )}
-            </div>
-
-            <div className='mb-3'>
-                                <label className='form-label fw-semibold small text-muted'>
-                                    Confirmar senha
-                                </label>
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    name='confirmPassword'
-                                    value={data.confirmPassword}
-                                    onChange={handleInputChange}
-                                    className={`form-control form-control-lg bg-light ${errors.has('confirmPassword') ? 'is-invalid' : ''}`}
-                                    placeholder='Repita a senha'
-                                    disabled={submitting}
-                                />
-                                {errors.has('confirmPassword') && (
-                                    <div className='text-danger small mt-1'>
-                                        {errors.get('confirmPassword')}
-                                    </div>
-                                )}
-                                {data.password &&
-                                    data.confirmPassword &&
-                                    data.password ===
-                                        data.confirmPassword && (
-                                        <div className='text-success small mt-1'>
-                                            <i className='bi bi-check-circle me-1'></i>
-                                            Senhas coincidem
-                                        </div>
-                                    )}
-                            </div>
-
-                            <div className='form-check mb-4'>
-                                <input
-                                    className={`form-check-input ${errors.has('accept') ? 'is-invalid' : ''}`}
-                                    type='checkbox'
-                                    name='accept'
-                                    id='accept'
-                                    checked={data.accept}
-                                    onChange={handleInputChange}
-                                />
-                                <label
-                                    className='form-check-label small'
-                                    htmlFor='accept'
-                                >
-                                    Concordo com os{' '}
-                                    <Link
-                                        to='/terms'
-                                        className='text-decoration-none'
-                                        style={{ color: '#FF6000' }}
-                                    >
-                                        Termos de Uso
-                                    </Link>{' '}
-                                    e{' '}
-                                    <Link
-                                        to='/privacy'
-                                        className='text-decoration-none'
-                                        style={{ color: '#FF6000' }}
-                                    >
-                                        Política de Privacidade
-                                    </Link>
-                                </label>
-                                {errors.has('accept') && (
-                                    <div className='text-danger small'>
-                                        {errors.get('accept')}
-                                    </div>
-                                )}
-            </div>
-                           {/** TODO: USAR FLEX PARA AFASTAR OS BOTOES */}     
-                <div className='mt-4 row g-3'>
-                            <button
-                                type='button'
-                                className='btn btn-lg fw-bold'
-                                style={{
-                                    backgroundColor: '#FFD814',
-                                    color: '#0F1111',
-                                    border: 'none',
-                                    marginRight: 'auto !important'
-                                }}
-                                disabled={submitting}
-                                onClick={()=> setStep(prev => prev - 1)}
-                                >
-                                Anterior
-                            </button>
-
-                            <button
-                                type='submit'
-                                className='btn btn-lg fw-bold'
-                                style={{
-                                    backgroundColor: '#FFD814',
-                                    color: '#0F1111',
-                                    border: 'none',
-                                }}
-                                disabled={submitting}
-                            >
-                                {submitting ? (
-                                    <>
-                                        <span className='spinner-border spinner-border-sm me-2'></span>
-                                        Criando...
-                                    </>
-                                ) : (
-                                    'Criar conta'
-                                )}
-                            </button>
+            <div className='row g-3 mb-4'>
+                <div className='col-12 col-md-6'>
+                    <label className='form-label fw-semibold small text-muted'>
+                        Telefone
+                    </label>
+                    <input
+                        type='tel'
+                        name='phoneNumber'
+                        value={data.phoneNumber}
+                        onChange={handleInputChange}
+                        className={`form-control form-control-lg bg-light ${errors.has('phoneNumber') ? 'is-invalid' : ''}`}
+                        placeholder='+258 86 123 4567'
+                        disabled={submitting}
+                    />
+                    {errors.has('phoneNumber') && (
+                        <div className='text-danger small mt-1'>
+                            {errors.get('phoneNumber')}
+                        </div>
+                    )}
                 </div>
+
+                <div className='col-12 col-md-6'>
+                    <label className='form-label fw-semibold small text-muted'>
+                        Telefone alternativo
+                    </label>
+                    <input
+                        type='tel'
+                        name='alternatePhoneNumber'
+                        value={data.alternatePhoneNumber}
+                        onChange={handleInputChange}
+                        className={`form-control form-control-lg bg-light ${errors.has('alternatePhoneNumber') ? 'is-invalid' : ''}`}
+                        placeholder='+258 84 123 4567'
+                        disabled={submitting}
+                    />
+                    {errors.has('alternatePhoneNumber') && (
+                        <div className='text-danger small mt-1'>
+                            {errors.get('alternatePhoneNumber')}
+                        </div>
+                    )}
+                </div>
+
+                <div className='col-12'>
+                    <label className='form-label fw-semibold small text-muted'>
+                        E-mail (opcional)
+                    </label>
+                    <input
+                        type='email'
+                        name='email'
+                        value={data.email}
+                        onChange={handleInputChange}
+                        className={`form-control form-control-lg bg-light ${errors.has('email') ? 'is-invalid' : ''}`}
+                        placeholder='seu.email@exemplo.com'
+                        disabled={submitting}
+                    />
+                    {errors.has('email') && (
+                        <div className='text-danger small mt-1'>
+                            {errors.get('email')}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div className='mb-3'>
+                <label className='form-label fw-semibold small text-muted'>
+                    Senha
+                </label>
+                <div className='input-group input-group-lg'>
+                    <input
+                        type={
+                            showPassword ? 'text' : 'password'
+                        }
+                        name='password'
+                        value={data.password}
+                        onChange={handleInputChange}
+                        className={`form-control bg-light border-end-0 ${errors.has('password') ? 'is-invalid' : ''}`}
+                        placeholder='Mínimo 6 caracteres'
+                        disabled={submitting}
+                    />
+                    <button
+                        type='button'
+                        className='input-group-text bg-light border-start-0'
+                        onClick={() =>
+                            setShowPassword(!showPassword)
+                        }
+                    >
+                        {showPassword ? (
+                            <EyeSlashFill
+                                color='#888'
+                                width='18'
+                                height='18'
+                            />
+                        ) : (
+                            <EyeFill
+                                color='#888'
+                                width='18'
+                                height='18'
+                            />
+                        )}
+                    </button>
+                </div>
+                {data.password && (
+                    <div className='mt-3'>
+                        <div
+                            className='progress'
+                            style={{ height: '5px' }}
+                        >
+                            <div
+                                className='progress-bar'
+                                role='progressbar'
+                                style={{
+                                    width: `${passwordStrength * 25}%`,
+                                    backgroundColor:
+                                        getPasswordStrengthColor(),
+                                }}
+                            ></div>
+                        </div>
+                    </div>
+                )}
+                {errors.has('password') && (
+                    <div className='text-danger small mt-1'>
+                        {errors.get('password')}
+                    </div>
+                )}
+            </div>
+
+            <div className='mb-4'>
+                <label className='form-label fw-semibold small text-muted'>
+                    Confirmar senha
+                </label>
+                <input
+                    type={showPassword ? 'text' : 'password'}
+                    name='confirmPassword'
+                    value={data.confirmPassword}
+                    onChange={handleInputChange}
+                    className={`form-control form-control-lg bg-light ${errors.has('confirmPassword') ? 'is-invalid' : ''}`}
+                    placeholder='Repita a senha'
+                    disabled={submitting}
+                />
+                {errors.has('confirmPassword') && (
+                    <div className='text-danger small mt-1'>
+                        {errors.get('confirmPassword')}
+                    </div>
+                )}
+                {data.password &&
+                    data.confirmPassword &&
+                    data.password ===
+                        data.confirmPassword && (
+                        <div className='text-success small mt-1'>
+                            <i className='bi bi-check-circle me-1'></i>
+                            Senhas coincidem
+                        </div>
+                    )}
+            </div>
+
+            <div className='form-check mb-4'>
+                <input
+                    className={`form-check-input ${errors.has('accept') ? 'is-invalid' : ''}`}
+                    type='checkbox'
+                    name='accept'
+                    id='accept'
+                    checked={data.accept}
+                    onChange={handleInputChange}
+                />
+                <label
+                    className='form-check-label small'
+                    htmlFor='accept'
+                >
+                    Concordo com os{' '}
+                    <Link
+                        to='/terms'
+                        className='text-decoration-none'
+                        style={{ color: '#FF6000' }}
+                    >
+                        Termos de Uso
+                    </Link>{' '}
+                    e{' '}
+                    <Link
+                        to='/privacy'
+                        className='text-decoration-none'
+                        style={{ color: '#FF6000' }}
+                    >
+                        Política de Privacidade
+                    </Link>
+                </label>
+                {errors.has('accept') && (
+                    <div className='text-danger small'>
+                        {errors.get('accept')}
+                    </div>
+                )}
+            </div>
+
+            <div className='d-flex gap-3 mt-4'>
+                <button
+                    type='button'
+                    className='btn btn-lg fw-bold'
+                    style={{
+                        backgroundColor: '#FFD814',
+                        color: '#0F1111',
+                        border: 'none',
+                    }}
+                    disabled={submitting}
+                    onClick={() => setStep(prev => prev - 1)}
+                >
+                    Anterior
+                </button>
+
+                <button
+                    type='submit'
+                    className='btn btn-lg fw-bold flex-grow-1'
+                    style={{
+                        backgroundColor: '#FFD814',
+                        color: '#0F1111',
+                        border: 'none',
+                    }}
+                    disabled={submitting}
+                >
+                    {submitting ? (
+                        <>
+                            <span className='spinner-border spinner-border-sm me-2'></span>
+                            Criando...
+                        </>
+                    ) : (
+                        'Criar conta'
+                    )}
+                </button>
+            </div>
             
         </form>
 
