@@ -16,7 +16,7 @@ import {
 function StoreOnboarding() {
     const api = useApi();
     const navigate = useNavigate();
-    const { addNotification } = useNotification();
+    const { showNotification } = useNotification();
 
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
@@ -43,14 +43,14 @@ function StoreOnboarding() {
 
         try {
             await api.post('/stores', formData);
-            addNotification(
+            showNotification(
                 'Sua loja foi criada com sucesso! Bem-vindo ao time de vendedores.',
                 'success'
             );
             navigate('/seller/dashboard');
         } catch (error) {
             console.error(error);
-            addNotification(
+            showNotification(
                 error.response?.data?.message ||
                     'Erro ao criar loja. Verifique os dados.',
                 'error'

@@ -21,7 +21,7 @@ function Login() {
     const [isSubmitting, setIsSubmitting] = useState(false); //TODO: USAR useFormStatus???
 
     const { login, loading, isAuthenticated } = useAuth();
-    const { addNotification } = useNotification();
+    const { showNotification } = useNotification();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -34,9 +34,9 @@ function Login() {
 
     useEffect(() => {
         if (location.state?.message) {
-            addNotification(location.state.message, 'info');
+            showNotification(location.state.message, 'info');
         }
-    }, [location, addNotification]);
+    }, [location, showNotification]);
 
     const validateForm = () => {
         const errors = {};
@@ -76,7 +76,7 @@ function Login() {
             const res = await login(credentials);
 
             if (res.done) {
-                addNotification('Sessão iniciada com sucesso', 'success');
+                showNotification('Sessão iniciada com sucesso', 'success');
                 if (credentials.saveCredentials) {
                     localStorage.setItem('remember', 'true');
                 } else {
@@ -87,10 +87,10 @@ function Login() {
                     (res.user?.role === 'seller' ? '/seller/dashboard' : '/');
                 navigate(from, { replace: true });
             } else {
-                addNotification(res.error || 'Erro no login', 'error');
+                showNotification(res.error || 'Erro no login', 'error');
             }
         } catch (err) {
-            addNotification('Erro no login: ' + err.message, 'error');
+            showNotification('Erro no login: ' + err.message, 'error');
         } finally {
             setIsSubmitting(false);
         }
@@ -99,17 +99,17 @@ function Login() {
     //TODO: HANDLE THIS
     const handleForgotPassword = async () => {
         if (!credentials.phoneNumber) {
-            addNotification(
+            showNotification(
                 'Digite seu email ou telefone para recuperar a senha',
                 'warning'
             );
             return;
         }
-        addNotification('Email de recuperação enviado!', 'success');
+        showNotification('Email de recuperação enviado!', 'success');
     };
 
     const handleSocialLogin = provider => {
-        addNotification(`Login com ${provider} em desenvolvimento`, 'info');
+        showNotification(`Login com ${provider} em desenvolvimento`, 'info');
     };
 
     return (

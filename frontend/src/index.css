@@ -1,11 +1,12 @@
 /* Bootstrap overrides and custom styles */
+@import "tailwindcss";
 
 @font-face {
     font-family: 'Source Sans Pro';
     /* A unique name for your font */
     src:
         url('/fonts/SourceSansPro-Regular.woff2') format('woff2'),
-        url('fonts/MyCustomFont.woff') format('woff');
+        url('/fonts/SourceSansPro-Regular.woff2') format('woff2');
     /* Path to font files with format hints */
     font-display: swap;
     font-weight: 400;
@@ -164,7 +165,7 @@ input {
     -webkit-tap-highlight-color: transparent;
 }
 
-//Dashboard styles
+/* Dashboard styles */
 .hover-card { 
 	transition: transform 0.2s ease-in-out; 
 }

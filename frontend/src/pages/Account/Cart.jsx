@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useNotification } from '../../hooks/useNotification';
 
 export default function Cart() {
-    const { addNotification } = useNotification();
+    const { showNotification } = useNotification();
     const navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
 
@@ -40,7 +40,7 @@ export default function Cart() {
         const updated = cartItems.filter(item => item.id !== id);
         setCartItems(updated);
         localStorage.setItem('cart', JSON.stringify(updated));
-        addNotification('Item removido', 'info');
+        showNotification('Item removido', 'info');
         window.dispatchEvent(new Event('cartUpdated'));
     };
 

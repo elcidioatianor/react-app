@@ -6,7 +6,7 @@ import { useApi } from '../../hooks/useApi.js';
 
 function Checkout() {
     const { user } = useAuth();
-    const { addNotification } = useNotification();
+    const { showNotification } = useNotification();
     const navigate = useNavigate();
     const api = useApi();
     const [cartItems, setCartItems] = useState([]);
@@ -65,8 +65,8 @@ function Checkout() {
             const res = await api.post('/orders', orderData);
 
             if (res) {
-                addNotification('Pedido realizado com sucesso!', 'success');
-                addNotification(
+                showNotification('Pedido realizado com sucesso!', 'success');
+                showNotification(
                     'Pague no seu celular agora (M-Pesa/e-Mola)',
                     'info'
                 );
@@ -76,7 +76,7 @@ function Checkout() {
             }
         } catch (error) {
             console.error(error);
-            addNotification('Erro ao processar pedido', 'error');
+            showNotification('Erro ao processar pedido', 'error');
         }
     };
 

@@ -24,7 +24,7 @@ import { useNotification } from '../../hooks/useNotification';
 
 function OrderManager() {
     const api = useApi();
-    const { addNotification } = useNotification();
+    const { showNotification } = useNotification();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -37,13 +37,13 @@ function OrderManager() {
                 setOrders(res.data);
             } catch (error) {
                 console.error('Failed to load orders', error);
-                addNotification('Erro ao carregar pedidos', 'error');
+                showNotification('Erro ao carregar pedidos', 'error');
             } finally {
                 setLoading(false);
             }
         };
         fetchOrders();
-    }, [api, addNotification]);
+    }, [api, showNotification]);
 
     const handleStatusChange = async (orderId, newStatus) => {
         // Optimistic update
@@ -56,10 +56,10 @@ function OrderManager() {
 
         try {
             await api.patch(`/orders/${orderId}/status`, { status: newStatus });
-            addNotification('Status atualizado com sucesso', 'success');
+            showNotification('Status atualizado com sucesso', 'success');
         } catch (error) {
             console.error('Update failed', error);
-            addNotification('Erro ao atualizar status', 'error');
+            showNotification('Erro ao atualizar status', 'error');
             setOrders(previousOrders); // Revert
         }
     };

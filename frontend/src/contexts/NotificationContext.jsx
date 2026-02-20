@@ -11,7 +11,7 @@ function createID() {
 function NotificationProvider({ children }) {
     const [notifications, setNotifications] = useState([]);
 
-    const addNotification = (message, type = 'info', duration = 5000) => {
+    const showNotification = (message, type = 'info', duration = 5000) => {
         const id = createID();
         const notification = { id, message, type };
 
@@ -29,7 +29,7 @@ function NotificationProvider({ children }) {
 
     const value = {
         notifications,
-        addNotification,
+        showNotification,
         removeNotification,
     };
 

@@ -379,7 +379,7 @@ function Step3({data, setData, setStep}) {
     const [submitting, setSubmitting] = useState(false)
 
     const navigate = useNavigate();
-    const { addNotification } = useNotification();
+    const { showNotification } = useNotification();
     const { register } = useAuth()
 
     useEffect(() => {
@@ -451,16 +451,16 @@ function Step3({data, setData, setStep}) {
                 //TODO: MULTI-STEP REGISTRATION (EACH STEP IS A COMPONENT),
                 //THE SECOND IS NUMBER VALIDATION (OTP), THE LAST IS CONGRATULATIONS
                 //(REPLACE NOTIFICATIONS BY ERROR & SUCCESS DIALOGS)
-                addNotification(
+                showNotification(
                     'Conta criada com sucesso! Faça login.',
                     'success'
                 );
                 navigate('/login');
             } else {
-                addNotification(res.error || 'Erro no registro', 'error');
+                showNotification(res.error || 'Erro no registro', 'error');
             }
         } catch (err) {
-            addNotification('Erro no cadastro: ' + err.message, 'error');
+            showNotification('Erro no cadastro: ' + err.message, 'error');
         } finally {
             setSubmitting(false);
         }

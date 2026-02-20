@@ -16,7 +16,7 @@ function ProductDetails() {
     const { id } = useParams();
     const api = useApi();
     const navigate = useNavigate();
-    const { addNotification } = useNotification();
+    const { showNotification } = useNotification();
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -43,7 +43,7 @@ function ProductDetails() {
                             store: { name: 'TechMoz' },
                         });
                     else {
-                        addNotification('Produto não encontrado', 'error');
+                        showNotification('Produto não encontrado', 'error');
                         navigate('/');
                     }
                 }
@@ -65,7 +65,7 @@ function ProductDetails() {
             }
         };
         fetchProduct();
-    }, [id, api, addNotification, navigate]);
+    }, [id, api, showNotification, navigate]);
 
     const addToCart = (redirect = false) => {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -86,7 +86,7 @@ function ProductDetails() {
         }
         localStorage.setItem('cart', JSON.stringify(cart));
         window.dispatchEvent(new Event('cartUpdated'));
-        addNotification('Adicionado ao carrinho!', 'success');
+        showNotification('Adicionado ao carrinho!', 'success');
         if (redirect) navigate('/cart');
     };
 
@@ -267,7 +267,7 @@ function ProductDetails() {
                                             variant='outline-primary'
                                             className='w-100 rounded-pill small'
                                             onClick={() =>
-                                                addNotification(
+                                                showNotification(
                                                     'Solicitação enviada.',
                                                     'success'
                                                 )
@@ -282,7 +282,7 @@ function ProductDetails() {
                                             variant='outline-secondary'
                                             className='w-100 rounded-pill small'
                                             onClick={() =>
-                                                addNotification(
+                                                showNotification(
                                                     'Proforma enviada.',
                                                     'success'
                                                 )

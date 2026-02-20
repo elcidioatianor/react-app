@@ -24,7 +24,7 @@ import {
 
 function ProductManager() {
     const api = useApi();
-    const { addNotification } = useNotification();
+    const { showNotification } = useNotification();
 
     // State
     const [products, setProducts] = useState([]);
@@ -57,10 +57,10 @@ function ProductManager() {
             })
             .catch(err => {
                 console.error(err);
-                addNotification('Erro ao carregar produtos', 'error');
+                showNotification('Erro ao carregar produtos', 'error');
                 setLoading(false);
             });
-    }, [loadProducts, addNotification]);
+    }, [loadProducts, showNotification]);
 
 
     const handleInput = e => {
@@ -80,10 +80,10 @@ function ProductManager() {
 
             if (editingProduct) {
                 await api.put(`/products/${editingProduct.id}`, payload);
-                addNotification('Produto atualizado!', 'success');
+                showNotification('Produto atualizado!', 'success');
             } else {
                 await api.post('/products', payload);
-                addNotification('Produto criado com sucesso!', 'success');
+                showNotification('Produto criado com sucesso!', 'success');
             }
 
             handleCloseModal();
@@ -94,13 +94,13 @@ function ProductManager() {
             })
             .catch(err => {
                 console.error(err);
-                addNotification('Erro ao carregar produtos', 'error');
+                showNotification('Erro ao carregar produtos', 'error');
                 setLoading(false);
             });
             
         } catch (error) {
             console.error(error);
-            addNotification('Erro ao salvar produto', 'error');
+            showNotification('Erro ao salvar produto', 'error');
         }
     };
 
@@ -108,10 +108,10 @@ function ProductManager() {
         if (window.confirm('Tem certeza que deseja apagar este produto?')) {
             try {
                 await api.delete(`/products/${id}`);
-                addNotification('Produto removido.', 'success');
+                showNotification('Produto removido.', 'success');
                 setProducts(products.filter(p => p.id !== id));
             } catch (error) {
-                addNotification('Erro ao remover produto: ' + error.message, 'error');
+                showNotification('Erro ao remover produto: ' + error.message, 'error');
             }
         }
     };

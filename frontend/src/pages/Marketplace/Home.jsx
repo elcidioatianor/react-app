@@ -17,7 +17,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 function Home() {
     //const api = useApi();
     const navigate = useNavigate();
-    //const { addNotification } = useNotification();
+    //const { showNotification } = useNotification();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -190,7 +190,7 @@ function Home() {
         }
         localStorage.setItem('cart', JSON.stringify(cart));
         window.dispatchEvent(new Event('cartUpdated'));
-        addNotification('Adicionado ao carrinho!', 'success');
+        showNotification('Adicionado ao carrinho!', 'success');
     };
     */
     return (
