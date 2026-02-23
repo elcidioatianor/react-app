@@ -77,7 +77,28 @@ exports.authenticate = (req, res, next) => {
     try {
         //passport.authenticate('jwt', { session: false })(req, res, next);
         const authHeader = req.headers.authorization;
-        const [, accessToken] = authHeader.split(' ');
+        
+        if (!authHeader) {
+            return next(
+                new ResponseError(400, 'Header Authorization não fornecido')
+            );
+        }
+
+        const parts = authHeader.split(' ');
+        
+        if (parts.length !== 2) {
+            return next(
+                new ResponseError(400, 'Formato de Authorization inválido')
+            );
+        }
+
+        const [scheme, accessToken] = parts;
+
+        if (!/^Bearer$/i.test(scheme)) {
+            return next(
+                new ResponseError(400, 'Esquema de Authorization deve ser Bearer')
+            );
+        }
 
         if (!accessToken) {
             return next(
@@ -86,12 +107,15 @@ exports.authenticate = (req, res, next) => {
         }
         console.log('Verificando token...');
         const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+        console.log('Token decoded:', decoded);
         //APENAS ARMAZENAMOS ID & ROLE:
         //ID: BUSCAR USUÁRIO EM QUALQUER MIDDLEWARE SUBSEQUENTE QUE PRECISAR
         //ROLE: PERMITIR/RECUSAR ACESSO A RECURSOS EM MIDDLEWARES SUBSEQUENTES
         req.payload = decoded; // { sub, role }
+        console.log('req.payload set:', req.payload);
         next();
     } catch (err) {
+        console.error('Token verification error:', err);
         const error = new ResponseError(401, 'Token expirado ou inválido'); //'Token inválido ou expirado'
 
         error.code = 'EEXPIRY';
@@ -216,7 +240,7 @@ exports.login = async (req, res, next) => {
                 firstName: user.firstName,
                 phoneNumber: user.phoneNumber,
                 email: user.email,
-                //role: user.role
+                role: user.role
             },
             accessToken,
             //refreshToken
@@ -345,9 +369,25 @@ exports.refresh = async (req, res, next) => {
 //TODO: MOVER PARA ./api
 exports.profile = async (req, res, next) => {
     try {
+        console.log('Profile request - payload:', req.payload);
+        console.log('Profile request - sub:', req.payload?.sub);
+        console.log('Profile request - sub type:', typeof req.payload?.sub);
+
+        if (!req.payload?.sub) {
+            return next(new ResponseError(400, 'Token payload inválido'));
+        }
+
         let user = await User.findByPk(req.payload.sub);
+        console.log('User found:', user ? 'YES' : 'NO');
+        console.log('User data:', user);
+
+        if (!user) {
+            return next(new ResponseError(404, 'Usuário não encontrado'));
+        }
+
         res.json(user);
     } catch (err) {
+        console.error('Profile error:', err);
         next(new ResponseError(500, 'Erro interno no servidor'));
     }
 };

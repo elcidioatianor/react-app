@@ -53,7 +53,7 @@ function Search() {
     // Clean reactive effect - only depends on reactive values
     useEffect(() => {
         onSearch(query);
-    }, [query, filters]);
+    }, [query]);
 
     const categories = ['Tecnologia', 'Moda', 'Casa', 'Agro', 'Serviços'];
     const cities = ['Maputo', 'Matola', 'Beira', 'Nampula', 'Tete'];

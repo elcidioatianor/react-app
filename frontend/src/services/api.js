@@ -46,13 +46,17 @@ xhr.transformRequest(async config => {
 xhr.transformResponse(async res => {
     //TODO: Add next()
     try {
-        let { accessToken: newToken } = res.json(); //CAPTURAR NOVO ACCESS TOKEN
-        if (newToken) accessToken = newToken;
+        const jsonData = res.json();
+        const { accessToken: newToken } = jsonData;
+        if (newToken) {
+            accessToken = newToken;
+            console.log('Access token updated from response');
+        }
+        return res;
     } catch(err) {
         console.log('Error parsing response: ' + err.message)
+        return res;
     }
-
-    return res;
 });
 
 // Interceptor para refresh token
