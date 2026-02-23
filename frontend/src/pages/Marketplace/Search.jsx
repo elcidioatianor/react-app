@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
 
@@ -15,41 +15,43 @@ function Search() {
         minPrice: '',
         maxPrice: '',
     });
+
     //TODO: USE REACT QUERY
-    useEffect(() => {
-        const fetchResults = async () => {
-            setLoading(true);
-            try {
-                const res = await api.get('/products');
-                const resData = res.data || [];
-                let filtered = resData.filter(
-                    p =>
-                        p.name.toLowerCase().includes(query.toLowerCase()) ||
-                        p.description
-                            .toLowerCase()
-                            .includes(query.toLowerCase())
+    const fetchResults = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await api.get('/products');
+            const resData = res.data || [];
+            let filtered = resData.filter(
+                p =>
+                    p.name.toLowerCase().includes(query.toLowerCase()) ||
+                    p.description
+                        .toLowerCase()
+                        .includes(query.toLowerCase())
+            );
+
+            if (filters.category) {
+                filtered = filtered.filter(
+                    p => p.category === filters.category
                 );
-
-                if (filters.category) {
-                    filtered = filtered.filter(
-                        p => p.category === filters.category
-                    );
-                }
-                if (filters.city) {
-                    filtered = filtered.filter(
-                        p => p.store?.city === filters.city
-                    );
-                }
-
-                setProducts(filtered);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
             }
-        };
+            if (filters.city) {
+                filtered = filtered.filter(
+                    p => p.store?.city === filters.city
+                );
+            }
+
+            setProducts(filtered);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }, [query, filters, api]);
+
+    useEffect(() => {
         fetchResults();
-    }, [query, api, filters]);
+    }, [fetchResults]);
 
     const categories = ['Tecnologia', 'Moda', 'Casa', 'Agro', 'Serviços'];
     const cities = ['Maputo', 'Matola', 'Beira', 'Nampula', 'Tete'];
