@@ -69,13 +69,20 @@ function Login() {
     const handleSubmit = async e => {
         //TODO: ADD OTP 2 STEP VERIFICATION
         e.preventDefault();
+        console.log('=== LOGIN FORM SUBMIT ===');
+        console.log('Form validation:', validateForm());
+        console.log('Is submitting:', isSubmitting);
+        
         if (!validateForm() || isSubmitting) return;
 
         setIsSubmitting(true);
         try {
+            console.log('Calling login with credentials:', { phoneNumber: credentials.phoneNumber.substring(0, 5) + '...', password: '***' });
             const res = await login(credentials);
+            console.log('Login result:', res);
 
             if (res.done) {
+                console.log('Login successful!');
                 showNotification('Sessão iniciada com sucesso', 'success');
                 if (credentials.saveCredentials) {
                     localStorage.setItem('remember', 'true');
@@ -84,9 +91,11 @@ function Login() {
                 }
                 // Navigation will be handled by useEffect when isAuthenticated becomes true
             } else {
+                console.log('Login failed:', res.error);
                 showNotification(res.error || 'Erro no login', 'error');
             }
         } catch (err) {
+            console.error('Login error:', err);
             showNotification('Erro no login: ' + err.message, 'error');
         } finally {
             setIsSubmitting(false);

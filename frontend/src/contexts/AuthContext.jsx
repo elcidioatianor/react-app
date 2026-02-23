@@ -64,15 +64,26 @@ function AuthProvider({ children }) {
     //LOGIN
     const login = async credentials => {
         try {
+            console.log('=== LOGIN FUNCTION ===');
+            console.log('Credentials being sent:', { phoneNumber: credentials.phoneNumber.substring(0, 5) + '...', password: '***' });
+            
             const res = await xhr.post('/auth/login', credentials);
-            const { user: userData } = res.json();
+            console.log('Login response received:', res);
+            console.log('Login response status:', res.status);
+            
+            const responseData = res.json();
+            console.log('Login response data:', responseData);
+            const { user: userData } = responseData;
+            
+            console.log('User data from login:', userData);
 
             setUser(userData);
             setAuthenticated(true);
             //setError(null);
             return { done: true, user: userData };
         } catch (err) {
-            console.log(err);
+            console.error('Login error:', err);
+            console.error('Error message:', err.message);
             //setError(err.message);
             //setAuthenticated(false);
             return { done: false, error: err.message };
