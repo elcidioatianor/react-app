@@ -20,17 +20,17 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false); //TODO: USAR useFormStatus???
 
-    const { login, loading, isAuthenticated } = useAuth();
+    const { login, loading, isAuthenticated, user } = useAuth();
     const { showNotification } = useNotification();
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
-        if (isAuthenticated) {
-            const from = location.state?.from?.pathname || '/';
+        if (isAuthenticated && user) {
+            const from = location.state?.from?.pathname || (user.role === 'seller' ? '/seller/dashboard' : '/');
             navigate(from, { replace: true });
         }
-    }, [isAuthenticated, navigate, location]);
+    }, [isAuthenticated, user, navigate, location]);
 
     useEffect(() => {
         if (location.state?.message) {
@@ -82,10 +82,7 @@ function Login() {
                 } else {
                     localStorage.removeItem('remember');
                 }
-                const from =
-                    location.state?.from?.pathname ||
-                    (res.user?.role === 'seller' ? '/seller/dashboard' : '/');
-                navigate(from, { replace: true });
+                // Navigation will be handled by useEffect when isAuthenticated becomes true
             } else {
                 showNotification(res.error || 'Erro no login', 'error');
             }

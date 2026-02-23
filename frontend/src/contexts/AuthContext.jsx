@@ -70,7 +70,7 @@ function AuthProvider({ children }) {
             setUser(userData);
             setAuthenticated(true);
             //setError(null);
-            return { done: true };
+            return { done: true, user: userData };
         } catch (err) {
             console.log(err);
             //setError(err.message);
