@@ -51,142 +51,108 @@ export function Navbar() {
     };
 
     return (
-        <header className='sticky-top shadow-sm' style={{ zIndex: 1030 }}>
+        <header className="sticky top-0 shadow-sm z-[1030]">
             {/* Main Navbar */}
-            <nav className='bg-nav-main text-white py-2'>
-                <div className='container-fluid d-flex align-items-center gap-2 gap-md-4'>
+            <nav className="bg-blue-600 text-white py-2">
+                <div className="max-w-7xl mx-auto flex items-center gap-2 md:gap-4 px-4">
                     {/* Logo & Mobile Menu Toggle */}
-                    <div className='d-flex align-items-center'>
+                    <div className="flex items-center">
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className='btn btn-link text-white text-decoration-none d-lg-none p-2 border border-transparent hover:border-white'
+                            className="lg:hidden p-2 border border-transparent hover:border-white text-white"
                         >
-                            <i className='bi bi-list fs-2'></i>
+                            <i className="bi bi-list text-2xl"></i>
                         </button>
                         <Link
-                            className='d-flex align-items-center nav-link-border px-2'
-                            to='/'
+                            className="flex items-center px-2 group border-b-2 border-transparent hover:border-white"
+                            to="/"
                         >
-                            <span className='fs-3 fw-bold text-dubaning-orange tracking-tighter'>
+                            <span className="text-3xl font-bold text-orange-500 tracking-tighter">
                                 DUBA
                             </span>
-                            <span className='fs-3 fw-bold text-white tracking-tighter'>
+                            <span className="text-3xl font-bold text-white tracking-tighter">
                                 NING
                             </span>
                         </Link>
                     </div>
 
                     {/* Location - Hidden on small mobile */}
-                    <div className='d-none d-sm-flex flex-column nav-link-border px-2 text-nowrap'>
-                        <span
-                            className='small text-secondary lh-1 ms-3'
-                            style={{ fontSize: '11px' }}
-                        >
+                    <div className="hidden sm:flex flex-col px-2 whitespace-nowrap group border-b-2 border-transparent hover:border-white">
+                        <span className="text-xs text-gray-300 lh-1 ml-3">
                             Enviar para
                         </span>
-                        <div className='d-flex align-items-center lh-1'>
-                            <i className='bi bi-geo-alt fs-5 me-1'></i>
-                            <span
-                                className='fw-bold'
-                                style={{ fontSize: '14px' }}
-                            >
+                        <div className="flex items-center lh-1">
+                            <i className="bi bi-geo-alt text-xl mr-1"></i>
+                            <span className="font-bold text-sm">
                                 Moçambique
                             </span>
                         </div>
                     </div>
 
                     {/* Search Bar */}
-                    <form className='flex-grow-1' onSubmit={handleSearch}>
-                        <div className='input-group'>
+                    <form className="flex-grow" onSubmit={handleSearch}>
+                        <div className="flex">
                             <select
                                 value={selectedCategory}
-                                onChange={e =>
-                                    setSelectedCategory(e.target.value)
-                                }
-                                className='form-select d-none d-lg-block bg-light border-0'
-                                style={{
-                                    maxWidth: '150px',
-                                    fontSize: '12px',
-                                    cursor: 'pointer',
-                                }}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                className="hidden lg:block bg-gray-100 border-0 max-w-[150px] text-xs cursor-pointer px-2 py-1"
                             >
-                                <option value='all'>Todos</option>
-                                {categories.map(c => (
+                                <option value="all">Todos</option>
+                                {categories.map((c) => (
                                     <option key={c} value={c.toLowerCase()}>
                                         {c}
                                     </option>
                                 ))}
                             </select>
                             <input
-                                type='text'
-                                className='form-control border-0'
-                                placeholder='Pesquisar na DUBANING'
+                                type="text"
+                                className="flex-1 border-0 px-3 py-1"
+                                placeholder="Pesquisar na DUBANING"
                                 value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                             />
                             <button
-                                type='submit'
-                                className='btn btn-warning bg-dubaning-orange border-0 text-dark'
+                                type="submit"
+                                className="bg-orange-500 border-0 text-black px-3 py-1 hover:bg-orange-600"
                             >
-                                <i className='bi bi-search'></i>
+                                <i className="bi bi-search"></i>
                             </button>
                         </div>
                     </form>
 
                     {/* Account & Orders & Cart */}
-                    <div className='d-flex align-items-center gap-1 gap-md-3'>
+                    <div className="flex items-center gap-1 md:gap-3">
                         {/* Language/Flag */}
-                        <div className='d-none d-lg-flex align-items-center nav-link-border'>
-                            <span
-                                className='fw-bold me-1'
-                                style={{ fontSize: '14px' }}
-                            >
+                        <div className="hidden lg:flex items-center px-2 group border-b-2 border-transparent hover:border-white">
+                            <span className="font-bold text-sm mr-1">
                                 PT
                             </span>
-                            <i
-                                className='bi bi-caret-down-fill text-secondary'
-                                style={{ fontSize: '8px' }}
-                            ></i>
+                            <i className="bi bi-caret-down-fill text-gray-300 text-[8px]"></i>
                         </div>
 
                         {/* Account Links */}
                         {isAuthenticated ? (
-                            <div className='position-relative nav-link-border px-2 min-width-120 group-hover-target'>
-                                <span
-                                    className='d-block small lh-1'
-                                    style={{ fontSize: '11px' }}
-                                >
+                            <div className="relative px-2 min-w-[120px] group border-b-2 border-transparent hover:border-white">
+                                <span className="block text-xs lh-1">
                                     Olá, {user.name?.split(' ')[0]}
                                 </span>
-                                <div className='d-flex align-items-center lh-1'>
-                                    <span
-                                        className='fw-bold'
-                                        style={{ fontSize: '14px' }}
-                                    >
+                                <div className="flex items-center lh-1">
+                                    <span className="font-bold text-sm">
                                         Minha Conta
                                     </span>
-                                    <i
-                                        className='bi bi-caret-down-fill text-secondary ms-1 mt-1'
-                                        style={{ fontSize: '8px' }}
-                                    ></i>
+                                    <i className="bi bi-caret-down-fill text-gray-300 ml-1 mt-1 text-[8px]"></i>
                                 </div>
-                                {/* Dropdown handled via standard Bootstrap usually requires click, keeping hover via custom CSS later if needed or relying on CSS hover logic */}
+                                {/* Dropdown can be added with Tailwind group-hover */}
                             </div>
                         ) : (
                             <Link
-                                to='/login'
-                                className='nav-link-border px-2 text-white'
+                                to="/login"
+                                className="px-2 text-white group border-b-2 border-transparent hover:border-white"
                             >
-                                <span
-                                    className='d-block small lh-1'
-                                    style={{ fontSize: '11px' }}
-                                >
+                                <span className="block text-xs lh-1">
                                     Olá, faça seu login
                                 </span>
-                                <span
-                                    className='fw-bold'
-                                    style={{ fontSize: '14px' }}
-                                >
+                                <span className="font-bold text-sm">
                                     Contas e Listas
                                 </span>
                             </Link>
@@ -194,44 +160,29 @@ export function Navbar() {
 
                         {/* Orders */}
                         <Link
-                            to='/orders'
-                            className='d-none d-md-flex flex-column nav-link-border px-2 text-white text-nowrap'
+                            to="/orders"
+                            className="hidden md:flex flex-col px-2 text-white whitespace-nowrap group border-b-2 border-transparent hover:border-white"
                         >
-                            <span
-                                className='small lh-1'
-                                style={{ fontSize: '11px' }}
-                            >
+                            <span className="text-xs lh-1">
                                 Devoluções
                             </span>
-                            <span
-                                className='fw-bold lh-1'
-                                style={{ fontSize: '14px' }}
-                            >
+                            <span className="font-bold text-sm lh-1">
                                 e Pedidos
                             </span>
                         </Link>
 
                         {/* Cart */}
                         <Link
-                            to='/cart'
-                            className='d-flex align-items-end nav-link-border px-2 text-white position-relative'
+                            to="/cart"
+                            className="flex items-end px-2 text-white relative group border-b-2 border-transparent hover:border-white"
                         >
-                            <div className='position-relative'>
-                                <i className='bi bi-cart3 fs-2'></i>
-                                <span
-                                    className='position-absolute top-0 start-50 translate-middle badge rounded-pill bg-warning text-dark fw-bold'
-                                    style={{ fontSize: '10px' }}
-                                >
+                            <div className="relative">
+                                <i className="bi bi-cart3 text-2xl"></i>
+                                <span className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-black font-bold text-xs rounded-full px-1">
                                     {cartCount}
                                 </span>
                             </div>
-                            <span
-                                className='d-none d-sm-block fw-bold ms-1'
-                                style={{
-                                    fontSize: '14px',
-                                    marginBottom: '5px',
-                                }}
-                            >
+                            <span className="hidden sm:block font-bold text-sm ml-1 mb-1">
                                 Carrinho
                             </span>
                         </Link>
@@ -240,145 +191,133 @@ export function Navbar() {
             </nav>
 
             {/* Secondary Navbar */}
-            <div className='bg-nav-sub text-white py-1 pl-3 d-flex align-items-center gap-3 overflow-auto text-nowrap'>
+            <div className="bg-gray-800 text-white py-1 pl-3 flex items-center gap-3 overflow-x-auto whitespace-nowrap">
                 <button
                     onClick={() => setIsMenuOpen(true)}
-                    className='btn btn-link text-white text-decoration-none fw-bold d-flex align-items-center gap-1 nav-link-border'
+                    className="text-white font-bold flex items-center gap-1 px-2 group border-b-2 border-transparent hover:border-white"
                 >
-                    <i className='bi bi-list fs-5'></i> Todos
+                    <i className="bi bi-list text-xl"></i> Todos
                 </button>
                 <Link
-                    to='/search?promo=flash'
-                    className='nav-link-border d-flex align-items-center gap-1 text-white'
+                    to="/search?promo=flash"
+                    className="flex items-center gap-1 text-white px-2 group border-b-2 border-transparent hover:border-white"
                 >
-                    <i className='bi bi-lightning-fill text-warning'></i>{' '}
-                    Ofertas do Dia
+                    <i className="bi bi-lightning-fill text-yellow-400"></i> Ofertas do Dia
                 </Link>
                 <Link
-                    to='/stores'
-                    className='nav-link-border d-flex align-items-center gap-1 text-white'
+                    to="/stores"
+                    className="flex items-center gap-1 text-white px-2 group border-b-2 border-transparent hover:border-white"
                 >
-                    <i className='bi bi-shop'></i> Lojas em Destaque
+                    <i className="bi bi-shop"></i> Lojas em Destaque
                 </Link>
                 <Link
-                    to='/seller/onboarding'
-                    className='nav-link-border d-flex align-items-center gap-1 text-white'
+                    to="/seller/onboarding"
+                    className="flex items-center gap-1 text-white px-2 group border-b-2 border-transparent hover:border-white"
                 >
-                    <i className='bi bi-cash-coin'></i> Vender na DUBANING
+                    <i className="bi bi-cash-coin"></i> Vender na DUBANING
                 </Link>
                 <Link
-                    to='/search?category=tecnologia'
-                    className='d-none d-md-flex nav-link-border align-items-center gap-1 text-white'
+                    to="/search?category=tecnologia"
+                    className="hidden md:flex items-center gap-1 text-white px-2 group border-b-2 border-transparent hover:border-white"
                 >
-                    <i className='bi bi-laptop'></i> Eletrónicos
+                    <i className="bi bi-laptop"></i> Eletrónicos
                 </Link>
                 <Link
-                    to='/search?category=moda'
-                    className='d-none d-md-flex nav-link-border align-items-center gap-1 text-white'
+                    to="/search?category=moda"
+                    className="hidden md:flex items-center gap-1 text-white px-2 group border-b-2 border-transparent hover:border-white"
                 >
-                    <i className='bi bi-bag'></i> Moda
+                    <i className="bi bi-bag"></i> Moda
                 </Link>
                 <Link
-                    to='/help'
-                    className='nav-link-border d-flex align-items-center gap-1 text-white'
+                    to="/help"
+                    className="flex items-center gap-1 text-white px-2 group border-b-2 border-transparent hover:border-white"
                 >
-                    <i className='bi bi-headset'></i> Apoio ao Cliente
+                    <i className="bi bi-headset"></i> Apoio ao Cliente
                 </Link>
             </div>
 
             {/* Mobile Menu Overlay */}
             {isMenuOpen && (
-                <div
-                    className='position-fixed top-0 start-0 w-100 h-100'
-                    style={{ zIndex: 1040 }}
-                >
-                    <div className='d-flex h-100'>
-                        <div
-                            className='bg-white h-100 overflow-auto'
-                            style={{ width: '85%', maxWidth: '350px' }}
-                        >
-                            <div className='bg-nav-sub text-white p-3 d-flex align-items-center gap-2'>
-                                <i className='bi bi-person-circle fs-2'></i>
-                                <span className='fw-bold fs-5'>
+                <div className="fixed inset-0 z-[1040]">
+                    <div className="flex h-full">
+                        <div className="bg-white h-full overflow-y-auto w-[85%] max-w-[350px]">
+                            <div className="bg-gray-800 text-white p-3 flex items-center gap-2">
+                                <i className="bi bi-person-circle text-2xl"></i>
+                                <span className="font-bold text-xl">
                                     Olá,{' '}
                                     {isAuthenticated
                                         ? user.name?.split(' ')[0]
                                         : 'Inicia Sessão'}
                                 </span>
                             </div>
-                            <div className='p-3'>
-                                <h5 className='fw-bold mb-2'>
+                            <div className="p-3">
+                                <h5 className="font-bold mb-2">
                                     Comprar por Categoria
                                 </h5>
-                                <ul className='list-unstyled mb-4'>
-                                    {categories.map(c => (
-                                        <li key={c} className='mb-2'>
+                                <ul className="list-none mb-4">
+                                    {categories.map((c) => (
+                                        <li key={c} className="mb-2">
                                             <Link
                                                 to={`/search?category=${c.toLowerCase()}`}
-                                                className='text-dark text-decoration-none'
-                                                onClick={() =>
-                                                    setIsMenuOpen(false)
-                                                }
+                                                className="text-black no-underline"
+                                                onClick={() => setIsMenuOpen(false)}
                                             >
                                                 {c}{' '}
-                                                <i className='bi bi-chevron-right float-end text-secondary'></i>
+                                                <i className="bi bi-chevron-right float-right text-gray-500"></i>
                                             </Link>
                                         </li>
                                     ))}
                                 </ul>
                                 <hr />
-                                <h5 className='fw-bold mb-2'>
+                                <h5 className="font-bold mb-2">
                                     Ajuda e Configurações
                                 </h5>
-                                <ul className='list-unstyled'>
-                                    <li className='mb-2'>
+                                <ul className="list-none">
+                                    <li className="mb-2">
                                         <Link
-                                            to='/profile'
-                                            className='text-dark text-decoration-none'
+                                            to="/profile"
+                                            className="text-black no-underline"
                                             onClick={() => setIsMenuOpen(false)}
                                         >
                                             Sua Conta
                                         </Link>
                                     </li>
-                                    <li className='mb-2'>
+                                    <li className="mb-2">
                                         <Link
-                                            to='/seller/onboarding'
-                                            className='text-dubaning-orange fw-bold text-decoration-none'
+                                            to="/seller/onboarding"
+                                            className="text-orange-500 font-bold no-underline"
                                             onClick={() => setIsMenuOpen(false)}
                                         >
                                             Vender na DUBANING
                                         </Link>
                                     </li>
-                                    <li className='mb-2'>
-                                        <i className='bi bi-globe me-2'></i>{' '}
-                                        Português
+                                    <li className="mb-2">
+                                        <i className="bi bi-globe mr-2"></i> Português
                                     </li>
-                                    <li className='mb-2'>
+                                    <li className="mb-2">
                                         <Link
-                                            to='/help'
-                                            className='text-dark text-decoration-none'
+                                            to="/help"
+                                            className="text-black no-underline"
                                             onClick={() => setIsMenuOpen(false)}
                                         >
                                             Apoio ao Cliente
                                         </Link>
                                     </li>
                                     {isAuthenticated ? (
-                                        <li className='mb-2'>
+                                        <li className="mb-2">
                                             <button
                                                 onClick={handleLogout}
-                                                className='btn btn-link text-dark text-decoration-none p-0'
+                                                className="text-black no-underline p-0 bg-transparent border-0"
                                             >
                                                 Sair
                                             </button>
                                         </li>
                                     ) : (
-                                        <li className='mb-2'>
+                                        <li className="mb-2">
                                             <Link
-                                                to='/login'
-                                                className='text-dark fw-bold text-decoration-none'
-                                                onClick={() =>
-                                                    setIsMenuOpen(false)
-                                                }
+                                                to="/login"
+                                                className="text-black font-bold no-underline"
+                                                onClick={() => setIsMenuOpen(false)}
                                             >
                                                 Inicia Sessão
                                             </Link>
@@ -388,11 +327,11 @@ export function Navbar() {
                             </div>
                         </div>
                         <div
-                            className='flex-grow-1 bg-dark bg-opacity-75'
+                            className="flex-1 bg-black bg-opacity-75"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            <button className='btn btn-link text-white fs-1 p-4'>
-                                <i className='bi bi-x-lg'></i>
+                            <button className="text-white text-4xl p-4">
+                                <i className="bi bi-x-lg"></i>
                             </button>
                         </div>
                     </div>
