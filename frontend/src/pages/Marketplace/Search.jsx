@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useEffectEvent } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
+// Using experimental useEffectEvent for cleaner dependency handling
 
 function Search() {
     const [searchParams] = useSearchParams();
@@ -16,18 +17,18 @@ function Search() {
         maxPrice: '',
     });
 
-    //TODO: USE REACT QUERY
-    const fetchResults = useCallback(async () => {
+    // Effect Event - doesn't need to be in dependencies
+    const onSearch = useEffectEvent(async (queryString) => {
         setLoading(true);
         try {
             const res = await api.get('/products');
             const resData = res.data || [];
             let filtered = resData.filter(
                 p =>
-                    p.name.toLowerCase().includes(query.toLowerCase()) ||
+                    p.name.toLowerCase().includes(queryString.toLowerCase()) ||
                     p.description
                         .toLowerCase()
-                        .includes(query.toLowerCase())
+                        .includes(queryString.toLowerCase())
             );
 
             if (filters.category) {
@@ -47,11 +48,12 @@ function Search() {
         } finally {
             setLoading(false);
         }
-    }, [query, filters, api]);
+    });
 
+    // Clean reactive effect - only depends on reactive values
     useEffect(() => {
-        fetchResults();
-    }, [fetchResults]);
+        onSearch(query);
+    }, [query, filters]);
 
     const categories = ['Tecnologia', 'Moda', 'Casa', 'Agro', 'Serviços'];
     const cities = ['Maputo', 'Matola', 'Beira', 'Nampula', 'Tete'];
