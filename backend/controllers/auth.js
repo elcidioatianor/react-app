@@ -75,48 +75,60 @@ const sendPasswordResetEmail = async (email, resetToken) => {
 // middleware requireAuth
 exports.authenticate = (req, res, next) => {
     try {
-        //passport.authenticate('jwt', { session: false })(req, res, next);
+        console.log('=== AUTHENTICATE MIDDLEWARE ===');
+        console.log('Method:', req.method);
+        console.log('URL:', req.url);
+        console.log('Headers:', Object.keys(req.headers));
+        
         const authHeader = req.headers.authorization;
+        console.log('Authorization header:', authHeader);
         
         if (!authHeader) {
+            console.log('No authorization header found');
             return next(
                 new ResponseError(400, 'Header Authorization não fornecido')
             );
         }
 
         const parts = authHeader.split(' ');
+        console.log('Auth header parts:', parts);
+        console.log('Number of parts:', parts.length);
         
         if (parts.length !== 2) {
+            console.log('Invalid number of parts');
             return next(
                 new ResponseError(400, 'Formato de Authorization inválido')
             );
         }
 
         const [scheme, accessToken] = parts;
+        console.log('Scheme:', scheme);
+        console.log('Token length:', accessToken.length);
 
         if (!/^Bearer$/i.test(scheme)) {
+            console.log('Invalid scheme:', scheme);
             return next(
                 new ResponseError(400, 'Esquema de Authorization deve ser Bearer')
             );
         }
 
         if (!accessToken) {
+            console.log('No token provided');
             return next(
                 new ResponseError(400, 'Token de acesso não fornecido')
             );
         }
+        
         console.log('Verificando token...');
         const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
-        console.log('Token decoded:', decoded);
-        //APENAS ARMAZENAMOS ID & ROLE:
-        //ID: BUSCAR USUÁRIO EM QUALQUER MIDDLEWARE SUBSEQUENTE QUE PRECISAR
-        //ROLE: PERMITIR/RECUSAR ACESSO A RECURSOS EM MIDDLEWARES SUBSEQUENTES
+        console.log('Token decoded successfully:', decoded);
+        
         req.payload = decoded; // { sub, role }
-        console.log('req.payload set:', req.payload);
+        console.log('req.payload set to:', req.payload);
         next();
     } catch (err) {
-        console.error('Token verification error:', err);
-        const error = new ResponseError(401, 'Token expirado ou inválido'); //'Token inválido ou expirado'
+        console.error('Token verification error:', err.message);
+        const error = new ResponseError(401, 'Token expirado ou inválido');
 
         error.code = 'EEXPIRY';
         next(error);
@@ -205,8 +217,23 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
     try {
+        console.log('=== LOGIN REQUEST ===');
+        console.log('Method:', req.method);
+        console.log('Content-Type:', req.headers['content-type']);
+        console.log('Body:', req.body);
+        console.log('Body keys:', Object.keys(req.body || {}));
+        console.log('Body type:', typeof req.body);
+        
         //TODO: CHANGE TO phoneNumber
         const { phoneNumber, password } = req.body;
+        
+        console.log('Extracted phoneNumber:', phoneNumber);
+        console.log('Extracted password:', password ? '***' : 'MISSING');
+
+        if (!phoneNumber || !password) {
+            console.log('Missing required fields - phoneNumber:', !!phoneNumber, 'password:', !!password);
+            return next(new ResponseError(400, 'Número de telefone e senha são obrigatórios'));
+        }
 
         const user = await User.findOne({ where: { phoneNumber } });
 
