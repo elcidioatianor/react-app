@@ -113,43 +113,43 @@ function Login() {
     };
 
     return (
-        <div className='vh-100 d-flex'>
+        <div className='min-h-screen flex'>
             {/* Left Panel - Branding */}
             <div
-                className='d-none d-lg-flex col-lg-6 position-relative top-0 left-0 vh-100'
+                className='hidden lg:flex lg:w-1/2 relative top-0 left-0 min-h-screen'
                 style={{
                     background:
                         'linear-gradient(135deg, #FF6000 0%, #FF8C00 100%)',
                 }}
             >
                 <div
-                    className='position-absolute top-0 start-0 w-100 h-100'
+                    className='absolute top-0 left-0 w-full h-full'
                     style={{
                         background: 'url("/images/hero.png") center/cover',
                         opacity: 0.15,
                     }}
                 ></div>
-                <div className='d-flex flex-column justify-content-center align-items-center text-white'>
-                    <Link to='/' className='text-decoration-none mb-5'>
-                        <h2 className='fw-bold' style={{ fontSize: '2rem' }}>
+                <div className='flex flex-col justify-center items-center text-white'>
+                    <Link to='/' className='no-underline mb-20'>
+                        <h2 className='font-bold' style={{ fontSize: '2rem' }}>
                             <span style={{ color: '#fff' }}>DUBA</span>
                             <span style={{ color: '#333' }}>NING</span>
                         </h2>
                     </Link>
-                    <h1 className='display-5 fw-bold mb-4'>
+                    <h1 className='text-5xl font-bold mb-16'>
                         Bem-vindo de volta!
                     </h1>
-                    <p className='lead mb-4 text-center w-75'>
+                    <p className='text-xl mb-16 text-center w-3/4'>
                         Aceda à sua conta para continuar a explorar milhares de
                         produtos e serviços em Moçambique.
                     </p>
-                    <div className='d-flex align-items-center gap-3 mt-4'>
-                        <div className='d-flex align-items-center gap-2'>
-                            <i className='bi bi-shield-check fs-4'></i>
+                    <div className='flex items-center gap-3 mt-16'>
+                        <div className='flex items-center gap-2'>
+                            <i className='bi bi-shield-check text-2xl'></i>
                             <span>Pagamento Seguro</span>
                         </div>
-                        <div className='d-flex align-items-center gap-2'>
-                            <i className='bi bi-truck fs-4'></i>
+                        <div className='flex items-center gap-2'>
+                            <i className='bi bi-truck text-2xl'></i>
                             <span>Entrega Rápida</span>
                         </div>
                     </div>
@@ -157,13 +157,13 @@ function Login() {
             </div>
 
             {/* Right Panel - Form */}
-            <div className='col-12 col-lg-6 d-flex align-items-center bg-light overflow-y-auto'>
-                <div className='w-100 d-flex flex-column bg-light align-items-center justify-content-center py-3'>
+            <div className='w-full lg:w-1/2 flex items-center bg-gray-100 overflow-y-auto'>
+                <div className='w-full flex flex-col bg-gray-100 items-center justify-center py-3'>
                     <div  style={{maxWidth: '450px'}}>
-                    <div className='text-center mb-4 d-lg-none'>
-                        <Link to='/' className='text-decoration-none'>
+                    <div className='text-center mb-16 lg:hidden'>
+                        <Link to='/' className='no-underline'>
                             <h2
-                                className='fw-bold mb-3'
+                                className='font-bold mb-3'
                                 style={{ fontSize: '2rem'}}
                             >
                                 <span style={{ color: '#FF6000' }}>DUBA</span>
@@ -172,9 +172,9 @@ function Login() {
                         </Link>
                     </div>
 
-                    <div className='bg-white rounded-4 shadow-sm p-4'>
-                        <h3 className='fw-bold mb-1'>Entrar</h3>
-                        <p className='text-muted mb-4'>
+                    <div className='bg-white rounded-lg shadow-md p-16'>
+                        <h3 className='font-bold mb-4'>Entrar</h3>
+                        <p className='text-gray-500 mb-16'>
                             Faça login para continuar
                         </p>
                         {/* TODO: USE action= */}
@@ -182,13 +182,13 @@ function Login() {
                             <div className='mb-3'>
                                 <label
                                     htmlFor='phoneNumber'
-                                    className='form-label fw-semibold small text-muted'
+                                    className='block font-semibold text-sm text-gray-600 mb-2'
                                 >
                                     Número de telefone
                                 </label>
-                                <div className='input-group input-group-lg'>
-                                    <span className='input-group-text bg-light border-end-0'>
-                                        <i className='bi bi-person text-muted'></i>
+                                <div className='flex items-center text-lg'>
+                                    <span className='bg-gray-100 px-4 py-3 border-2 border-r-0 border-gray-200 rounded-l-lg'>
+                                        <i className='bi bi-person text-gray-500'></i>
                                     </span>
                                     <input
                                         type='text'
@@ -196,13 +196,15 @@ function Login() {
                                         name='phoneNumber'
                                         value={credentials.phoneNumber}
                                         onChange={handleInputChange}
-                                        className={`form-control bg-light border-start-0 ${validationErrors.phoneNumber ? 'is-invalid' : ''}`}
+                                        className={`flex-1 px-4 py-3 bg-gray-100 border-2 border-l-0 rounded-r-lg focus:outline-none focus:border-blue-500 ${
+                                            validationErrors.phoneNumber ? 'border-red-500' : 'border-gray-200'
+                                        }`}
                                         placeholder='+258 84 123 4567'
                                         disabled={loading || isSubmitting}
                                     />
                                 </div>
                                 {validationErrors.phoneNumber && (
-                                    <div className='text-danger small mt-1'>
+                                    <div className='text-red-500 text-sm mt-1'>
                                         {validationErrors.phoneNumber}
                                     </div>
                                 )}
@@ -211,13 +213,13 @@ function Login() {
                             <div className='mb-3'>
                                 <label
                                     htmlFor='password'
-                                    className='form-label fw-semibold small text-muted'
+                                    className='block font-semibold text-sm text-gray-600 mb-2'
                                 >
                                     Senha
                                 </label>
-                                <div className='input-group input-group-lg'>
-                                    <span className='input-group-text bg-light border-end-0'>
-                                        <i className='bi bi-lock text-muted'></i>
+                                <div className='flex items-center text-lg'>
+                                    <span className='bg-gray-100 px-4 py-3 border-2 border-r-0 border-gray-200 rounded-l-lg'>
+                                        <i className='bi bi-lock text-gray-500'></i>
                                     </span>
                                     <input
                                         type={
@@ -227,13 +229,15 @@ function Login() {
                                         name='password'
                                         value={credentials.password}
                                         onChange={handleInputChange}
-                                        className={`form-control bg-light border-start-0 border-end-0 ${validationErrors.password ? 'is-invalid' : ''}`}
+                                        className={`flex-1 px-4 py-3 bg-gray-100 border-2 border-l-0 border-r-0 focus:outline-none focus:border-blue-500 ${
+                                            validationErrors.password ? 'border-red-500' : 'border-gray-200'
+                                        }`}
                                         placeholder='Digite a senha'
                                         disabled={loading || isSubmitting}
                                     />
                                     <button
                                         type='button'
-                                        className='input-group-text bg-light border-start-0'
+                                        className='bg-gray-100 px-4 py-3 border-2 border-l-0 border-gray-200 rounded-r-lg hover:bg-gray-200 transition-colors'
                                         onClick={() =>
                                             setShowPassword(!showPassword)
                                         }
@@ -254,16 +258,16 @@ function Login() {
                                     </button>
                                 </div>
                                 {validationErrors.password && (
-                                    <div className='text-danger small mt-1'>
+                                    <div className='text-red-500 text-sm mt-1'>
                                         {validationErrors.password}
                                     </div>
                                 )}
                             </div>
 
-                            <div className='d-flex justify-content-between align-items-center mb-4'>
-                                <div className='form-check'>
+<div className='flex justify-between items-center mb-16'>
+                                <div className='flex items-center'>
                                     <input
-                                        className='form-check-input'
+                                        className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2'
                                         type='checkbox'
                                         name='saveCredentials'
                                         id='saveCredentials'
@@ -271,7 +275,7 @@ function Login() {
                                         onChange={handleInputChange}
                                     />
                                     <label
-                                        className='form-check-label small'
+                                        className='ml-2 text-sm font-medium text-gray-900'
                                         htmlFor='saveCredentials'
                                     >
                                         Lembrar-me
@@ -280,7 +284,7 @@ function Login() {
                                 <button
                                     type='button'
                                     onClick={() => navigate('/forgot-password')}
-                                    className='btn btn-link p-0 text-decoration-none small fw-semibold'
+                                    className='text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors'
                                     style={{ color: '#FF6000' }}
                                 >
                                     Esqueceu a senha?
@@ -289,7 +293,7 @@ function Login() {
 
                             <button
                                 type='submit'
-                                className='btn btn-lg w-100 fw-bold mb-3'
+                                className='w-full py-3 px-6 font-bold text-black rounded-lg mb-3'
                                 style={{
                                     backgroundColor: '#FFD814',
                                     color: '#0F1111',
@@ -300,7 +304,7 @@ function Login() {
                                 {loading ||
                                 isSubmitting /* TODO: USAR SPINNER CUSTOM */ ? (
                                     <>
-                                        <span className='spinner-border spinner-border-sm me-2'></span>
+                                        <span className='inline-block w-4 h-4 border-2 border-gray-300 border-t-black rounded-full animate-spin mr-2'></span>
                                         Entrando...
                                     </>
                                 ) : (
@@ -308,29 +312,29 @@ function Login() {
                                 )}
                             </button>
 
-                            <div className='text-center my-4'>
+                            <div className='text-center my-16'>
                                 <span
-                                    className='text-muted small px-2 d-inline-block position-relative'
+                                    className='text-gray-500 text-sm px-2 bg-white relative inline-block'
                                     style={{ background: '#fff' }}
                                 >
                                     ou continue com
                                 </span>
                                  <hr
-                                    className='position-relative'
+                                    className='relative border-gray-300'
                                     style={{ borderColor: '#ddd', marginTop: '-10px'}}
                                 />
-                               
+
                             </div>
 
-                            <div className='d-flex gap-3'>
+                            <div className='flex gap-3'>
                                 <button
                                     type='button'
                                     onClick={() => handleSocialLogin('Google')}
-                                    className='btn flex-grow-1 py-2 social-btn'
+                                    className='flex-1 py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center'
                                     disabled={loading || isSubmitting}
                                 >
                                     <GoogleLogo
-                                        className='me-2'
+                                        className='mr-2'
                                         size='20'
                                     />{' '}
                                     Google
@@ -338,11 +342,11 @@ function Login() {
                                 <button
                                     type='button'
                                     onClick={() => handleSocialLogin('GitHub')}
-                                    className='btn flex-grow-1 py-2 social-btn'
+                                    className='flex-1 py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center'
                                     disabled={loading || isSubmitting}
                                 >
                                     <GithubLogo
-                                        className='me-2'
+                                        className='mr-2'
                                         size='20'
                                     />{' '}
                                     GitHub
@@ -350,11 +354,11 @@ function Login() {
                             </div>
                         </form>
 
-                        <p className='text-center text-muted small mt-4 mb-0'>
+                        <p className='text-center text-gray-500 text-sm mt-16 mb-0'>
                             Não tens uma conta?{' '}
                             <Link
                                 to='/register'
-                                className='fw-bold text-decoration-none'
+                                className='font-bold no-underline'
                                 style={{ color: '#FF6000' }}
                             >
                                 Crie agora aqui
@@ -362,13 +366,13 @@ function Login() {
                         </p>
                     </div>
 
-                    <p className='text-center text-muted small mt-4'>
+                    <p className='text-center text-gray-500 text-sm mt-16'>
                         Ao continuar, aceita os{' '}
-                        <Link to='/terms' className='text-decoration-none'>
+                        <Link to='/terms' className='no-underline'>
                             Termos de Uso
                         </Link>{' '}
                         e a{' '}
-                        <Link to='/privacy' className='text-decoration-none'>
+                        <Link to='/privacy' className='no-underline'>
                             Política de Privacidade
                         </Link>{' '}
                         da DUBANING.

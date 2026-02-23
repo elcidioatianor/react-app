@@ -55,22 +55,22 @@ function Search() {
     const cities = ['Maputo', 'Matola', 'Beira', 'Nampula', 'Tete'];
 
     return (
-        <div className='container py-5' style={{ marginTop: '70px' }}>
-            <div className='row g-4'>
+        <div className='container mx-auto py-20' style={{ marginTop: '70px' }}>
+            <div className='grid grid-cols-1 lg:grid-cols-4 gap-4'>
                 {/* Filtros Sidebar */}
-                <div className='col-lg-3'>
+                <div className='lg:col-span-1'>
                     <div
-                        className='card border-0 shadow-sm p-4 sticky-top'
+                        className='bg-white border border-gray-200 rounded-lg shadow-sm p-16 sticky'
                         style={{ top: '100px' }}
                     >
-                        <h5 className='fw-bold mb-4'>Filtros</h5>
+                        <h5 className='font-bold mb-16'>Filtros</h5>
 
-                        <div className='mb-4'>
-                            <label className='form-label small fw-bold'>
+                        <div className='mb-16'>
+                            <label className='block text-sm font-bold text-gray-700 mb-2'>
                                 Categoria
                             </label>
                             <select
-                                className='form-select'
+                                className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500'
                                 value={filters.category}
                                 onChange={e =>
                                     setFilters({
@@ -88,12 +88,12 @@ function Search() {
                             </select>
                         </div>
 
-                        <div className='mb-4'>
-                            <label className='form-label small fw-bold'>
+                        <div className='mb-16'>
+                            <label className='block text-sm font-bold text-gray-700 mb-2'>
                                 Cidade
                             </label>
                             <select
-                                className='form-select'
+                                className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500'
                                 value={filters.city}
                                 onChange={e =>
                                     setFilters({
@@ -111,26 +111,26 @@ function Search() {
                             </select>
                         </div>
 
-                        <div className='mb-4'>
-                            <label className='form-label small fw-bold'>
+                        <div className='mb-16'>
+                            <label className='block text-sm font-bold text-gray-700 mb-2'>
                                 Preço
                             </label>
-                            <div className='d-flex gap-2'>
+                            <div className='flex gap-2'>
                                 <input
                                     type='number'
-                                    className='form-control'
+                                    className='flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500'
                                     placeholder='Mínimo'
                                 />
                                 <input
                                     type='number'
-                                    className='form-control'
+                                    className='flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500'
                                     placeholder='Máximo'
                                 />
                             </div>
                         </div>
 
                         <button
-                            className='btn btn-outline-primary w-100'
+                            className='w-full py-2 px-4 border border-blue-500 text-blue-500 font-bold rounded-lg hover:bg-blue-50 transition-colors'
                             onClick={() =>
                                 setFilters({
                                     category: '',
@@ -146,34 +146,34 @@ function Search() {
                 </div>
 
                 {/* Resultados */}
-                <div className='col-lg-9'>
-                    <h4 className='fw-bold mb-4'>
+                <div className='lg:col-span-3'>
+                    <h4 className='font-bold mb-16 text-2xl'>
                         {loading
                             ? 'Pesquisando...'
                             : `${products?.length || 0} resultados para "${query}"`}
                     </h4>
 
                     {loading ? (
-                        <div className='text-center py-5'>
-                            <div className='spinner-border text-primary'></div>
+                        <div className='text-center py-20'>
+                            <div className='inline-block w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin'></div>
                         </div>
                     ) : !products || products.length === 0 ? (
-                        <div className='text-center py-5 bg-light rounded-3'>
-                            <i className='bi bi-search display-1 text-muted opacity-25 mb-4'></i>
-                            <h5>Nenhum produto encontrado</h5>
-                            <p className='text-muted'>
+                        <div className='text-center py-20 bg-gray-100 rounded-lg'>
+                            <i className='bi bi-search text-9xl text-gray-400 opacity-25 mb-16 block'></i>
+                            <h5 className='font-bold text-lg mb-4'>Nenhum produto encontrado</h5>
+                            <p className='text-gray-500'>
                                 Tente usar outros termos ou limpe os filtros.
                             </p>
                         </div>
                     ) : (
-                        <div className='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4'>
+                        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
                             {products.map(product => (
                                 <div className='col' key={product.id}>
                                     <Link
                                         to={`/product/${product.id}`}
-                                        className='text-decoration-none text-dark'
+                                        className='no-underline text-black'
                                     >
-                                        <div className='card h-100 border-0 shadow-sm product-card'>
+                                        <div className='bg-white h-full border border-gray-200 rounded-lg shadow-sm overflow-hidden product-card hover:shadow-lg transition-shadow'>
                                             <div
                                                 style={{
                                                     height: '180px',
@@ -185,26 +185,26 @@ function Search() {
                                                         product.images?.[0] ||
                                                         'https://via.placeholder.com/300x200'
                                                     }
-                                                    className='card-img-top h-100 object-fit-cover'
+                                                    className='w-full h-full object-cover'
                                                     alt={product.name}
                                                 />
                                             </div>
-                                            <div className='card-body'>
-                                                <small className='text-primary fw-bold'>
+                                            <div className='p-4'>
+                                                <small className='text-blue-600 font-bold'>
                                                     {product.category}
                                                 </small>
-                                                <h6 className='fw-bold mb-2 text-truncate'>
+                                                <h6 className='font-bold mb-2 truncate'>
                                                     {product.name}
                                                 </h6>
-                                                <div className='fw-bold fs-5 text-primary'>
+                                                <div className='font-bold text-xl text-blue-600'>
                                                     {(
                                                         product.price -
                                                         (product.discount || 0)
                                                     ).toLocaleString()}{' '}
                                                     MT
                                                 </div>
-                                                <div className='mt-2 d-flex align-items-center small text-muted'>
-                                                    <i className='bi bi-geo-alt me-1'></i>{' '}
+                                                <div className='mt-2 flex items-center text-sm text-gray-500'>
+                                                    <i className='bi bi-geo-alt mr-1'></i>{' '}
                                                     {product.store?.city ||
                                                         'Maputo'}
                                                 </div>

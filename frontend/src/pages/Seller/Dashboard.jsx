@@ -1,14 +1,5 @@
 import { useState, useEffect } from 'react';
 //import { useApi } from '../../hooks/useApi';
-import {
-    Container,
-    Row,
-    Col,
-    Card,
-    Table,
-    Button,
-    Badge,
-} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import {
     CurrencyDollar,
@@ -76,10 +67,10 @@ function SellerDashboard() {
 
     const StatusBadge = ({ status }) => {
         const variants = {
-            pending: 'warning',
-            shipped: 'info',
-            delivered: 'success',
-            cancelled: 'danger',
+            pending: 'bg-yellow-100 text-yellow-800',
+            shipped: 'bg-blue-100 text-blue-800',
+            delivered: 'bg-green-100 text-green-800',
+            cancelled: 'bg-red-100 text-red-800',
         };
         const labels = {
             pending: 'Pendente',
@@ -88,23 +79,23 @@ function SellerDashboard() {
             cancelled: 'Cancelado',
         };
         return (
-            <Badge bg={variants[status] || 'secondary'}>
+            <span className={`px-3 py-1 rounded text-xs font-bold ${variants[status] || 'bg-gray-100 text-gray-800'}`}>
                 {labels[status] || status}
-            </Badge>
+            </span>
         );
     };
 
     const StatCard = ({ title, value, icon, color, trend }) => (
-        <Card className='border-0 shadow-sm h-100'>
-            <Card.Body className='d-flex align-items-center justify-content-between'>
+        <div className='bg-white rounded-lg shadow-sm h-full'>
+            <div className='p-6 flex items-center justify-between'>
                 <div>
-                    <h6 className='text-muted small text-uppercase fw-bold mb-1'>
+                    <h6 className='text-gray-500 text-sm uppercase font-bold mb-1'>
                         {title}
                     </h6>
-                    <h3 className='mb-0 fw-bold'>{value}</h3>
+                    <h3 className='mb-0 font-bold'>{value}</h3>
                     {trend && (
                         <small
-                            className={`d-flex align-items-center mt-2 ${trend > 0 ? 'text-success' : 'text-danger'}`}
+                            className={`flex items-center mt-2 ${trend > 0 ? 'text-green-600' : 'text-red-600'}`}
                         >
                             {trend > 0 ? (
                                 <ArrowUpRight className='me-1' />
@@ -116,19 +107,19 @@ function SellerDashboard() {
                     )}
                 </div>
                 <div
-                    className={`p-3 rounded-circle bg-${color} bg-opacity-10 text-${color}`}
+                    className={`p-3 rounded-full bg-${color}-100 text-${color}-600`}
                 >
                     {icon}
                 </div>
-            </Card.Body>
-        </Card>
+            </div>
+        </div>
     );
 
     return (
-        <Container fluid className='px-0'>
+        <div className='px-4 py-8 max-w-7xl mx-auto'>
             {/* Stats Grid */}
-            <Row className='g-4 mb-4'>
-                <Col md={3}>
+            <div className='grid grid-cols-1 md:grid-cols-4 gap-6 mb-8'>
+                <div>
                     <StatCard
                         title='Vendas Totais'
                         value={`${stats.revenue.toLocaleString()} MT`}
@@ -136,8 +127,8 @@ function SellerDashboard() {
                         color='success'
                         trend={12.5}
                     />
-                </Col>
-                <Col md={3}>
+                </div>
+                <div>
                     <StatCard
                         title='Pedidos'
                         value={stats.orders}
@@ -145,8 +136,8 @@ function SellerDashboard() {
                         color='primary'
                         trend={5.2}
                     />
-                </Col>
-                <Col md={3}>
+                </div>
+                <div>
                     <StatCard
                         title='Produtos Ativos'
                         value={stats.products}
@@ -154,8 +145,8 @@ function SellerDashboard() {
                         color='warning'
                         trend={-2.1}
                     />
-                </Col>
-                <Col md={3}>
+                </div>
+                <div>
                     <StatCard
                         title='Visitas da Loja'
                         value={stats.views}
@@ -163,31 +154,31 @@ function SellerDashboard() {
                         color='info'
                         trend={8.4}
                     />
-                </Col>
-            </Row>
+                </div>
+            </div>
 
             {/* Recent Orders Section */}
-            <Card className='border-0 shadow-sm'>
-                <Card.Header className='bg-white border-0 py-3 d-flex justify-content-between align-items-center'>
-                    <h5 className='mb-0 fw-bold'>Pedidos Recentes</h5>
+            <div className='bg-white border border-gray-200 rounded-lg shadow'>
+                <div className='bg-white border-b border-gray-200 p-6 flex justify-between items-center'>
+                    <h5 className='mb-0 font-bold text-lg'>Pedidos Recentes</h5>
                     <Link
                         to='/seller/orders'
-                        className='btn btn-sm btn-outline-primary rounded-pill'
+                        className='border border-blue-600 text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-full font-bold text-sm transition-colors'
                     >
                         Ver Todos
                     </Link>
-                </Card.Header>
-                <Card.Body className='p-0'>
-                    <div className='table-responsive'>
-                        <Table hover className='mb-0 align-middle'>
-                            <thead className='bg-light'>
+                </div>
+                <div className='p-0'>
+                    <div className='overflow-x-auto'>
+                        <table className='w-full'>
+                            <thead className='bg-gray-50'>
                                 <tr>
-                                    <th className='border-0 ps-4'>ID</th>
+                                    <th className='border-0 pl-6'>ID</th>
                                     <th className='border-0'>Cliente</th>
                                     <th className='border-0'>Data</th>
                                     <th className='border-0'>Total</th>
                                     <th className='border-0'>Status</th>
-                                    <th className='border-0 text-end pe-4'>
+                                    <th className='border-0 text-right pr-6'>
                                         Ação
                                     </th>
                                 </tr>
@@ -195,7 +186,7 @@ function SellerDashboard() {
                             <tbody>
                                 {recentOrders.map(order => (
                                     <tr key={order.id}>
-                                        <td className='ps-4 fw-bold text-primary'>
+                                        <td className='pl-6 font-bold text-blue-600'>
                                             #{order.id}
                                         </td>
                                         <td>{order.customer}</td>
@@ -208,23 +199,21 @@ function SellerDashboard() {
                                                 status={order.status}
                                             />
                                         </td>
-                                        <td className='text-end pe-4'>
-                                            <Button
-                                                variant='light'
-                                                size='sm'
-                                                className='rounded-circle'
+                                        <td className='text-right pr-6'>
+                                            <button
+                                                className='bg-gray-100 hover:bg-gray-200 p-2 rounded-full text-sm transition-colors'
                                             >
                                                 <i className='bi bi-three-dots-vertical'></i>
-                                            </Button>
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
-                        </Table>
+                        </table>
                     </div>
-                </Card.Body>
-            </Card>
-        </Container>
+                </div>
+            </div>
+        </div>
     );
 }
 

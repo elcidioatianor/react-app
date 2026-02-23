@@ -52,31 +52,31 @@ export default function Cart() {
     if (cartItems.length === 0)
         return (
             <div
-                className='container py-5 text-center'
-                style={{ marginTop: '100px' }}
+                className='container mx-auto py-20 text-center flex flex-col items-center justify-center'
+                style={{ marginTop: '100px', minHeight: '400px' }}
             >
-                <i className='bi bi-cart-x display-1 text-muted mb-4'></i>
-                <h3>Seu carrinho está vazio</h3>
-                <p className='text-muted mb-4'>
+                <i className='bi bi-cart-x text-9xl text-gray-400 mb-16'></i>
+                <h3 className='text-2xl font-bold'>Seu carrinho está vazio</h3>
+                <p className='text-gray-500 mb-16'>
                     Que tal explorar nossos produtos e encontrar algo incrível?
                 </p>
-                <Link to='/' className='btn btn-primary btn-lg px-5'>
+                <Link to='/' className='bg-blue-600 text-white py-3 px-8 rounded-lg font-bold hover:bg-blue-700 transition-colors'>
                     Ir para o Shopping
                 </Link>
             </div>
         );
 
     return (
-        <div className='container py-5' style={{ marginTop: '70px' }}>
-            <h2 className='fw-bold mb-5'>Seu Carrinho</h2>
+        <div className='container mx-auto py-20' style={{ marginTop: '70px' }}>
+            <h2 className='font-bold mb-20 text-3xl'>Seu Carrinho</h2>
 
-            <div className='row g-4'>
-                <div className='col-lg-8'>
-                    <div className='card border-0 shadow-sm p-4 mb-4'>
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-4'>
+                <div className='lg:col-span-2'>
+                    <div className='bg-white border-0 shadow-sm p-16 mb-16 rounded-lg'>
                         {cartItems.map((item, idx) => (
                             <div
                                 key={item.id}
-                                className={`d-flex align-items-center py-3 ${idx !== cartItems.length - 1 ? 'border-bottom' : ''}`}
+                                className={`flex items-center py-3 ${idx !== cartItems.length - 1 ? 'border-b border-gray-200' : ''}`}
                             >
                                 <img
                                     src={
@@ -91,33 +91,31 @@ export default function Cart() {
                                     }}
                                     alt={item.name}
                                 />
-                                <div className='ms-3 flex-grow-1'>
-                                    <h6 className='fw-bold mb-0'>
+                                <div className='ml-3 flex-grow'>
+                                    <h6 className='font-bold mb-0'>
                                         {item.name}
                                     </h6>
-                                    <small className='text-muted'>
+                                    <small className='text-gray-500'>
                                         {item.category}
                                     </small>
-                                    <div className='mt-2 text-primary fw-bold'>
+                                    <div className='mt-2 text-blue-600 font-bold'>
                                         {item.price.toLocaleString()} MT
                                     </div>
                                 </div>
-                                <div className='d-flex align-items-center gap-2'>
+                                <div className='flex items-center gap-2'>
                                     <button
-                                        className='btn btn-sm btn-outline-secondary rounded-circle'
-                                        style={{ width: 30, height: 30 }}
+                                        className='w-7 h-7 flex items-center justify-center border border-gray-300 rounded-full text-gray-600 hover:bg-gray-100 transition-colors'
                                         onClick={() =>
                                             updateQuantity(item.id, -1)
                                         }
                                     >
-                                        -
+                                        −
                                     </button>
-                                    <span className='fw-bold mx-2'>
+                                    <span className='font-bold mx-2 w-6 text-center'>
                                         {item.quantity}
                                     </span>
                                     <button
-                                        className='btn btn-sm btn-outline-secondary rounded-circle'
-                                        style={{ width: 30, height: 30 }}
+                                        className='w-7 h-7 flex items-center justify-center border border-gray-300 rounded-full text-gray-600 hover:bg-gray-100 transition-colors'
                                         onClick={() =>
                                             updateQuantity(item.id, 1)
                                         }
@@ -126,7 +124,7 @@ export default function Cart() {
                                     </button>
                                 </div>
                                 <button
-                                    className='btn btn-link text-danger ms-3'
+                                    className='no-underline text-red-600 ml-3 hover:opacity-70 transition-opacity'
                                     onClick={() => removeItem(item.id)}
                                 >
                                     <i className='bi bi-trash'></i>
@@ -134,50 +132,50 @@ export default function Cart() {
                             </div>
                         ))}
                     </div>
-                    <Link to='/' className='text-decoration-none text-muted'>
-                        <i className='bi bi-arrow-left me-2'></i> Continuar
+                    <Link to='/' className='no-underline text-gray-500 hover:text-gray-700 transition-colors'>
+                        <i className='bi bi-arrow-left mr-2'></i> Continuar
                         Comprando
                     </Link>
                 </div>
 
-                <div className='col-lg-4'>
-                    <div className='card border-0 shadow-sm p-4'>
-                        <h5 className='fw-bold mb-4'>Resumo do Pedido</h5>
-                        <div className='d-flex justify-content-between mb-2'>
+                <div className='lg:col-span-1'>
+                    <div className='bg-white border-0 shadow-sm p-16 rounded-lg'>
+                        <h5 className='font-bold mb-16 text-lg'>Resumo do Pedido</h5>
+                        <div className='flex justify-between mb-2'>
                             <span>Subtotal</span>
-                            <span className='fw-bold'>
+                            <span className='font-bold'>
                                 {total.toLocaleString()} MT
                             </span>
                         </div>
-                        <div className='d-flex justify-content-between mb-2'>
+                        <div className='flex justify-between mb-2'>
                             <span>Entrega</span>
-                            <span className='text-success fw-bold'>Grátis</span>
+                            <span className='text-green-600 font-bold'>Grátis</span>
                         </div>
-                        <hr className='my-4' />
-                        <div className='d-flex justify-content-between mb-4 fs-5'>
-                            <span className='fw-bold'>Total</span>
-                            <span className='fw-bold text-primary'>
+                        <hr className='my-16' />
+                        <div className='flex justify-between mb-16 text-lg'>
+                            <span className='font-bold'>Total</span>
+                            <span className='font-bold text-blue-600'>
                                 {total.toLocaleString()} MT
                             </span>
                         </div>
                         <button
-                            className='btn btn-primary btn-lg w-100'
+                            className='w-full py-3 px-6 bg-blue-600 text-white font-bold text-lg rounded-lg hover:bg-blue-700 transition-colors'
                             onClick={() => navigate('/checkout')}
                         >
                             Finalizar Compra
                         </button>
-                        <div className='mt-4 text-center'>
-                            <small className='text-muted mb-2 d-block'>
+                        <div className='mt-16 text-center'>
+                            <small className='text-gray-500 mb-2 block'>
                                 Pague com facilidade:
                             </small>
-                            <div className='d-flex justify-content-center gap-3 opacity-50'>
+                            <div className='flex justify-center gap-3 opacity-50'>
                                 <img
                                     src='https://logodownload.org/wp-content/uploads/2021/01/m-pesa-logo-0.png'
                                     height='15'
                                     alt='M-Pesa'
                                 />
-                                <span className='small fw-bold'>e-Mola</span>
-                                <span className='small fw-bold'>mKesh</span>
+                                <span className='text-sm font-bold'>e-Mola</span>
+                                <span className='text-sm font-bold'>mKesh</span>
                             </div>
                         </div>
                     </div>

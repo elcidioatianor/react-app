@@ -25,97 +25,93 @@ export default function Dashboard() {
     }, [setOrders, setLoading, api]);
 
     return (
-        <div className='container py-5' style={{ marginTop: '60px' }}>
-            <div className='d-flex justify-content-between align-items-center mb-5'>
+        <div className='px-4 py-8 max-w-7xl mx-auto' style={{ marginTop: '60px' }}>
+            <div className='flex justify-between items-center mb-8'>
                 <div>
-                    <h1 className='fw-bold'>Minha Conta</h1>
-                    <p className='text-muted'>
+                    <h1 className='font-bold'>Minha Conta</h1>
+                    <p className='text-gray-500'>
                         Bem-vindo de volta, {user?.name}
                     </p>
                 </div>
-                <Link to='/' className='btn btn-outline-primary'>
-                    <i className='bi bi-arrow-left me-2'></i>
+                <Link to='/' className='border border-blue-600 text-blue-600 hover:bg-blue-50 p-2 rounded text-sm transition-colors inline-flex items-center gap-2'>
+                    <i className='bi bi-arrow-left'></i>
                     Continuar Comprando
                 </Link>
             </div>
 
-            <div className='row g-4 mb-5'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
                 {/* Meus Pedidos Card */}
-                <div className='col-md-4'>
-                    <div className='card h-100 border-0 shadow-sm hover-card'>
-                        <div className='card-body p-4'>
-                            <div className='d-flex align-items-center mb-3'>
-                                <div
-                                    className='bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center'
-                                    style={{ width: 48, height: 48 }}
-                                >
-                                    <i className='bi bi-box-seam fs-4'></i>
-                                </div>
-                                <h5 className='card-title fw-bold mb-0 ms-3'>
-                                    Meus Pedidos
-                                </h5>
+                <div className='bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow h-full'>
+                    <div className='p-6'>
+                        <div className='flex items-center mb-4'>
+                            <div
+                                className='bg-blue-100 text-blue-600 rounded-full flex items-center justify-center'
+                                style={{ width: 48, height: 48 }}
+                            >
+                                <i className='bi bi-box-seam text-lg'></i>
                             </div>
-                            <p className='card-text text-muted small'>
-                                Gerencie suas compras e acompanhe o envio.
-                            </p>
-                            <div className='fs-3 fw-bold text-primary'>
-                                {orders.length}
-                            </div>
+                            <h5 className='font-bold mb-0 ml-4 text-lg'>
+                                Meus Pedidos
+                            </h5>
+                        </div>
+                        <p className='text-gray-500 text-sm'>
+                            Gerencie suas compras e acompanhe o envio.
+                        </p>
+                        <div className='text-3xl font-bold text-blue-600'>
+                            {orders.length}
                         </div>
                     </div>
                 </div>
 
                 {/* Mensagens Card */}
-                <div className='col-md-4'>
-                    <div
-                        className='card h-100 border-0 shadow-sm hover-card shadow-hover'
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => alert('Chat em breve!')}
-                    >
-                        <div className='card-body p-4'>
-                            <div className='d-flex align-items-center mb-3'>
-                                <div
-                                    className='bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center'
-                                    style={{ width: 48, height: 48 }}
-                                >
-                                    <i className='bi bi-chat-dots fs-4'></i>
-                                </div>
-                                <h5 className='card-title fw-bold mb-0 ms-3'>
-                                    Mensagens
-                                </h5>
+                <div
+                    className='bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow h-full'
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => alert('Chat em breve!')}
+                >
+                    <div className='p-6'>
+                        <div className='flex items-center mb-4'>
+                            <div
+                                className='bg-green-100 text-green-600 rounded-full flex items-center justify-center'
+                                style={{ width: 48, height: 48 }}
+                            >
+                                <i className='bi bi-chat-dots text-lg'></i>
                             </div>
-                            <p className='card-text text-muted small'>
-                                Converse com vendedores em tempo real.
-                            </p>
-                            <div className='fs-3 fw-bold text-success'>0</div>
+                            <h5 className='font-bold mb-0 ml-4 text-lg'>
+                                Mensagens
+                            </h5>
                         </div>
+                        <p className='text-gray-500 text-sm'>
+                            Converse com vendedores em tempo real.
+                        </p>
+                        <div className='text-3xl font-bold text-green-600'>0</div>
                     </div>
                 </div>
 
                 {/* Perfil Card */}
-                <div className='col-md-4'>
+                <div>
                     <Link
                         to='/profile'
-                        className='text-decoration-none text-dark'
+                        className='no-underline text-gray-900 block h-full'
                     >
-                        <div className='card h-100 border-0 shadow-sm hover-card shadow-hover'>
-                            <div className='card-body p-4'>
-                                <div className='d-flex align-items-center mb-3'>
+                        <div className='bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow h-full'>
+                            <div className='p-6'>
+                                <div className='flex items-center mb-4'>
                                     <div
-                                        className='bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center'
+                                        className='bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center'
                                         style={{ width: 48, height: 48 }}
                                     >
-                                        <i className='bi bi-person fs-4'></i>
+                                        <i className='bi bi-person text-lg'></i>
                                     </div>
-                                    <h5 className='card-title fw-bold mb-0 ms-3'>
+                                    <h5 className='font-bold mb-0 ml-4 text-lg'>
                                         Dados Pessoais
                                     </h5>
                                 </div>
-                                <p className='card-text text-muted small'>
+                                <p className='text-gray-500 text-sm'>
                                     Edite seu perfil e endereços de entrega.
                                 </p>
-                                <div className='fs-3 fw-bold text-warning'>
-                                    <i className='bi bi-pencil-square fs-5'></i>
+                                <div className='text-3xl font-bold text-yellow-600'>
+                                    <i className='bi bi-pencil-square text-base'></i>
                                 </div>
                             </div>
                         </div>
@@ -124,62 +120,62 @@ export default function Dashboard() {
             </div>
 
             {/* Lista de Pedidos Recentes */}
-            <div className='card border-0 shadow-sm p-4 mb-5'>
-                <h4 className='fw-bold mb-4'>Pedidos Recentes</h4>
+            <div className='bg-white border border-gray-200 rounded-lg shadow p-6 mb-8'>
+                <h4 className='font-bold mb-6 text-lg'>Pedidos Recentes</h4>
                 {loading ? (
                     <div className='text-center py-4'>
-                        <div className='spinner-border text-primary'></div>
+                        <div className='inline-block animate-spin border-4 border-gray-300 border-t-blue-600 rounded-full text-2xl' style={{ width: '2rem', height: '2rem' }}></div>
                     </div>
                 ) : orders.length === 0 ? (
-                    <div className='text-center py-5 text-muted'>
-                        <i className='bi bi-cart-x fs-1 opacity-25 d-block mb-3'></i>
+                    <div className='text-center py-5 text-gray-500'>
+                        <i className='bi bi-cart-x text-4xl opacity-25 block mb-3'></i>
                         Ainda não realizaste nenhum pedido.
                     </div>
                 ) : (
-                    <div className='table-responsive'>
-                        <table className='table table-hover align-middle'>
+                    <div className='overflow-x-auto'>
+                        <table className='w-full'>
                             <thead>
-                                <tr className='text-muted small'>
-                                    <th>PEDIDO</th>
-                                    <th>DATA</th>
-                                    <th>LOJA</th>
-                                    <th>VALOR</th>
-                                    <th>STATUS</th>
-                                    <th className='text-end'>AÇÃO</th>
+                                <tr className='text-gray-500 text-sm border-b'>
+                                    <th className='text-left py-3 px-4'>PEDIDO</th>
+                                    <th className='text-left py-3 px-4'>DATA</th>
+                                    <th className='text-left py-3 px-4'>LOJA</th>
+                                    <th className='text-left py-3 px-4'>VALOR</th>
+                                    <th className='text-left py-3 px-4'>STATUS</th>
+                                    <th className='text-right py-3 px-4'>AÇÃO</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {orders.map(order => (
-                                    <tr key={order.id}>
-                                        <td className='fw-bold'>#{order.id}</td>
-                                        <td>
+                                    <tr key={order.id} className='border-b hover:bg-gray-50'>
+                                        <td className='font-bold py-3 px-4'>#{order.id}</td>
+                                        <td className='py-3 px-4'>
                                             {new Date(
                                                 order.createdAt
                                             ).toLocaleDateString()}
                                         </td>
-                                        <td>{order.store?.name}</td>
-                                        <td className='fw-bold'>
+                                        <td className='py-3 px-4'>{order.store?.name}</td>
+                                        <td className='font-bold py-3 px-4'>
                                             {order.total.toLocaleString()} MT
                                         </td>
-                                        <td>
+                                        <td className='py-3 px-4'>
                                             <span
-                                                className={`badge ${order.status === 'entregue' ? 'bg-success' : 'bg-primary'} bg-opacity-10 text-${order.status === 'entregue' ? 'success' : 'primary'}`}
+                                                className={`px-3 py-1 ${order.status === 'entregue' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'} text-xs font-bold rounded`}
                                             >
                                                 {order.status.toUpperCase()}
                                             </span>
                                         </td>
-                                        <td className='text-end'>
-                                            <div className='btn-group'>
+                                        <td className='text-right py-3 px-4'>
+                                            <div className='flex justify-end gap-2'>
                                                 <Link
                                                     to={`/orders/${order.id}/document?type=quote`}
-                                                    className='btn btn-sm btn-outline-primary'
+                                                    className='border border-blue-600 text-blue-600 hover:bg-blue-50 p-2 rounded text-sm transition-colors'
                                                     title='Ver Cotação'
                                                 >
                                                     <i className='bi bi-file-earmark-pdf'></i>
                                                 </Link>
                                                 <Link
                                                     to={`/orders/${order.id}/document?type=invoice`}
-                                                    className='btn btn-sm btn-outline-dark'
+                                                    className='border border-gray-400 text-gray-600 hover:bg-gray-50 p-2 rounded text-sm transition-colors'
                                                     title='Ver Factura'
                                                 >
                                                     <i className='bi bi-receipt'></i>
@@ -196,25 +192,25 @@ export default function Dashboard() {
 
             {/* Destaque para Vendedores */}
             {!user?.role || user?.role === 'client' ? (
-                <div className='mt-5 p-5 bg-dark text-white rounded-3 shadow text-center position-relative overflow-hidden'>
-                    <div className='position-relative z-1'>
-                        <h2 className='fw-bold mb-3'>
+                <div className='mt-8 p-8 bg-gray-900 text-white rounded-3xl shadow-lg text-center relative overflow-hidden'>
+                    <div className='relative z-10'>
+                        <h2 className='font-bold mb-3 text-2xl'>
                             Quer vender na DUBANING?
                         </h2>
-                        <p className='lead mb-4'>
+                        <p className='text-lg mb-6'>
                             Abra sua loja gratuitamente e alcance milhares de
                             clientes em Moçambique.
                         </p>
                         <Link
                             to='/seller/onboarding'
-                            className='btn btn-light btn-lg px-5 fw-bold text-primary'
+                            className='bg-white text-blue-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 inline-block transition-colors'
                         >
                             Começar a Vender
                         </Link>
                     </div>
                     {/* Decorative Circle */}
                     <div
-                        className='position-absolute top-0 end-0 bg-white opacity-10 rounded-circle'
+                        className='absolute top-0 right-0 bg-white opacity-10 rounded-full'
                         style={{
                             width: 300,
                             height: 300,

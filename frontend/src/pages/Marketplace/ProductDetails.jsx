@@ -2,15 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
 import { useNotification } from '../../hooks/useNotification';
-import {
-    Container,
-    Row,
-    Col,
-    Card,
-    Button,
-    Badge,
-    Spinner,
-} from 'react-bootstrap';
 
 function ProductDetails() {
     const { id } = useParams();
@@ -92,12 +83,12 @@ function ProductDetails() {
 
     if (loading)
         return (
-            <Container
-                className='py-5 text-center'
-                style={{ marginTop: '100px' }}
+            <div
+                className='py-20 text-center flex justify-center items-center'
+                style={{ marginTop: '100px', minHeight: '400px' }}
             >
-                <Spinner animation='border' variant='warning' />
-            </Container>
+                <div className='inline-block w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin'></div>
+            </div>
         );
 
     if (!product) return null;
@@ -109,163 +100,161 @@ function ProductDetails() {
           : [];
 
     return (
-        <Container className='py-5' style={{ marginTop: '30px' }}>
-            <nav aria-label='breadcrumb' className='mb-4'>
-                <ol className='breadcrumb'>
-                    <li className='breadcrumb-item'>
-                        <Link to='/' className='text-decoration-none text-dark'>
+        <div className='container mx-auto py-20' style={{ marginTop: '30px' }}>
+            <nav aria-label='breadcrumb' className='mb-16'>
+                <ol className='flex text-sm'>
+                    <li className='flex items-center'>
+                        <Link to='/' className='no-underline text-black hover:text-blue-600'>
                             Home
                         </Link>
+                        <span className='mx-2 text-gray-400'>/</span>
                     </li>
-                    <li className='breadcrumb-item active'>
-                        {product.category || 'Produtos'}
+                    <li className='flex items-center'>
+                        <span className='text-gray-700'>
+                            {product.category || 'Produtos'}
+                        </span>
+                        <span className='mx-2 text-gray-400'>/</span>
                     </li>
-                    <li className='breadcrumb-item active' aria-current='page'>
-                        {product.name}
+                    <li className='flex items-center'>
+                        <span className='text-gray-700'>
+                            {product.name}
+                        </span>
                     </li>
                 </ol>
             </nav>
 
-            <Row className='g-5'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-20'>
                 {/* Images Column */}
-                <Col md={6}>
-                    <Card className='border-0 shadow-sm overflow-hidden mb-3 rounded-4'>
+                <div>
+                    <div className='bg-white border border-gray-200 shadow-sm overflow-hidden mb-3 rounded-lg'>
                         <img
                             src={
                                 images[selectedImage] ||
                                 'https://via.placeholder.com/600x600?text=Sem+Imagem'
                             }
-                            className='img-fluid w-100'
+                            className='w-full'
                             style={{ height: '500px', objectFit: 'contain' }}
                             alt={product.name}
                         />
-                    </Card>
+                    </div>
                     {images.length > 1 && (
-                        <div className='d-flex gap-2 overflow-auto pb-2'>
+                        <div className='flex gap-2 overflow-x-auto pb-2'>
                             {images.map((img, idx) => (
                                 <img
                                     key={idx}
                                     src={img}
                                     onClick={() => setSelectedImage(idx)}
-                                    className={`img-thumbnail p-0 border-${selectedImage === idx ? 'warning' : 'light'}`}
+                                    className={`flex-shrink-0 p-0 cursor-pointer border-2 rounded-lg ${
+                                        selectedImage === idx ? 'border-yellow-400' : 'border-gray-200'
+                                    }`}
                                     style={{
                                         width: '80px',
                                         height: '80px',
                                         objectFit: 'cover',
-                                        cursor: 'pointer',
                                     }}
                                 />
                             ))}
                         </div>
                     )}
-                </Col>
+                </div>
 
                 {/* Info Column */}
-                <Col md={6}>
-                    <div className='ps-md-4'>
-                        <small className='text-uppercase fw-bold text-muted tracking-wider'>
+                <div>
+                    <div className='md:ps-4'>
+                        <small className='uppercase font-bold text-gray-500 tracking-widest'>
                             {product.category}
                         </small>
-                        <h1 className='fw-bold mb-3'>{product.name}</h1>
+                        <h1 className='font-bold mb-3 text-4xl'>{product.name}</h1>
 
-                        <div className='d-flex align-items-center mb-4'>
-                            <div className='text-warning me-2'>
+                        <div className='flex items-center mb-16'>
+                            <div className='text-yellow-400 mr-2 flex'>
                                 <i className='bi bi-star-fill'></i>
                                 <i className='bi bi-star-fill'></i>
                                 <i className='bi bi-star-fill'></i>
                                 <i className='bi bi-star-fill'></i>
                                 <i className='bi bi-star-half'></i>
                             </div>
-                            <small className='text-muted'>
+                            <small className='text-gray-500'>
                                 (4.5 - 12 avaliações)
                             </small>
                         </div>
 
-                        <div className='mb-4'>
-                            <span className='display-6 fw-bold text-danger'>
+                        <div className='mb-16'>
+                            <span className='text-5xl font-bold text-red-600'>
                                 {(
                                     product.price - (product.discount || 0)
                                 ).toLocaleString()}{' '}
                                 MT
                             </span>
                             {product.discount > 0 && (
-                                <span className='text-decoration-line-through text-muted ms-3 fs-5'>
+                                <span className='line-through text-gray-500 ml-3 text-lg'>
                                     {product.price.toLocaleString()} MT
                                 </span>
                             )}
                         </div>
 
-                        <div className='bg-light p-3 rounded-4 mb-4 border'>
-                            <div className='d-flex align-items-center mb-2'>
-                                <i className='bi bi-shop text-dark me-2'></i>
-                                <span className='fw-bold'>
+                        <div className='bg-gray-100 p-3 rounded-lg mb-16 border border-gray-200'>
+                            <div className='flex items-center mb-2'>
+                                <i className='bi bi-shop text-black mr-2'></i>
+                                <span className='font-bold'>
                                     Vendido por:{' '}
                                     <Link
                                         to={`/store/${product.store?.id || 1}`}
-                                        className='text-decoration-none text-dark'
+                                        className='no-underline text-black hover:text-blue-600'
                                     >
                                         {product.store?.name || 'TechMoz'}
                                     </Link>
                                 </span>
                             </div>
-                            <div className='d-flex gap-2'>
+                            <div className='flex gap-2'>
                                 {product.store?.verified && (
-                                    <Badge
-                                        bg='success'
-                                        className='bg-opacity-10 text-success border border-success'
-                                    >
-                                        <i className='bi bi-patch-check-fill me-1'></i>{' '}
+                                    <span className='inline-block px-3 py-1 bg-green-50 text-green-600 border border-green-500 rounded'>
+                                        <i className='bi bi-patch-check-fill mr-1'></i>
                                         Vendedor Verificado
-                                    </Badge>
+                                    </span>
                                 )}
-                                <Badge
-                                    bg='primary'
-                                    className='bg-opacity-10 text-primary border border-primary'
-                                >
+                                <span className='inline-block px-3 py-1 bg-blue-50 text-blue-600 border border-blue-500 rounded'>
                                     98% Resposta
-                                </Badge>
+                                </span>
                             </div>
                         </div>
 
-                        <p className='text-muted mb-4'>
+                        <p className='text-gray-500 mb-16'>
                             {product.description ||
                                 'Este produto é de alta qualidade e vem com garantia de satisfação.'}
                         </p>
 
-                        <div className='d-grid gap-3 mb-5'>
-                            <Button
-                                variant='warning'
-                                size='lg'
-                                className='bg-dubaning-orange border-0 shadow-sm text-white fw-bold rounded-pill'
+                        <div className='flex flex-col gap-3 mb-20'>
+                            <button
+                                className='w-full py-3 px-6 bg-yellow-400 border-0 shadow-sm text-white font-bold rounded-full hover:bg-yellow-500 transition-colors'
+                                style={{ backgroundColor: '#FFD814', color: '#0F1111' }}
                                 onClick={() => addToCart(true)}
                             >
-                                <i className='bi bi-lightning-fill me-2'></i>
+                                <i className='bi bi-lightning-fill mr-2'></i>
                                 Comprar Agora
-                            </Button>
+                            </button>
 
-                            <div className='p-3 bg-white border border-dashed rounded-4'>
-                                <h6 className='fw-bold mb-3 small text-muted'>
+                            <div className='p-3 bg-white border border-dashed border-gray-300 rounded-lg'>
+                                <h6 className='font-bold mb-3 text-sm text-gray-500'>
                                     Ações Marketplace:
                                 </h6>
-                                <Row className='g-2'>
-                                    <Col xs={12} className='mb-1'>
-                                        <Button
-                                            variant='outline-success'
-                                            className='w-100 rounded-pill'
+                                <div className='grid grid-cols-1 gap-2'>
+                                    <div className='mb-1'>
+                                        <button
+                                            className='w-full py-2 px-4 border border-green-500 text-green-600 font-bold rounded-full hover:bg-green-50 transition-colors text-sm'
                                             onClick={() =>
                                                 navigate(
                                                     `/chat/${product.store?.owner_id || 1}`
                                                 )
                                             }
                                         >
-                                            <i className='bi bi-whatsapp me-2'></i>{' '}
+                                            <i className='bi bi-whatsapp mr-2'></i>
                                             Chat com Vendedor
-                                        </Button>
-                                    </Col>
-                                    <Col xs={6}>
-                                        <Button
-                                            variant='outline-primary'
-                                            className='w-100 rounded-pill small'
+                                        </button>
+                                    </div>
+                                    <div className='grid grid-cols-2 gap-2'>
+                                        <button
+                                            className='py-2 px-4 border border-blue-500 text-blue-600 font-bold rounded-full hover:bg-blue-50 transition-colors text-xs'
                                             onClick={() =>
                                                 showNotification(
                                                     'Solicitação enviada.',
@@ -273,14 +262,11 @@ function ProductDetails() {
                                                 )
                                             }
                                         >
-                                            <i className='bi bi-file-earmark-text me-1'></i>{' '}
+                                            <i className='bi bi-file-earmark-text mr-1'></i>
                                             Pedir Cotação
-                                        </Button>
-                                    </Col>
-                                    <Col xs={6}>
-                                        <Button
-                                            variant='outline-secondary'
-                                            className='w-100 rounded-pill small'
+                                        </button>
+                                        <button
+                                            className='py-2 px-4 border border-gray-400 text-gray-600 font-bold rounded-full hover:bg-gray-50 transition-colors text-xs'
                                             onClick={() =>
                                                 showNotification(
                                                     'Proforma enviada.',
@@ -288,47 +274,47 @@ function ProductDetails() {
                                                 )
                                             }
                                         >
-                                            <i className='bi bi-file-earmark-pdf me-1'></i>{' '}
+                                            <i className='bi bi-file-earmark-pdf mr-1'></i>
                                             Pedir Proforma
-                                        </Button>
-                                    </Col>
-                                </Row>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         {/* Pagamento e Garantia */}
-                        <div className='border-top pt-4'>
-                            <Row className='g-4'>
-                                <Col sm={6}>
-                                    <h6 className='fw-bold mb-3 small text-muted'>
+                        <div className='border-t pt-16'>
+                            <div className='grid grid-cols-1 sm:grid-cols-2 gap-16'>
+                                <div>
+                                    <h6 className='font-bold mb-3 text-sm text-gray-500'>
                                         Pagamento Seguro:
                                     </h6>
-                                    <div className='d-flex gap-3 align-items-center'>
-                                        <Badge bg='secondary'>M-Pesa</Badge>
-                                        <Badge bg='secondary'>e-Mola</Badge>
+                                    <div className='flex gap-3 items-center'>
+                                        <span className='inline-block px-3 py-1 bg-gray-500 text-white rounded text-sm'>M-Pesa</span>
+                                        <span className='inline-block px-3 py-1 bg-gray-500 text-white rounded text-sm'>e-Mola</span>
                                         <i
-                                            className='bi bi-cash-stack fs-4 text-muted'
+                                            className='bi bi-cash-stack text-2xl text-gray-500'
                                             title='Dinheiro'
                                         ></i>
                                     </div>
-                                </Col>
-                                <Col sm={6}>
-                                    <h6 className='fw-bold mb-3 small text-muted'>
+                                </div>
+                                <div>
+                                    <h6 className='font-bold mb-3 text-sm text-gray-500'>
                                         Confiança:
                                     </h6>
-                                    <div className='d-flex align-items-center gap-2'>
-                                        <i className='bi bi-shield-check text-success fs-4'></i>
-                                        <span className='small text-muted'>
+                                    <div className='flex items-center gap-2'>
+                                        <i className='bi bi-shield-check text-green-600 text-2xl'></i>
+                                        <span className='text-sm text-gray-500'>
                                             Garantia Dubaning
                                         </span>
                                     </div>
-                                </Col>
-                            </Row>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </Col>
-            </Row>
-        </Container>
+                </div>
+            </div>
+        </div>
     );
 }
 

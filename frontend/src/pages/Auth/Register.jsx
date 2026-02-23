@@ -36,45 +36,45 @@ function Register() {//prevData
    ]
 
     return (
-        <div className='vh-100 d-flex overflow-y-hidden'>
+        <div className='min-h-screen flex overflow-hidden'>
             {/* Left Panel - Branding */}
             <div
-                className='d-none d-lg-flex col-lg-6 position-relative top-0 left-0 vh-100'
-                
+                className='hidden lg:flex lg:w-1/2 relative top-0 left-0 min-h-screen'
+
             >
                 <div
-                    className='position-absolute top-0 start-0 w-100 h-100'
+                    className='absolute top-0 left-0 w-full h-full'
                     style={{
                         background: 'url("/images/hero.png") center/cover',
                         opacity: 0.4,
                     }}
                 ></div>
-                <div className='d-flex flex-column justify-content-center align-items-center text-white' style={{
+                <div className='flex flex-col justify-center items-center text-white' style={{
                         background: 'url("/images/hero.png") center/cover, linear-gradient(135deg, #FF6000 0%, #FF8C00 100%)',
                         opacity: 1,
                     }}>
-                    <Link to='/' className='text-decoration-none mb-5s rounded-2'>
-                        <h2 className='fw-bold' style={{ fontSize: '2.5rem' }}>
+                    <Link to='/' className='no-underline mb-20 rounded-md'>
+                        <h2 className='font-bold' style={{ fontSize: '2.5rem' }}>
                             <span style={{ color: '#FF6000'}}>DUBA</span>
                             <span style={{ color: '#333' }}>NING</span>
                         </h2>
                     </Link>
-                    <h1 className='display-5 fw-bold mb-4'>Junte-se a nós!</h1>
-                    <p className='lead text-center mb-4 w-75'>
+                    <h1 className='text-5xl font-bold mb-16'>Junte-se a nós!</h1>
+                    <p className='text-xl text-center mb-16 w-3/4'>
                         Crie sua conta gratuita e comece a comprar ou vender no
                         maior marketplace de Moçambique.
                     </p>
-                    <div className='mt-4'>
-                        <div className='d-flex align-items-center gap-3 mb-3'>
-                            <i className='bi bi-check-circle-fill fs-4'></i>
+                    <div className='mt-16'>
+                        <div className='flex items-center gap-3 mb-3'>
+                            <i className='bi bi-check-circle-fill text-2xl'></i>
                             <span>Cadastro rápido sem e-mail obrigatório</span>
                         </div>
-                        <div className='d-flex align-items-center gap-3 mb-3'>
-                            <i className='bi bi-check-circle-fill fs-4'></i>
+                        <div className='flex items-center gap-3 mb-3'>
+                            <i className='bi bi-check-circle-fill text-2xl'></i>
                             <span>Pagamentos via M-Pesa, e-Mola e mKesh</span>
                         </div>
-                        <div className='d-flex align-items-center gap-3'>
-                            <i className='bi bi-check-circle-fill fs-4'></i>
+                        <div className='flex items-center gap-3'>
+                            <i className='bi bi-check-circle-fill text-2xl'></i>
                             <span>Suporte 100% moçambicano</span>
                         </div>
                     </div>
@@ -82,32 +82,32 @@ function Register() {//prevData
             </div>
 
             {/* Right Panel - Form */}
-            <div className='col-12 col-lg-6 bg-light overflow-y-auto p-4 p-md-5'>
-                <div className='w-100 d-flex bg-light align-items-center justify-content-center'>
+            <div className='w-full lg:w-1/2 bg-gray-100 overflow-y-auto p-4 md:p-20'>
+                <div className='w-full flex bg-gray-100 items-center justify-center'>
                     <div  style={{maxWidth: '450px'}}>
-                    <div className='text-center mb-4 d-lg-none'>
-                        <Link to='/' className='text-decoration-none'>
-                            <h2 className='fw-bold' style={{ fontSize: '2rem' }}>
+                    <div className='text-center mb-16 lg:hidden'>
+                        <Link to='/' className='no-underline'>
+                            <h2 className='font-bold' style={{ fontSize: '2rem' }}>
                                 <span style={{ color: '#FF6000' }}>DUBA</span>
                                 <span style={{ color: '#333' }}>NING</span>
                             </h2>
                         </Link>
                     </div>
 
-                    <div className='bg-white shadow-sm rounded-4 p-4'>
-                        <h3 className='fw-bold mb-1'>Criar conta</h3>
-                        <p className='text-muted'>
+                    <div className='bg-white shadow-md rounded-lg p-16'>
+                        <h3 className='font-bold mb-4'>Criar conta</h3>
+                        <p className='text-gray-500'>
                             Passo {step + 1} de {jsxForm.length}
                         </p>
                         <hr className='mb-3'/>
                         {/** FORM STEPS */}
                         {jsxForm[step]}
 
-                        <p className='text-center text-muted small mt-4 mb-0'>
+                        <p className='text-center text-gray-500 text-sm mt-16 mb-0'>
                             Já tens uma conta?{' '}
                             <Link
                                 to='/login'
-                                className='fw-bold text-decoration-none'
+                                className='font-bold no-underline'
                                 style={{ color: '#FF6000' }}
                             >
                                 Entrar agora
@@ -171,45 +171,53 @@ function Step1({data, setData, setStep}) {
                             </div>
                                 */}
 
-              <div className='flex flex-column g-3 mb-3'>
+              <div className='flex flex-col gap-3 mb-3'>
          {/*TODO: USE CUSTOM RADIOS (Role Selection Cards) */}
-                        <div className='row g-3 mb-4'>
-                            <div className='col-6'>
+                        <div className='grid grid-cols-2 gap-3 mb-16'>
+                            <div>
                                 <div
                                     onClick={() => handleChange('buyer')}
-                                    className={`card h-100 text-center p-3 cursor-pointer ${data.role === 'buyer' ? 'border-primary border-1' : 'border-light'}`}
+                                    className={`bg-white h-full text-center p-3 cursor-pointer border-2 transition-all duration-200 ${
+                                        data.role === 'buyer' ? 'border-blue-500' : 'border-gray-200'
+                                    }`}
                                     style={{
                                         cursor: 'pointer',
                                         transition: 'all 0.2s',
                                     }}
                                 >
                                     <i
-                                        className={`bi bi-cart3 fs-1 mb-2 ${data.role === 'buyer' ? 'text-primary' : 'text-muted'}`}
+                                        className={`bi bi-cart3 text-4xl mb-2 ${
+                                            data.role === 'buyer' ? 'text-blue-500' : 'text-gray-400'
+                                        }`}
                                     ></i>
-                                    <h6 className='fw-bold mb-0'>
+                                    <h6 className='font-bold mb-0'>
                                         Quero Comprar
                                     </h6>
-                                    <small className='text-muted'>
+                                    <small className='text-gray-500'>
                                         Cliente
                                     </small>
                                 </div>
                             </div>
-                            <div className='col-6'>
+                            <div>
                                 <div
                                     onClick={() => handleChange('seller')}
-                                    className={`card h-100 text-center p-3 ${data.role === 'seller' ? 'border-primary border-1' : 'border-light'}`}
+                                    className={`bg-white h-full text-center p-3 cursor-pointer border-2 transition-all duration-200 ${
+                                        data.role === 'seller' ? 'border-blue-500' : 'border-gray-200'
+                                    }`}
                                     style={{
                                         cursor: 'pointer',
                                         transition: 'all 0.2s',
                                     }}
                                 >
                                     <i
-                                        className={`bi bi-shop fs-1 mb-2 ${data.role === 'seller' ? 'text-primary' : 'text-muted'}`}
+                                        className={`bi bi-shop text-4xl mb-2 ${
+                                            data.role === 'seller' ? 'text-blue-500' : 'text-gray-400'
+                                        }`}
                                     ></i>
-                                    <h6 className='fw-bold mb-0'>
+                                    <h6 className='font-bold mb-0'>
                                         Quero Vender
                                     </h6>
-                                    <small className='text-muted'>
+                                    <small className='text-gray-500'>
                                         Vendedor
                                     </small>
                                 </div>
@@ -218,7 +226,7 @@ function Step1({data, setData, setStep}) {
                     <div className='mt-3'>
                         <button
                                 type='submit'
-                                className='btn btn-lg w-100 fw-bold'
+                                className='w-full py-3 px-6 font-bold text-black rounded-lg'
                                 style={{
                                     backgroundColor: '#FFD814',
                                     color: '#0F1111',
@@ -291,8 +299,8 @@ function Step2({data, setData, setStep}) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className='col-12 mb-3'>
-                                    <label className='form-label fw-semibold small text-muted'>
+            <div className='w-full mb-3'>
+                                    <label className='block font-semibold text-sm text-gray-600 mb-2'>
                                         Nome completo
                                     </label>
                                     <input
@@ -300,18 +308,20 @@ function Step2({data, setData, setStep}) {
                                         name='firstName'
                                         value={data.firstName}
                                         onChange={handleInputChange}
-                                        className={`form-control form-control-lg bg-light ${errors.has('firstName') ? 'is-invalid' : ''}`}
+                                        className={`w-full px-4 py-3 bg-gray-100 border-2 rounded-lg text-lg ${
+                                            errors.has('firstName') ? 'border-red-500' : 'border-gray-200'
+                                        } focus:outline-none focus:border-blue-500`}
                                         placeholder='João Silva'
                                         
                                     />
                                     {errors.has('firstName') && (
-                                        <div className='text-danger small mt-1'>
+                                        <div className='text-red-500 text-sm mt-1'>
                                             {errors.get('firstName')}
                                         </div>
                                     )}
             </div>
-            <div className='col-12 mb-3'>
-                                    <label className='form-label fw-semibold small text-muted'>
+            <div className='w-full mb-3'>
+                                    <label className='block font-semibold text-sm text-gray-600 mb-2'>
                                         Apelido
                                     </label>
                                     <input
@@ -319,20 +329,22 @@ function Step2({data, setData, setStep}) {
                                         name='lastName'
                                         value={data.lastName}
                                         onChange={handleInputChange}
-                                        className={`form-control form-control-lg bg-light ${errors.has('lastName') ? 'is-invalid' : ''}`}
+                                        className={`w-full px-4 py-3 bg-gray-100 border-2 rounded-lg text-lg ${
+                                            errors.has('lastName') ? 'border-red-500' : 'border-gray-200'
+                                        } focus:outline-none focus:border-blue-500`}
                                         placeholder='Cardoso'
                                     />
                                     {errors.has('lastName') && (
-                                        <div className='text-danger small mt-1'>
+                                        <div className='text-red-500 text-sm mt-1'>
                                             {errors.get('lastName')}
                                         </div>
                                     )}
             </div>
 
-            <div className='d-flex gap-3 mt-4'>
+            <div className='flex gap-3 mt-16'>
                 <button
                     type='button'
-                    className='btn btn-lg fw-bold'
+                    className='py-3 px-6 font-bold rounded-lg'
                     style={{
                         backgroundColor: '#FFD814',
                         color: '#0F1111',
@@ -344,7 +356,7 @@ function Step2({data, setData, setStep}) {
                 </button>
                 <button
                     type='submit'
-                    className='btn btn-lg fw-bold flex-grow-1'
+                    className='py-3 px-6 font-bold flex-grow rounded-lg'
                     style={{
                         backgroundColor: '#FFD814',
                         color: '#0F1111',
@@ -466,9 +478,9 @@ function Step3({data, setData, setStep}) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className='row g-3 mb-4'>
-                <div className='col-12 col-md-6'>
-                    <label className='form-label fw-semibold small text-muted'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-16'>
+                <div>
+                    <label className='block font-semibold text-sm text-gray-600 mb-2'>
                         Telefone
                     </label>
                     <input
@@ -476,12 +488,14 @@ function Step3({data, setData, setStep}) {
                         name='phoneNumber'
                         value={data.phoneNumber}
                         onChange={handleInputChange}
-                        className={`form-control form-control-lg bg-light ${errors.has('phoneNumber') ? 'is-invalid' : ''}`}
+                        className={`w-full px-4 py-3 bg-gray-100 border-2 rounded-lg text-lg ${
+                            errors.has('phoneNumber') ? 'border-red-500' : 'border-gray-200'
+                        } focus:outline-none focus:border-blue-500`}
                         placeholder='+258 86 123 4567'
                         disabled={submitting}
                     />
                     {errors.has('phoneNumber') && (
-                        <div className='text-danger small mt-1'>
+                        <div className='text-red-500 text-sm mt-1'>
                             {errors.get('phoneNumber')}
                         </div>
                     )}
