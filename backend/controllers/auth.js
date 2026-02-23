@@ -273,6 +273,8 @@ exports.login = async (req, res, next) => {
             //refreshToken
         });
     } catch (err) {
+        console.error('Login error caught:', err);
+        console.error('Error stack:', err.stack);
         next(new ResponseError(500, 'Erro interno no servidor'));
     }
 };
