@@ -87,19 +87,19 @@ function ResetPassword() {
     };
 
     return (
-        <div className='vh-100 d-flex align-items-center justify-content-center' style={{ backgroundColor: '#f8f9fa' }}>
-            <div className='w-100' style={{ maxWidth: '400px' }}>
-                <div className='bg-white shadow-sm rounded-4 p-5'>
-                    <h2 className='fw-bold mb-4' style={{ fontSize: '1.5rem' }}>
+        <div className='min-h-screen flex items-center justify-center' style={{ backgroundColor: '#f8f9fa' }}>
+            <div className='w-full' style={{ maxWidth: '400px' }}>
+                <div className='bg-white shadow-md rounded-lg p-20'>
+                    <h2 className='font-bold mb-16' style={{ fontSize: '1.5rem' }}>
                         Redefinir Palavra-Passe
                     </h2>
 
                     <form onSubmit={handleSubmit}>
-                        <div className='mb-4'>
-                            <label className='form-label fw-semibold small text-muted'>
+                        <div className='mb-16'>
+                            <label className='block font-semibold text-sm text-gray-600 mb-2'>
                                 Nova Senha
                             </label>
-                            <div className='input-group input-group-lg'>
+                            <div className='flex items-center text-lg'>
                                 <input
                                     type={
                                         showPasswords.newPassword
@@ -114,10 +114,8 @@ function ResetPassword() {
                                         })
                                     }
                                     placeholder='Insira sua nova senha'
-                                    className={`form-control bg-light border-end-0 ${
-                                        errors.newPassword
-                                            ? 'is-invalid'
-                                            : ''
+                                    className={`flex-1 px-4 py-3 bg-gray-100 border-2 border-r-0 rounded-l-lg focus:outline-none focus:border-blue-500 ${
+                                        errors.newPassword ? 'border-red-500' : 'border-gray-200'
                                     }`}
                                     disabled={isSubmitting}
                                 />
@@ -126,7 +124,7 @@ function ResetPassword() {
                                     onClick={() =>
                                         togglePasswordVisibility('newPassword')
                                     }
-                                    className='input-group-text bg-light border-start-0'
+                                    className='bg-gray-100 px-4 py-3 border-2 border-l-0 border-gray-200 rounded-r-lg hover:bg-gray-200 transition-colors'
                                 >
                                     {showPasswords.newPassword ? (
                                         <EyeSlashFill
@@ -144,17 +142,17 @@ function ResetPassword() {
                                 </button>
                             </div>
                             {errors.newPassword && (
-                                <div className='text-danger small mt-1'>
+                                <div className='text-red-500 text-sm mt-1'>
                                     {errors.newPassword}
                                 </div>
                             )}
                         </div>
 
-                        <div className='mb-4'>
-                            <label className='form-label fw-semibold small text-muted'>
+                        <div className='mb-16'>
+                            <label className='block font-semibold text-sm text-gray-600 mb-2'>
                                 Confirmar Senha
                             </label>
-                            <div className='input-group input-group-lg'>
+                            <div className='flex items-center text-lg'>
                                 <input
                                     type={
                                         showPasswords.confirmPassword
@@ -169,10 +167,8 @@ function ResetPassword() {
                                         })
                                     }
                                     placeholder='Confirme sua nova senha'
-                                    className={`form-control bg-light border-end-0 ${
-                                        errors.confirmPassword
-                                            ? 'is-invalid'
-                                            : ''
+                                    className={`flex-1 px-4 py-3 bg-gray-100 border-2 border-r-0 rounded-l-lg focus:outline-none focus:border-blue-500 ${
+                                        errors.confirmPassword ? 'border-red-500' : 'border-gray-200'
                                     }`}
                                     disabled={isSubmitting}
                                 />
@@ -181,7 +177,7 @@ function ResetPassword() {
                                     onClick={() =>
                                         togglePasswordVisibility('confirmPassword')
                                     }
-                                    className='input-group-text bg-light border-start-0'
+                                    className='bg-gray-100 px-4 py-3 border-2 border-l-0 border-gray-200 rounded-r-lg hover:bg-gray-200 transition-colors'
                                 >
                                     {showPasswords.confirmPassword ? (
                                         <EyeSlashFill
@@ -199,7 +195,7 @@ function ResetPassword() {
                                 </button>
                             </div>
                             {errors.confirmPassword && (
-                                <div className='text-danger small mt-1'>
+                                <div className='text-red-500 text-sm mt-1'>
                                     {errors.confirmPassword}
                                 </div>
                             )}
@@ -208,7 +204,7 @@ function ResetPassword() {
                         <button
                             type='submit'
                             disabled={isSubmitting}
-                            className='btn btn-lg w-100 fw-bold'
+                            className='w-full py-3 px-6 font-bold text-black rounded-lg'
                             style={{
                                 backgroundColor: '#FFD814',
                                 color: '#0F1111',

@@ -36,23 +36,22 @@ xhr.transformRequest(async config => {
     if (accessToken) {
         config.headers = config.headers || {};
         config.headers['Authorization'] = `Bearer ${accessToken}`;
-    } else {
-        //TODO: REMOVE IN PRODUCTION
-        console.warn('XHR: Enviando requisição sem token de acesso');
     }
     return config;
 });
 
 xhr.transformResponse(async res => {
-    //TODO: Add next()
     try {
-        let { accessToken: newToken } = res.json(); //CAPTURAR NOVO ACCESS TOKEN
-        if (newToken) accessToken = newToken;
+        const jsonData = await res.json();
+        const { accessToken: newToken } = jsonData;
+        
+        if (newToken) {
+            accessToken = newToken;
+        }
+        return res;
     } catch(err) {
-        console.log('Error parsing response: ' + err.message)
+        return res;
     }
-
-    return res;
 });
 
 // Interceptor para refresh token
@@ -78,7 +77,7 @@ xhr.interceptError(async (error, config) => {
 
         try {
             const response = await xhr.post('/auth/refresh', {});
-            const { accessToken: token } = response.json();
+            const { accessToken: token } = await response.json();
 
             if (token) {
                 accessToken = token;

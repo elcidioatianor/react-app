@@ -12,7 +12,7 @@ import ResetPassword from './pages/Auth/ResetPassword';
 import Dashboard from './pages/Account/Dashboard';
 import Profile from './pages/Account/Profile';
 
-//Auth
+// Auth
 import RequireAuth from './components/RequireAuth';
 
 // Erros

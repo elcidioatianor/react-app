@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 //import { useApi } from '../../hooks/useApi';
 import { useAuth } from '../../hooks/useAuth';
-import { Container, Card, Form, Button, Spinner } from 'react-bootstrap';
 import { SendFill, Paperclip, CheckAll, Check } from 'react-bootstrap-icons';
 
 function Chat() {
@@ -103,40 +102,39 @@ function Chat() {
     };
 
     return (
-        <div
-            className='d-flex flex-column'
-            style={{ height: 'calc(100vh - 76px)', background: '#e5ddd5' }}
-        >
+        <div className="flex flex-col h-[calc(100vh-76px)] bg-gray-100">
             {/* Header */}
-            <div className='bg-nav-sub text-white px-3 py-2 d-flex align-items-center shadow-sm flex-shrink-0'>
-                <Link to='/profile' className='text-white me-3 d-md-none'>
-                    <i className='bi bi-arrow-left fs-4'></i>
+            <div className="bg-green-600 text-white px-3 py-2 flex items-center shadow-sm flex-shrink-0">
+                <Link to="/profile" className="text-white mr-3 md:hidden">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                    </svg>
                 </Link>
-                <div
-                    className='bg-secondary rounded-circle d-flex align-items-center justify-content-center me-3'
-                    style={{ width: 40, height: 40 }}
-                >
-                    <i className='bi bi-person-fill fs-5 text-white'></i>
+                <div className="bg-gray-500 rounded-full flex items-center justify-center mr-3 w-10 h-10">
+                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
                 </div>
                 <div>
-                    <h6 className='mb-0 fw-bold'>{partner.name}</h6>
-                    <small
-                        className='opacity-75'
-                        style={{ fontSize: '0.8rem' }}
-                    >
-                        Online agora
-                    </small>
+                    <h6 className="mb-0 font-bold">{partner.name}</h6>
+                    <small className="opacity-75 text-sm">Online agora</small>
                 </div>
-                <div className='ms-auto d-flex gap-3'>
-                    <i className='bi bi-camera-video fs-5'></i>
-                    <i className='bi bi-telephone fs-5'></i>
-                    <i className='bi bi-three-dots-vertical fs-5'></i>
+                <div className="ml-auto flex gap-3">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                    </svg>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                    </svg>
                 </div>
             </div>
 
             {/* Messages Area */}
             <div
-                className='flex-grow-1 overflow-auto p-3'
+                className="flex-grow overflow-auto p-3"
                 style={{
                     backgroundImage:
                         "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')",
@@ -144,99 +142,83 @@ function Chat() {
                     opacity: 0.95,
                 }}
             >
-                <Container style={{ maxWidth: '900px' }}>
+                <div className="max-w-4xl mx-auto">
                     {messages.map((msg, idx) => {
                         const isMe = msg.senderId === user.id;
                         return (
                             <div
                                 key={idx}
-                                className={`d-flex mb-2 ${isMe ? 'justify-content-end' : 'justify-content-start'}`}
+                                className={`flex mb-2 ${isMe ? 'justify-end' : 'justify-start'}`}
                             >
-                                <Card
-                                    className={`border-0 shadow-sm ${isMe ? 'bg-success bg-opacity-25' : 'bg-white'}`}
-                                    style={{
-                                        maxWidth: '80%',
-                                        borderRadius: '7px',
-                                        borderTopRightRadius: isMe ? 0 : '7px',
-                                        borderTopLeftRadius: !isMe ? 0 : '7px',
-                                        backgroundColor: isMe
-                                            ? '#dcf8c6 !important'
-                                            : '#fff',
-                                    }}
+                                <div
+                                    className={`max-w-xs px-3 py-2 shadow-sm ${
+                                        isMe
+                                            ? 'bg-green-100 rounded-lg rounded-br-none'
+                                            : 'bg-white rounded-lg rounded-bl-none'
+                                    }`}
                                 >
-                                    <div className='px-2 pt-2 pb-1'>
-                                        <span
-                                            className='text-dark'
-                                            style={{ fontSize: '0.95rem' }}
-                                        >
-                                            {msg.message}
+                                    <span className="text-gray-800 text-sm">
+                                        {msg.message}
+                                    </span>
+                                    <div className="flex items-center justify-end gap-1 mt-1">
+                                        <span className="text-xs text-gray-500">
+                                            {formatTime(msg.createdAt)}
                                         </span>
-                                        <div
-                                            className='d-flex align-items-center justify-content-end gap-1 mt-1'
-                                            style={{
-                                                fontSize: '0.7rem',
-                                                color: '#999',
-                                            }}
-                                        >
-                                            <span>
-                                                {formatTime(msg.createdAt)}
-                                            </span>
-                                            {isMe &&
-                                                (msg.read ? (
-                                                    <CheckAll className='text-primary fs-6' />
-                                                ) : (
-                                                    <Check className='fs-6' />
-                                                ))}
-                                        </div>
+                                        {isMe &&
+                                            (msg.read ? (
+                                                <CheckAll className="text-blue-500 w-4 h-4" />
+                                            ) : (
+                                                <Check className="w-4 h-4" />
+                                            ))}
                                     </div>
-                                </Card>
+                                </div>
                             </div>
                         );
                     })}
                     <div ref={scrollRef}></div>
-                </Container>
+                </div>
             </div>
 
             {/* Input Area */}
-            <div className='bg-light px-3 py-2 flex-shrink-0'>
-                <Container style={{ maxWidth: '900px' }}>
-                    <Form
+            <div className="bg-gray-200 px-3 py-2 flex-shrink-0">
+                <div className="max-w-4xl mx-auto">
+                    <form
                         onSubmit={handleSend}
-                        className='d-flex align-items-center gap-2'
+                        className="flex items-center gap-2"
                     >
-                        <Button variant='link' className='text-secondary p-0'>
-                            <i className='bi bi-emoji-smile fs-4'></i>
-                        </Button>
-                        <Button variant='link' className='text-secondary p-0'>
-                            <Paperclip className='fs-4' />
-                        </Button>
-                        <Form.Control
-                            className='rounded-pill border-0 shadow-sm'
-                            placeholder='Mensagem'
+                        <button type="button" className="text-gray-500 hover:text-gray-700 p-0 bg-transparent border-none">
+                            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zM9 7a1 1 0 11-2 0 1 1 0 012 0zM9 11a1 1 0 100-2 1 1 0 000 2zM12 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                            </svg>
+                        </button>
+                        <button type="button" className="text-gray-500 hover:text-gray-700 p-0 bg-transparent border-none">
+                            <Paperclip className="w-6 h-6" />
+                        </button>
+                        <input
+                            className="flex-grow rounded-full border-none shadow-sm px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            placeholder="Mensagem"
                             value={newMessage}
                             onChange={e => setNewMessage(e.target.value)}
-                            style={{ paddingRight: '1rem' }}
                         />
                         {newMessage.trim() ? (
-                            <Button
-                                type='submit'
-                                variant='success'
-                                className='rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm'
-                                style={{ width: 45, height: 45 }}
+                            <button
+                                type="submit"
+                                className="bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-11 h-11 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                             >
-                                <SendFill size={20} className='ms-1' />
-                            </Button>
+                                <SendFill size={20} className="ml-1" />
+                            </button>
                         ) : (
-                            <Button
-                                variant='secondary'
-                                className='rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm'
-                                style={{ width: 45, height: 45 }}
+                            <button
+                                type="button"
+                                className="bg-gray-500 hover:bg-gray-600 text-white rounded-full flex items-center justify-center w-11 h-11 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
                             >
-                                <i className='bi bi-mic-fill fs-5'></i>
-                            </Button>
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 002 11c0-2.21.895-4.21 2.34-5.657l.793.793A5.968 5.968 0 013 11a5.968 5.968 0 001.543 4.207l-.793.793A6.967 6.967 0 004 11a6.967 6.967 0 002.457-5.457l.793.793A5.968 5.968 0 016 11c0 1.657.672 3.164 1.757 4.243l-.793.793z" clipRule="evenodd" />
+                                </svg>
+                            </button>
                         )}
-                    </Form>
-                </Container>
+                    </form>
+                </div>
             </div>
         </div>
     );

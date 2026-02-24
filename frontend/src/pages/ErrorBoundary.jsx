@@ -8,18 +8,18 @@ function ErrorBoundary() {
 
     //Refatorar isso
     return (
-        <div className='d-flex flex-column justify-content-center align-items-center vh-100 bg-light text-center'>
-            <h1 className='display-1 fw-bold text-primary'>Oops!</h1>
+        <div className='flex flex-col justify-center items-center min-h-screen bg-gray-100 text-center'>
+            <h1 className='text-6xl font-bold text-blue-600'>Oops!</h1>
 
-            <h2 className='mb-3 fw-semibold'>Erro Interno</h2>
+            <h2 className='mb-3 font-semibold text-2xl'>Erro Interno</h2>
 
-            <p className='text-muted mb-4' style={{ maxWidth: '420px' }}>
+            <p className='text-gray-600 mb-4 max-w-md'>
                 Algo inesperado ocorreu e não conseguimos carregar esta página.
                 Pressione <code>F5</code> para recarregar a página ou voltar à
                 página principal
             </p>
 
-            <Link className='btn btn-primary btn-lg px-4' to='/'>
+            <Link className='bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-medium' to='/'>
                 Voltar para o início
             </Link>
         </div>

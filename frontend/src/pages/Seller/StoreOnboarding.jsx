@@ -2,16 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
 import { useNotification } from '../../hooks/useNotification';
-import {
-    Container,
-    Row,
-    Col,
-    Card,
-    Form,
-    Button,
-    Spinner,
-    Alert,
-} from 'react-bootstrap';
 
 function StoreOnboarding() {
     const api = useApi();
@@ -67,23 +57,22 @@ function StoreOnboarding() {
     ];
 
     return (
-        <div className='min-vh-100 bg-light py-5' style={{ marginTop: '40px' }}>
-            <Container>
-                <Row className='justify-content-center'>
-                    <Col md={10} lg={8}>
+        <div className='min-h-screen bg-gray-50 py-8' style={{ marginTop: '40px' }}>
+            <div className='px-4 py-8 max-w-7xl mx-auto'>
+                <div className='flex justify-center'>
+                    <div className='w-full max-w-4xl'>
                         {/* Stepper */}
-                        <div className='d-flex justify-content-between mb-5 position-relative'>
+                        <div className='flex justify-between mb-8 relative'>
                             <div
-                                className='position-absolute top-50 start-0 end-0 border-top border-2 z-0'
-                                style={{ transform: 'translateY(-50%)' }}
+                                className='absolute top-1/2 left-0 right-0 border-t-2 border-gray-300 -translate-y-1/2 z-0'
                             ></div>
                             {steps.map(s => (
                                 <div
                                     key={s.num}
-                                    className='position-relative z-1 text-center bg-light px-2'
+                                    className='relative z-10 text-center bg-gray-50 px-2'
                                 >
                                     <div
-                                        className={`rounded-circle d-flex align-items-center justify-content-center mx-auto ${step >= s.num ? 'bg-dubaning-orange text-white' : 'bg-white text-muted border border-2'}`}
+                                        className={`rounded-full flex items-center justify-center mx-auto ${step >= s.num ? 'bg-orange-500 text-white' : 'bg-white text-gray-500 border-2 border-gray-300'}`}
                                         style={{
                                             width: '40px',
                                             height: '40px',
@@ -93,7 +82,7 @@ function StoreOnboarding() {
                                         {s.num}
                                     </div>
                                     <small
-                                        className={`mt-2 d-block fw-bold ${step >= s.num ? 'text-dubaning-orange' : 'text-muted'}`}
+                                        className={`mt-2 block font-bold ${step >= s.num ? 'text-orange-500' : 'text-gray-500'}`}
                                     >
                                         {s.label}
                                     </small>
@@ -101,70 +90,64 @@ function StoreOnboarding() {
                             ))}
                         </div>
 
-                        <Card className='border-0 shadow-sm overflow-hidden rounded-4'>
-                            <Row className='g-0'>
-                                <Col
-                                    md={4}
-                                    className='bg-dark text-white p-5 d-none d-md-flex flex-column justify-content-center'
+                        <div className='bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden'>
+                            <div className='grid grid-cols-1 md:grid-cols-3'>
+                                <div
+                                    className='md:col-span-1 bg-gray-900 text-white p-8 hidden md:flex flex-col justify-center'
                                 >
-                                    <h3 className='fw-bold mb-4'>
+                                    <h3 className='font-bold mb-6 text-xl'>
                                         Venda na DUBANING
                                     </h3>
-                                    <ul className='list-unstyled d-flex flex-column gap-3'>
-                                        <li className='d-flex gap-3 align-items-center'>
-                                            <i className='bi bi-check-circle-fill text-warning'></i>
+                                    <ul className='space-y-4'>
+                                        <li className='flex gap-3 items-center'>
+                                            <i className='bi bi-check-circle-fill text-yellow-400'></i>
                                             <span>
                                                 Milhares de clientes esperando
                                                 por você.
                                             </span>
                                         </li>
-                                        <li className='d-flex gap-3 align-items-center'>
-                                            <i className='bi bi-check-circle-fill text-warning'></i>
+                                        <li className='flex gap-3 items-center'>
+                                            <i className='bi bi-check-circle-fill text-yellow-400'></i>
                                             <span>
                                                 Ferramentas de gestão
                                                 integradas.
                                             </span>
                                         </li>
-                                        <li className='d-flex gap-3 align-items-center'>
-                                            <i className='bi bi-check-circle-fill text-warning'></i>
+                                        <li className='flex gap-3 items-center'>
+                                            <i className='bi bi-check-circle-fill text-yellow-400'></i>
                                             <span>
                                                 Pagamentos seguros via M-Pesa.
                                             </span>
                                         </li>
                                     </ul>
-                                </Col>
-                                <Col md={8} className='p-4 p-md-5'>
-                                    <Form onSubmit={handleSubmit}>
+                                </div>
+                                <div className='md:col-span-2 p-6 md:p-8'>
+                                    <form onSubmit={handleSubmit}>
                                         {step === 1 && (
                                             <div className='animate-fade-in'>
-                                                <h4 className='fw-bold mb-4'>
+                                                <h4 className='font-bold mb-6 text-lg'>
                                                     Dados da Loja
                                                 </h4>
-                                                <Form.Group className='mb-3'>
-                                                    <Form.Label className='small fw-bold text-muted'>
+                                                <div className='mb-4'>
+                                                    <label className='block text-sm font-bold text-gray-600 mb-2'>
                                                         Nome da Loja
-                                                    </Form.Label>
-                                                    <Form.Control
-                                                        size='lg'
-                                                        className='bg-light border-0'
+                                                    </label>
+                                                    <input
+                                                        className='w-full px-4 py-3 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
                                                         name='name'
                                                         value={formData.name}
                                                         onChange={handleChange}
                                                         required
                                                         placeholder='Ex: Maputo Gadgets'
                                                     />
-                                                </Form.Group>
-                                                <Row className='mb-3'>
-                                                    <Col
-                                                        md={6}
-                                                        className='mb-3 mb-md-0'
-                                                    >
-                                                        <Form.Label className='small fw-bold text-muted'>
+                                                </div>
+                                                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+                                                    <div>
+                                                        <label className='block text-sm font-bold text-gray-600 mb-2'>
                                                             Categoria
-                                                        </Form.Label>
-                                                        <Form.Select
-                                                            size='lg'
-                                                            className='bg-light border-0'
+                                                        </label>
+                                                        <select
+                                                            className='w-full px-4 py-3 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
                                                             name='category'
                                                             value={
                                                                 formData.category
@@ -182,15 +165,14 @@ function StoreOnboarding() {
                                                             <option>
                                                                 Serviços
                                                             </option>
-                                                        </Form.Select>
-                                                    </Col>
-                                                    <Col md={6}>
-                                                        <Form.Label className='small fw-bold text-muted'>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className='block text-sm font-bold text-gray-600 mb-2'>
                                                             Tipo
-                                                        </Form.Label>
-                                                        <Form.Select
-                                                            size='lg'
-                                                            className='bg-light border-0'
+                                                        </label>
+                                                        <select
+                                                            className='w-full px-4 py-3 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
                                                             name='type'
                                                             value={
                                                                 formData.type
@@ -205,20 +187,16 @@ function StoreOnboarding() {
                                                             <option value='pme'>
                                                                 PME / Empresa
                                                             </option>
-                                                        </Form.Select>
-                                                    </Col>
-                                                </Row>
-                                                <Row className='mb-4'>
-                                                    <Col
-                                                        md={6}
-                                                        className='mb-3 mb-md-0'
-                                                    >
-                                                        <Form.Label className='small fw-bold text-muted'>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+                                                    <div>
+                                                        <label className='block text-sm font-bold text-gray-600 mb-2'>
                                                             Cidade
-                                                        </Form.Label>
-                                                        <Form.Control
-                                                            size='lg'
-                                                            className='bg-light border-0'
+                                                        </label>
+                                                        <input
+                                                            className='w-full px-4 py-3 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
                                                             name='city'
                                                             value={
                                                                 formData.city
@@ -228,14 +206,13 @@ function StoreOnboarding() {
                                                             }
                                                             required
                                                         />
-                                                    </Col>
-                                                    <Col md={6}>
-                                                        <Form.Label className='small fw-bold text-muted'>
+                                                    </div>
+                                                    <div>
+                                                        <label className='block text-sm font-bold text-gray-600 mb-2'>
                                                             Província
-                                                        </Form.Label>
-                                                        <Form.Select
-                                                            size='lg'
-                                                            className='bg-light border-0'
+                                                        </label>
+                                                        <select
+                                                            className='w-full px-4 py-3 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
                                                             name='province'
                                                             value={
                                                                 formData.province
@@ -253,64 +230,62 @@ function StoreOnboarding() {
                                                             <option>
                                                                 Gaza
                                                             </option>
-                                                        </Form.Select>
-                                                    </Col>
-                                                </Row>
-                                                <div className='d-grid mt-4'>
-                                                    <Button
-                                                        variant='warning'
-                                                        size='lg'
-                                                        className='bg-dubaning-orange border-0 text-white fw-bold'
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div className='mt-6'>
+                                                    <button
+                                                        type='button'
+                                                        className='w-full bg-orange-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors'
                                                         onClick={() =>
                                                             setStep(2)
                                                         }
                                                     >
                                                         Continuar
-                                                    </Button>
+                                                    </button>
                                                 </div>
                                             </div>
                                         )}
 
                                         {step === 2 && (
                                             <div className='animate-fade-in'>
-                                                <h4 className='fw-bold mb-4'>
+                                                <h4 className='font-bold mb-6 text-lg'>
                                                     Branding & Descrição
                                                 </h4>
                                                 <div className='mb-4 text-center'>
                                                     <div
-                                                        className='mx-auto rounded-3 border border-dashed border-3 d-flex align-items-center justify-content-center bg-light'
+                                                        className='mx-auto rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50'
                                                         style={{
                                                             width: '120px',
                                                             height: '120px',
                                                         }}
                                                     >
                                                         <div className='text-center'>
-                                                            <i className='bi bi-image fs-1 text-muted'></i>
-                                                            <p className='small text-muted mb-0'>
+                                                            <i className='bi bi-image text-4xl text-gray-400'></i>
+                                                            <p className='small text-gray-400 mb-0'>
                                                                 Upload Logo
                                                             </p>
                                                         </div>
                                                     </div>
                                                     <input
                                                         type='file'
-                                                        className='d-none'
+                                                        className='hidden'
                                                         id='logo-upload'
                                                     />
                                                     <label
                                                         htmlFor='logo-upload'
-                                                        className='btn btn-link text-dubaning-orange fw-bold mt-2 text-decoration-none'
+                                                        className='text-orange-500 font-bold mt-4 hover:text-orange-600 cursor-pointer'
                                                     >
                                                         Selecionar Imagem
                                                     </label>
                                                 </div>
-                                                <Form.Group className='mb-4'>
-                                                    <Form.Label className='small fw-bold text-muted'>
+                                                <div className='mb-4'>
+                                                    <label className='block text-sm font-bold text-gray-600 mb-2'>
                                                         Breve Descrição
-                                                    </Form.Label>
-                                                    <Form.Control
-                                                        as='textarea'
+                                                    </label>
+                                                    <textarea
                                                         rows={3}
-                                                        className='bg-light border-0'
+                                                        className='w-full px-4 py-3 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none'
                                                         name='description'
                                                         value={
                                                             formData.description
@@ -318,44 +293,39 @@ function StoreOnboarding() {
                                                         onChange={handleChange}
                                                         placeholder='O que diferencia sua loja?'
                                                     />
-                                                </Form.Group>
-                                                <Row className='g-2 mt-4'>
-                                                    <Col xs={6}>
-                                                        <Button
-                                                            variant='outline-secondary'
-                                                            className='w-100 py-3'
-                                                            onClick={() =>
-                                                                setStep(1)
-                                                            }
-                                                        >
-                                                            Voltar
-                                                        </Button>
-                                                    </Col>
-                                                    <Col xs={6}>
-                                                        <Button
-                                                            variant='warning'
-                                                            className='w-100 py-3 bg-dubaning-orange border-0 text-white fw-bold'
-                                                            onClick={() =>
-                                                                setStep(3)
-                                                            }
-                                                        >
-                                                            Continuar
-                                                        </Button>
-                                                    </Col>
-                                                </Row>
+                                                </div>
+                                                <div className='grid grid-cols-2 gap-4 mt-6'>
+                                                    <button
+                                                        type='button'
+                                                        className='w-full border border-gray-300 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-50 transition-colors'
+                                                        onClick={() =>
+                                                            setStep(1)
+                                                        }
+                                                    >
+                                                        Voltar
+                                                    </button>
+                                                    <button
+                                                        type='button'
+                                                        className='w-full bg-orange-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors'
+                                                        onClick={() =>
+                                                            setStep(3)
+                                                        }
+                                                    >
+                                                        Continuar
+                                                    </button>
+                                                </div>
                                             </div>
                                         )}
 
                                         {step === 3 && (
                                             <div className='animate-fade-in'>
-                                                <h4 className='fw-bold mb-4'>
+                                                <h4 className='font-bold mb-6 text-lg'>
                                                     Verificação de Conta
                                                 </h4>
-                                                <Alert
-                                                    variant='warning'
-                                                    className='border-0 text-dark small mb-4'
+                                                <div
+                                                    className='bg-yellow-50 border border-yellow-200 text-gray-800 p-4 rounded-lg mb-6'
                                                 >
-                                                    <i className='bi bi-info-circle-fill me-2 text-danger'></i>
+                                                    <i className='bi bi-info-circle-fill mr-2 text-red-500'></i>
                                                     Para ser um{' '}
                                                     <strong>
                                                         Vendedor Verificado
@@ -363,52 +333,44 @@ function StoreOnboarding() {
                                                     , entraremos em contacto
                                                     para solicitar o seu NUIT ou
                                                     BI.
-                                                </Alert>
-                                                <p className='text-muted small mb-4'>
+                                                </div>
+                                                <p className='text-gray-500 text-sm mb-6'>
                                                     Ao clicar em "Abrir Minha
                                                     Loja", você concorda com os
                                                     termos de serviço do
                                                     Marketplace DUBANING.
                                                 </p>
-                                                <Row className='g-2 mt-4'>
-                                                    <Col xs={6}>
-                                                        <Button
-                                                            variant='outline-secondary'
-                                                            className='w-100 py-3'
-                                                            onClick={() =>
-                                                                setStep(2)
-                                                            }
-                                                        >
-                                                            Voltar
-                                                        </Button>
-                                                    </Col>
-                                                    <Col xs={6}>
-                                                        <Button
-                                                            type='submit'
-                                                            variant='success'
-                                                            className='w-100 py-3 bg-dubaning-orange border-0 shadow-sm fw-bold'
-                                                            disabled={loading}
-                                                        >
-                                                            {loading ? (
-                                                                <Spinner
-                                                                    animation='border'
-                                                                    size='sm'
-                                                                />
-                                                            ) : (
-                                                                'Abrir Minha Loja'
-                                                            )}
-                                                        </Button>
-                                                    </Col>
-                                                </Row>
+                                                <div className='grid grid-cols-2 gap-4 mt-6'>
+                                                    <button
+                                                        type='button'
+                                                        className='w-full border border-gray-300 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-50 transition-colors'
+                                                        onClick={() =>
+                                                            setStep(2)
+                                                        }
+                                                    >
+                                                        Voltar
+                                                    </button>
+                                                    <button
+                                                        type='submit'
+                                                        className='w-full bg-orange-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50'
+                                                        disabled={loading}
+                                                    >
+                                                        {loading ? (
+                                                            <div className='animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full'></div>
+                                                        ) : (
+                                                            'Abrir Minha Loja'
+                                                        )}
+                                                    </button>
+                                                </div>
                                             </div>
                                         )}
-                                    </Form>
-                                </Col>
-                            </Row>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

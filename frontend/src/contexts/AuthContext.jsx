@@ -19,7 +19,7 @@ function AuthProvider({ children }) {
             const checkAuthentication = async () => {
                 try {
                     const res = await xhr.post('/auth/profile', {});
-                    const user = res.json();
+                    const user = await res.json();
         
                     if (user) {
                         setUser(user);
@@ -44,7 +44,7 @@ function AuthProvider({ children }) {
     const register = async formData => {
         try {
             const res = await xhr.post('/auth/register', formData);
-            const { user: userData, accessToken } = res.json();
+            const { user: userData, accessToken } = await res.json();
 
             // Validar dados obrigatórios
             if (!userData || !accessToken) {
@@ -54,8 +54,6 @@ function AuthProvider({ children }) {
             //setError(null)
             return { done: true };
         } catch (err) {
-            console.error(err);
-            //setError(err.message)
             setAuthenticated(false);
             return { done: false, error: err.message };
         }
@@ -65,16 +63,13 @@ function AuthProvider({ children }) {
     const login = async credentials => {
         try {
             const res = await xhr.post('/auth/login', credentials);
-            const { user: userData } = res.json();
+            const responseData = await res.json();
+            const { user: userData } = responseData;
 
             setUser(userData);
             setAuthenticated(true);
-            //setError(null);
-            return { done: true };
+            return { done: true, user: userData };
         } catch (err) {
-            console.log(err);
-            //setError(err.message);
-            //setAuthenticated(false);
             return { done: false, error: err.message };
         }
     };

@@ -81,25 +81,25 @@ function Checkout() {
     };
 
     return (
-        <div className='container py-5' style={{ marginTop: '70px' }}>
-            <h2 className='fw-bold mb-4 text-center'>Finalizar Compra</h2>
+        <div className='px-4 py-8 max-w-7xl mx-auto' style={{ marginTop: '70px' }}>
+            <h2 className='font-bold mb-6 text-center text-2xl'>Finalizar Compra</h2>
 
-            <div className='row g-4'>
-                <div className='col-lg-8'>
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+                <div className='lg:col-span-2'>
                     {/* Step 1: Entrega */}
-                    <div className='card border-0 shadow-sm p-4 mb-4'>
-                        <h5 className='fw-bold mb-4'>
-                            <i className='bi bi-geo-alt text-primary me-2'></i>
+                    <div className='bg-white border border-gray-200 rounded-lg shadow p-6 mb-6'>
+                        <h5 className='font-bold mb-6 text-lg'>
+                            <i className='bi bi-geo-alt text-blue-600 mr-2'></i>
                             Informações de Entrega
                         </h5>
-                        <div className='row g-3'>
-                            <div className='col-md-6'>
-                                <label className='form-label small fw-bold'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                            <div>
+                                <label className='block text-sm font-bold mb-2'>
                                     Nome Completo
                                 </label>
                                 <input
                                     type='text'
-                                    className='form-control'
+                                    className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'
                                     value={formData.name}
                                     onChange={e =>
                                         setFormData({
@@ -109,13 +109,13 @@ function Checkout() {
                                     }
                                 />
                             </div>
-                            <div className='col-md-6'>
-                                <label className='form-label small fw-bold'>
+                            <div>
+                                <label className='block text-sm font-bold mb-2'>
                                     Telefone
                                 </label>
                                 <input
                                     type='text'
-                                    className='form-control'
+                                    className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'
                                     value={formData.phone}
                                     onChange={e =>
                                         setFormData({
@@ -125,12 +125,12 @@ function Checkout() {
                                     }
                                 />
                             </div>
-                            <div className='col-md-12'>
-                                <label className='form-label small fw-bold'>
+                            <div className='col-span-1 md:col-span-2'>
+                                <label className='block text-sm font-bold mb-2'>
                                     Endereço (Rua, Bairro, Casa)
                                 </label>
                                 <textarea
-                                    className='form-control'
+                                    className='w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'
                                     rows='2'
                                     value={formData.address}
                                     onChange={e =>
@@ -143,11 +143,11 @@ function Checkout() {
                             </div>
                         </div>
 
-                        <h6 className='fw-bold mt-4 mb-3'>Método de Entrega</h6>
-                        <div className='row g-3'>
-                            <div className='col-md-6'>
+                        <h6 className='font-bold mt-6 mb-3 text-base'>Método de Entrega</h6>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                            <div>
                                 <div
-                                    className={`card p-3 border-${formData.deliveryMethod === 'motoboy' ? 'primary' : 'light'} bg-light pointer`}
+                                    className={`p-3 rounded border-2 bg-gray-50 cursor-pointer transition-colors ${formData.deliveryMethod === 'motoboy' ? 'border-blue-600' : 'border-gray-200'} hover:bg-gray-100`}
                                     onClick={() =>
                                         setFormData({
                                             ...formData,
@@ -155,24 +155,24 @@ function Checkout() {
                                         })
                                     }
                                 >
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='flex justify-between'>
                                         <div>
-                                            <h6 className='fw-bold mb-0'>
+                                            <h6 className='font-bold mb-0'>
                                                 Motoboy DUBANING
                                             </h6>
-                                            <small className='text-muted'>
+                                            <small className='text-gray-500'>
                                                 Entrega em 24h
                                             </small>
                                         </div>
-                                        <span className='fw-bold text-primary'>
+                                        <span className='font-bold text-blue-600'>
                                             150 MT
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            <div className='col-md-6'>
+                            <div>
                                 <div
-                                    className={`card p-3 border-${formData.deliveryMethod === 'pickup' ? 'primary' : 'light'} bg-light pointer`}
+                                    className={`p-3 rounded border-2 bg-gray-50 cursor-pointer transition-colors ${formData.deliveryMethod === 'pickup' ? 'border-blue-600' : 'border-gray-200'} hover:bg-gray-100`}
                                     onClick={() =>
                                         setFormData({
                                             ...formData,
@@ -180,16 +180,16 @@ function Checkout() {
                                         })
                                     }
                                 >
-                                    <div className='d-flex justify-content-between'>
+                                    <div className='flex justify-between'>
                                         <div>
-                                            <h6 className='fw-bold mb-0'>
+                                            <h6 className='font-bold mb-0'>
                                                 Levantamento na Loja
                                             </h6>
-                                            <small className='text-muted'>
+                                            <small className='text-gray-500'>
                                                 Grátis
                                             </small>
                                         </div>
-                                        <span className='fw-bold text-success'>
+                                        <span className='font-bold text-green-600'>
                                             0 MT
                                         </span>
                                     </div>
@@ -199,17 +199,17 @@ function Checkout() {
                     </div>
 
                     {/* Step 2: Pagamento */}
-                    <div className='card border-0 shadow-sm p-4'>
-                        <h5 className='fw-bold mb-4'>
-                            <i className='bi bi-credit-card text-primary me-2'></i>
+                    <div className='bg-white border border-gray-200 rounded-lg shadow p-6'>
+                        <h5 className='font-bold mb-6 text-lg'>
+                            <i className='bi bi-credit-card text-blue-600 mr-2'></i>
                             Pagamento
                         </h5>
-                        <div className='list-group mb-3'>
+                        <div className='space-y-3 mb-6'>
                             <label
-                                className={`list-group-item d-flex align-items-center p-3 border-${formData.paymentMethod === 'mpesa' ? 'primary' : 'light'} bg-light`}
+                                className={`flex items-center p-3 border rounded cursor-pointer transition-colors ${formData.paymentMethod === 'mpesa' ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-gray-50'}`}
                             >
                                 <input
-                                    className='form-check-input me-3'
+                                    className='w-4 h-4 mr-3 cursor-pointer accent-blue-600'
                                     type='radio'
                                     name='pay'
                                     checked={formData.paymentMethod === 'mpesa'}
@@ -223,16 +223,16 @@ function Checkout() {
                                 <img
                                     src='https://logodownload.org/wp-content/uploads/2021/01/m-pesa-logo-0.png'
                                     height='20'
-                                    className='me-3'
+                                    className='mr-3'
                                     alt='M-Pesa'
                                 />
-                                <span className='fw-bold'>M-Pesa</span>
+                                <span className='font-bold'>M-Pesa</span>
                             </label>
                             <label
-                                className={`list-group-item d-flex align-items-center p-3 border-${formData.paymentMethod === 'emola' ? 'primary' : 'light'} bg-light`}
+                                className={`flex items-center p-3 border rounded cursor-pointer transition-colors ${formData.paymentMethod === 'emola' ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-gray-50'}`}
                             >
                                 <input
-                                    className='form-check-input me-3'
+                                    className='w-4 h-4 mr-3 cursor-pointer accent-blue-600'
                                     type='radio'
                                     name='pay'
                                     checked={formData.paymentMethod === 'emola'}
@@ -243,16 +243,16 @@ function Checkout() {
                                         })
                                     }
                                 />
-                                <span className='fw-bold me-3'>e-Mola</span>
-                                <small className='text-muted'>
+                                <span className='font-bold mr-3'>e-Mola</span>
+                                <small className='text-gray-500'>
                                     Carteira móvel Movitel
                                 </small>
                             </label>
                             <label
-                                className={`list-group-item d-flex align-items-center p-3 border-${formData.paymentMethod === 'cash' ? 'primary' : 'light'} bg-light`}
+                                className={`flex items-center p-3 border rounded cursor-pointer transition-colors ${formData.paymentMethod === 'cash' ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-gray-50'}`}
                             >
                                 <input
-                                    className='form-check-input me-3'
+                                    className='w-4 h-4 mr-3 cursor-pointer accent-blue-600'
                                     type='radio'
                                     name='pay'
                                     checked={formData.paymentMethod === 'cash'}
@@ -263,21 +263,21 @@ function Checkout() {
                                         })
                                     }
                                 />
-                                <i className='bi bi-wallet2 me-3 fs-5'></i>
-                                <span className='fw-bold'>
+                                <i className='bi bi-wallet2 mr-3 text-lg'></i>
+                                <span className='font-bold'>
                                     Pagamento na Entrega (Cash)
                                 </span>
                             </label>
                         </div>
 
                         {formData.paymentMethod !== 'cash' && (
-                            <div className='bg-primary bg-opacity-10 p-3 rounded-3 mb-4 border border-primary border-opacity-25'>
-                                <label className='form-label small fw-bold text-primary'>
+                            <div className='bg-blue-50 p-3 rounded-lg mb-4 border border-blue-200'>
+                                <label className='block text-sm font-bold text-blue-600 mb-2'>
                                     Número da Conta Móvel
                                 </label>
                                 <input
                                     type='text'
-                                    className='form-control border-primary border-opacity-50'
+                                    className='w-full px-3 py-2 border border-blue-300 rounded focus:outline-none focus:border-blue-500'
                                     placeholder='Ex: 84 / 85 / 86 / 87'
                                     value={formData.mpesaNumber}
                                     onChange={e =>
@@ -287,7 +287,7 @@ function Checkout() {
                                         })
                                     }
                                 />
-                                <small className='text-muted mt-2 d-block'>
+                                <small className='text-gray-500 mt-2 block'>
                                     Você receberá uma notificação no celular
                                     para confirmar.
                                 </small>
@@ -296,23 +296,23 @@ function Checkout() {
                     </div>
                 </div>
 
-                <div className='col-lg-4'>
+                <div>
                     <div
-                        className='card border-0 shadow-sm p-4 sticky-top'
+                        className='bg-white border border-gray-200 rounded-lg shadow p-6 sticky'
                         style={{ top: '100px' }}
                     >
-                        <h5 className='fw-bold mb-4'>Resumo do Pedido</h5>
+                        <h5 className='font-bold mb-6 text-lg'>Resumo do Pedido</h5>
                         <div
-                            className='mb-4 overflow-auto'
+                            className='mb-6 overflow-auto'
                             style={{ maxHeight: '200px' }}
                         >
                             {cartItems.map(item => (
                                 <div
                                     key={item.id}
-                                    className='d-flex justify-content-between mb-2 small'
+                                    className='flex justify-between mb-2 text-sm'
                                 >
                                     <span
-                                        className='text-truncate'
+                                        className='truncate'
                                         style={{ maxWidth: '150px' }}
                                     >
                                         {item.quantity}x {item.name}
@@ -326,27 +326,27 @@ function Checkout() {
                                 </div>
                             ))}
                         </div>
-                        <div className='d-flex justify-content-between mb-2'>
+                        <div className='flex justify-between mb-2'>
                             <span>Subtotal</span>
-                            <span className='fw-bold'>
+                            <span className='font-bold'>
                                 {total.toLocaleString()} MT
                             </span>
                         </div>
-                        <div className='d-flex justify-content-between mb-2'>
+                        <div className='flex justify-between mb-2'>
                             <span>Entrega</span>
-                            <span className='fw-bold'>
+                            <span className='font-bold'>
                                 {shipping.toLocaleString()} MT
                             </span>
                         </div>
-                        <hr className='my-4' />
-                        <div className='d-flex justify-content-between mb-4 fs-5'>
-                            <span className='fw-bold'>Total Geral</span>
-                            <span className='fw-bold text-primary'>
+                        <hr className='my-6' />
+                        <div className='flex justify-between mb-6 text-lg'>
+                            <span className='font-bold'>Total Geral</span>
+                            <span className='font-bold text-blue-600'>
                                 {(total + shipping).toLocaleString()} MT
                             </span>
                         </div>
                         <button
-                            className='btn btn-primary btn-lg w-100'
+                            className='w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors'
                             onClick={handlePlaceOrder}
                         >
                             Confirmar Pedido
@@ -354,11 +354,6 @@ function Checkout() {
                     </div>
                 </div>
             </div>
-
-            <style>{`
-                .pointer { cursor: pointer; }
-                .pointer:hover { background-color: #f8f9fa !important; border-color: #0d6efd !important; }
-            `}</style>
         </div>
     );
 }

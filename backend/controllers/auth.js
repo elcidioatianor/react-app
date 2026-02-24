@@ -72,38 +72,12 @@ const sendPasswordResetEmail = async (email, resetToken) => {
     }
 };
 
-// middleware requireAuth
-exports.authenticate = (req, res, next) => {
-    try {
-        //passport.authenticate('jwt', { session: false })(req, res, next);
-        const authHeader = req.headers.authorization;
-        const [, accessToken] = authHeader.split(' ');
 
-        if (!accessToken) {
-            return next(
-                new ResponseError(400, 'Token de acesso não fornecido')
-            );
-        }
-        console.log('Verificando token...');
-        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
-        //APENAS ARMAZENAMOS ID & ROLE:
-        //ID: BUSCAR USUÁRIO EM QUALQUER MIDDLEWARE SUBSEQUENTE QUE PRECISAR
-        //ROLE: PERMITIR/RECUSAR ACESSO A RECURSOS EM MIDDLEWARES SUBSEQUENTES
-        req.payload = decoded; // { sub, role }
-        next();
-    } catch (err) {
-        const error = new ResponseError(401, 'Token expirado ou inválido'); //'Token inválido ou expirado'
-
-        error.code = 'EEXPIRY';
-        next(error);
-    }
-};
 //firstName, lastName, phoneNumber
 exports.register = async (req, res, next) => {
     try {
         const { firstName, lastName, phoneNumber, email, password, role } =
             req.body;
-        console.log(req.body)
         if (!firstName || !lastName || !phoneNumber || !email || !password) {
             //400 (Bad Request)
             return next(
@@ -181,8 +155,23 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
     try {
+        console.log('=== LOGIN REQUEST ===');
+        console.log('Method:', req.method);
+        console.log('Content-Type:', req.headers['content-type']);
+        console.log('Body:', req.body);
+        console.log('Body keys:', Object.keys(req.body || {}));
+        console.log('Body type:', typeof req.body);
+        
         //TODO: CHANGE TO phoneNumber
         const { phoneNumber, password } = req.body;
+        
+        console.log('Extracted phoneNumber:', phoneNumber);
+        console.log('Extracted password:', password ? '***' : 'MISSING');
+
+        if (!phoneNumber || !password) {
+            console.log('Missing required fields - phoneNumber:', !!phoneNumber, 'password:', !!password);
+            return next(new ResponseError(400, 'Número de telefone e senha são obrigatórios'));
+        }
 
         const user = await User.findOne({ where: { phoneNumber } });
 
@@ -216,12 +205,14 @@ exports.login = async (req, res, next) => {
                 firstName: user.firstName,
                 phoneNumber: user.phoneNumber,
                 email: user.email,
-                //role: user.role
+                role: user.role
             },
             accessToken,
             //refreshToken
         });
     } catch (err) {
+        console.error('Login error caught:', err);
+        console.error('Error stack:', err.stack);
         next(new ResponseError(500, 'Erro interno no servidor'));
     }
 };
@@ -345,9 +336,25 @@ exports.refresh = async (req, res, next) => {
 //TODO: MOVER PARA ./api
 exports.profile = async (req, res, next) => {
     try {
+        console.log('Profile request - payload:', req.payload);
+        console.log('Profile request - sub:', req.payload?.sub);
+        console.log('Profile request - sub type:', typeof req.payload?.sub);
+
+        if (!req.payload?.sub) {
+            return next(new ResponseError(400, 'Token payload inválido'));
+        }
+
         let user = await User.findByPk(req.payload.sub);
+        console.log('User found:', user ? 'YES' : 'NO');
+        console.log('User data:', user);
+
+        if (!user) {
+            return next(new ResponseError(404, 'Usuário não encontrado'));
+        }
+
         res.json(user);
     } catch (err) {
+        console.error('Profile error:', err);
         next(new ResponseError(500, 'Erro interno no servidor'));
     }
 };
@@ -404,7 +411,21 @@ exports.requireRole = (...allowedRoles) => {
 exports.authenticate = (req, res, next) => {
     return passport.authenticate('jwt', {
         session: false,
-    })(req, res, next);
+    })(req, res, (err) => {
+        if (err) return next(err);
+        
+        // Passport sets req.user to the User object
+        // But auth.profile expects req.payload with sub property
+        // So we need to bridge them
+        if (req.user) {
+            req.payload = {
+                sub: req.user.id,
+                role: req.user.role
+            };
+        }
+        
+        next();
+    });
 };
 
 // Request password reset

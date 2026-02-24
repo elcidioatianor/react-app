@@ -2,18 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useApi } from '../../hooks/useApi';
 import { useNotification } from '../../hooks/useNotification';
 import {
-    Container,
-    Row,
-    Col,
-    Card,
-    Table,
-    Button,
-    Modal,
-    Form,
-    Badge,
-    InputGroup,
-} from 'react-bootstrap';
-import {
     Plus,
     Search,
     PencilSquare,
@@ -157,267 +145,234 @@ function ProductManager() {
     );
 
     return (
-        <Container fluid className='px-0'>
-            <div className='d-flex justify-content-between align-items-center mb-4'>
-                <h4 className='fw-bold mb-0'>Meus Produtos</h4>
-                <Button
-                    variant='primary'
-                    className='d-flex align-items-center gap-2 bg-dubaning-orange border-0'
+        <div className="p-4">
+            <div className="flex justify-between items-center mb-4">
+                <h4 className="text-2xl font-bold">Meus Produtos</h4>
+                <button
+                    className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 focus:ring-2 focus:ring-orange-500"
                     onClick={() => openModal()}
                 >
                     <Plus size={20} /> Novo Produto
-                </Button>
+                </button>
             </div>
 
-            <Card className='border-0 shadow-sm'>
-                <Card.Body>
-                    <div className='mb-4'>
-                        <InputGroup>
-                            <InputGroup.Text className='bg-white border-end-0'>
-                                <Search className='text-muted' />
-                            </InputGroup.Text>
-                            <Form.Control
-                                placeholder='Pesquisar por nome ou categoria...'
-                                className='border-start-0 ps-0'
-                                value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
-                            />
-                        </InputGroup>
+            <div className="bg-white shadow rounded-lg p-6">
+                <div className="mb-4">
+                    <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Search className="text-gray-400" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Pesquisar por nome ou categoria..."
+                            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                        />
                     </div>
+                </div>
 
-                    <div className='table-responsive'>
-                        <Table hover className='align-middle'>
-                            <thead className='bg-light'>
+                <div className="overflow-x-auto">
+                    <table className="w-full table-auto border-collapse">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produto</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoria</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Preço</th>
+                                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Estoque</th>
+                                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {loading ? (
                                 <tr>
-                                    <th className='border-0 ps-3'>Produto</th>
-                                    <th className='border-0'>Categoria</th>
-                                    <th className='border-0'>Preço</th>
-                                    <th className='border-0 text-center'>
-                                        Estoque
-                                    </th>
-                                    <th className='border-0 text-center'>
-                                        Status
-                                    </th>
-                                    <th className='border-0 text-end pe-3'>
-                                        Ações
-                                    </th>
+                                    <td colSpan="6" className="px-4 py-5 text-center text-gray-500">
+                                        Carregando...
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {loading ? (
-                                    <tr>
-                                        <td
-                                            colSpan='6'
-                                            className='text-center py-5'
-                                        >
-                                            Carregando...
-                                        </td>
-                                    </tr>
-                                ) : filteredProducts.length === 0 ? (
-                                    <tr>
-                                        <td
-                                            colSpan='6'
-                                            className='text-center py-5 text-muted'
-                                        >
-                                            Nenhum produto encontrado.
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    filteredProducts.map(p => (
-                                        <tr key={p.id}>
-                                            <td className='ps-3'>
-                                                <div className='d-flex align-items-center gap-3'>
-                                                    <div className='bg-light rounded p-1 border'>
-                                                        <img
-                                                            src={
-                                                                (p.images &&
-                                                                    Array.isArray(
-                                                                        p.images
-                                                                    ) &&
-                                                                    p
-                                                                        .images[0]) ||
-                                                                (p.images &&
-                                                                    JSON.parse(
-                                                                        p.images
-                                                                    )[0]) ||
-                                                                'https://via.placeholder.com/50'
-                                                            }
-                                                            alt=''
-                                                            style={{
-                                                                width: 40,
-                                                                height: 40,
-                                                                objectFit:
-                                                                    'cover',
-                                                            }}
-                                                        />
-                                                    </div>
-                                                    <span className='fw-bold text-dark'>
-                                                        {p.name}
-                                                    </span>
+                            ) : filteredProducts.length === 0 ? (
+                                <tr>
+                                    <td colSpan="6" className="px-4 py-5 text-center text-gray-500">
+                                        Nenhum produto encontrado.
+                                    </td>
+                                </tr>
+                            ) : (
+                                filteredProducts.map(p => (
+                                    <tr key={p.id} className="hover:bg-gray-50">
+                                        <td className="px-4 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-gray-100 rounded p-1 border">
+                                                    <img
+                                                        src={
+                                                            (p.images &&
+                                                                Array.isArray(p.images) &&
+                                                                p.images[0]) ||
+                                                            (p.images &&
+                                                                JSON.parse(p.images)[0]) ||
+                                                            'https://via.placeholder.com/50'
+                                                        }
+                                                        alt=""
+                                                        className="w-10 h-10 object-cover rounded"
+                                                    />
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <Badge
-                                                    bg='light'
-                                                    text='dark'
-                                                    className='border'
-                                                >
-                                                    {p.category}
-                                                </Badge>
-                                            </td>
-                                            <td className='fw-bold'>
-                                                {p.price.toLocaleString()} MT
-                                            </td>
-                                            <td className='text-center'>
-                                                {p.stock}
-                                            </td>
-                                            <td className='text-center'>
-                                                <Badge
-                                                    bg={
-                                                        p.stock > 0
-                                                            ? 'success'
-                                                            : 'danger'
-                                                    }
-                                                    className='bg-opacity-10 text-capitalize'
-                                                    style={{
-                                                        color:
-                                                            p.stock > 0
-                                                                ? 'green'
-                                                                : 'red',
-                                                    }}
-                                                >
-                                                    {p.stock > 0
-                                                        ? 'Ativo'
-                                                        : 'Esgotado'}
-                                                </Badge>
-                                            </td>
-                                            <td className='text-end pe-3'>
-                                                <Button
-                                                    variant='link'
-                                                    className='text-primary p-1'
-                                                    onClick={() => openModal(p)}
-                                                >
-                                                    <PencilSquare />
-                                                </Button>
-                                                <Button
-                                                    variant='link'
-                                                    className='text-danger p-1'
-                                                    onClick={() =>
-                                                        handleDelete(p.id)
-                                                    }
-                                                >
-                                                    <Trash />
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </Table>
-                    </div>
-                </Card.Body>
-            </Card>
+                                                <span className="font-semibold text-gray-900">
+                                                    {p.name}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-4">
+                                            <span className="inline-flex px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
+                                                {p.category}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-4 font-semibold">
+                                            {p.price.toLocaleString()} MT
+                                        </td>
+                                        <td className="px-4 py-4 text-center">
+                                            {p.stock}
+                                        </td>
+                                        <td className="px-4 py-4 text-center">
+                                            <span
+                                                className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                                                    p.stock > 0
+                                                        ? 'bg-green-100 text-green-800'
+                                                        : 'bg-red-100 text-red-800'
+                                                }`}
+                                            >
+                                                {p.stock > 0 ? 'Ativo' : 'Esgotado'}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-4 text-right">
+                                            <button
+                                                className="text-blue-600 hover:text-blue-900 p-1"
+                                                onClick={() => openModal(p)}
+                                            >
+                                                <PencilSquare />
+                                            </button>
+                                            <button
+                                                className="text-red-600 hover:text-red-900 p-1"
+                                                onClick={() => handleDelete(p.id)}
+                                            >
+                                                <Trash />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             {/* Product Modal */}
-            <Modal show={showModal} onHide={handleCloseModal} centered>
-                <Modal.Header closeButton className='border-0'>
-                    <Modal.Title className='fw-bold'>
-                        {editingProduct ? 'Editar Produto' : 'Novo Produto'}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body className='px-4 pb-4'>
-                    <Form>
-                        <Form.Group className='mb-3'>
-                            <Form.Label className='small fw-bold text-muted'>
-                                Nome do Produto
-                            </Form.Label>
-                            <Form.Control
-                                type='text'
-                                name='name'
-                                value={formData.name}
-                                onChange={handleInput}
-                            />
-                        </Form.Group>
-                        <Row>
-                            <Col md={6}>
-                                <Form.Group className='mb-3'>
-                                    <Form.Label className='small fw-bold text-muted'>
+            {showModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg shadow-lg max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+                        <div className="flex justify-between items-center p-4 border-b">
+                            <h5 className="text-lg font-bold">
+                                {editingProduct ? 'Editar Produto' : 'Novo Produto'}
+                            </h5>
+                            <button
+                                className="text-gray-400 hover:text-gray-600"
+                                onClick={handleCloseModal}
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        <div className="p-4">
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Nome do Produto
+                                </label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInput}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
                                         Preço (MT)
-                                    </Form.Label>
-                                    <Form.Control
-                                        type='number'
-                                        name='price'
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="price"
                                         value={formData.price}
                                         onChange={handleInput}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6}>
-                                <Form.Group className='mb-3'>
-                                    <Form.Label className='small fw-bold text-muted'>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
                                         Estoque
-                                    </Form.Label>
-                                    <Form.Control
-                                        type='number'
-                                        name='stock'
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="stock"
                                         value={formData.stock}
                                         onChange={handleInput}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Form.Group className='mb-3'>
-                            <Form.Label className='small fw-bold text-muted'>
-                                Categoria
-                            </Form.Label>
-                            <Form.Select
-                                name='category'
-                                value={formData.category}
-                                onChange={handleInput}
-                            >
-                                <option>Tecnologia</option>
-                                <option>Moda</option>
-                                <option>Casa</option>
-                                <option>Agro</option>
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group className='mb-3'>
-                            <Form.Label className='small fw-bold text-muted'>
-                                Descrição
-                            </Form.Label>
-                            <Form.Control
-                                as='textarea'
-                                rows={3}
-                                name='description'
-                                value={formData.description}
-                                onChange={handleInput}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label className='small fw-bold text-muted'>
-                                URL da Imagem
-                            </Form.Label>
-                            <Form.Control
-                                type='text'
-                                name='image'
-                                value={formData.image}
-                                onChange={handleInput}
-                                placeholder='https://...'
-                            />
-                        </Form.Group>
-                    </Form>
-                    <div className='d-grid mt-4'>
-                        <Button
-                            variant='primary'
-                            className='bg-dubaning-orange border-0'
-                            onClick={handleSave}
-                        >
-                            Salvar Produto
-                        </Button>
+                                </div>
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Categoria
+                                </label>
+                                <select
+                                    name="category"
+                                    value={formData.category}
+                                    onChange={handleInput}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                    <option>Tecnologia</option>
+                                    <option>Moda</option>
+                                    <option>Casa</option>
+                                    <option>Agro</option>
+                                </select>
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Descrição
+                                </label>
+                                <textarea
+                                    rows={3}
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleInput}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    URL da Imagem
+                                </label>
+                                <input
+                                    type="text"
+                                    name="image"
+                                    value={formData.image}
+                                    onChange={handleInput}
+                                    placeholder="https://..."
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                />
+                            </div>
+                            <div className="mt-4">
+                                <button
+                                    className="w-full bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 focus:ring-2 focus:ring-orange-500"
+                                    onClick={handleSave}
+                                >
+                                    Salvar Produto
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </Modal.Body>
-            </Modal>
-        </Container>
+                </div>
+            )}
+        </div>
     );
 }
 

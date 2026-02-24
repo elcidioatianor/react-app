@@ -30,7 +30,7 @@ function DocumentViewer() {
         return <div className='p-5 text-center'>Gerando Documento...</div>;
     if (!order)
         return (
-            <div className='p-5 text-center text-danger'>
+            <div className='p-5 text-center text-red-600'>
                 Pedido não encontrado
             </div>
         );
@@ -39,7 +39,7 @@ function DocumentViewer() {
 
     return (
         <div
-            className='bg-white p-0 p-lg-5 min-vh-100'
+            className='bg-white p-0 lg:p-5 min-h-screen'
             style={{ marginTop: '70px' }}
         >
             <style>{`
@@ -60,14 +60,14 @@ function DocumentViewer() {
                 }
             `}</style>
 
-            <div className='no-print container mb-4'>
-                <div className='d-flex justify-content-between align-items-center bg-light p-3 rounded-3'>
-                    <h5 className='mb-0 fw-bold'>
+            <div className='no-print max-w-7xl mx-auto mb-4'>
+                <div className='flex justify-between items-center bg-gray-100 p-3 rounded-md'>
+                    <h5 className='mb-0 font-bold text-xl'>
                         {type === 'quote'
                             ? 'Visualização de Cotação'
                             : 'Visualização de Factura'}
                     </h5>
-                    <button className='btn btn-primary' onClick={print}>
+                    <button className='bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700' onClick={print}>
                         <i className='bi bi-printer me-2'></i>Imprimir / Salvar
                         PDF
                     </button>
@@ -75,18 +75,18 @@ function DocumentViewer() {
             </div>
 
             <div className='invoice-box bg-white'>
-                <div className='d-flex justify-content-between mb-5'>
+                <div className='flex justify-between mb-5'>
                     <div>
-                        <h1 className='fw-bold text-primary mb-0'>DUBANING</h1>
-                        <small className='text-muted'>
+                        <h1 className='font-bold text-blue-600 mb-0'>DUBANING</h1>
+                        <small className='text-gray-500'>
                             Marketplace Digital de Moçambique
                         </small>
                     </div>
-                    <div className='text-end'>
-                        <h3 className='fw-bold text-uppercase'>
+                    <div className='text-right'>
+                        <h3 className='font-bold uppercase'>
                             {type === 'quote' ? 'Cotação' : 'Factura'}
                         </h3>
-                        <div className='fw-bold'>#{order.id}</div>
+                        <div className='font-bold'>#{order.id}</div>
                         <div>
                             Data:{' '}
                             {new Date(order.createdAt).toLocaleDateString()}
@@ -94,46 +94,46 @@ function DocumentViewer() {
                     </div>
                 </div>
 
-                <div className='row mb-5'>
-                    <div className='col-6'>
-                        <h6 className='fw-bold border-bottom pb-2'>Vendedor</h6>
-                        <div className='fw-bold'>{order.store?.name}</div>
-                        <div className='text-muted small'>
+                <div className='grid grid-cols-1 md:grid-cols-2 mb-5'>
+                    <div>
+                        <h6 className='font-bold border-b pb-2'>Vendedor</h6>
+                        <div className='font-bold'>{order.store?.name}</div>
+                        <div className='text-gray-500 text-sm'>
                             {order.store?.city}, Moçambique
                         </div>
                     </div>
-                    <div className='col-6 text-end'>
-                        <h6 className='fw-bold border-bottom pb-2'>
+                    <div className='text-right'>
+                        <h6 className='font-bold border-b pb-2'>
                             Comprador
                         </h6>
-                        <div className='fw-bold'>{order.customerName}</div>
-                        <div className='text-muted small'>
+                        <div className='font-bold'>{order.customerName}</div>
+                        <div className='text-gray-500 text-sm'>
                             {order.customerPhone}
                         </div>
-                        <div className='text-muted small'>
+                        <div className='text-gray-500 text-sm'>
                             {order.customerAddress}
                         </div>
                     </div>
                 </div>
 
-                <table className='table mt-4'>
-                    <thead className='table-light'>
+                <table className='table w-full mt-4 border-collapse border border-gray-300'>
+                    <thead className='bg-gray-100'>
                         <tr>
-                            <th>Descrição</th>
-                            <th className='text-center'>Qtd</th>
-                            <th className='text-end'>Preço Unit.</th>
-                            <th className='text-end'>Total</th>
+                            <th className='border border-gray-300 px-4 py-2 text-left'>Descrição</th>
+                            <th className='border border-gray-300 px-4 py-2 text-center'>Qtd</th>
+                            <th className='border border-gray-300 px-4 py-2 text-right'>Preço Unit.</th>
+                            <th className='border border-gray-300 px-4 py-2 text-right'>Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         {order.items?.map(item => (
                             <tr key={item.id}>
-                                <td>{item.productName}</td>
-                                <td className='text-center'>{item.quantity}</td>
-                                <td className='text-end'>
+                                <td className='border border-gray-300 px-4 py-2'>{item.productName}</td>
+                                <td className='border border-gray-300 px-4 py-2 text-center'>{item.quantity}</td>
+                                <td className='border border-gray-300 px-4 py-2 text-right'>
                                     {item.price.toLocaleString()} MT
                                 </td>
-                                <td className='text-end'>
+                                <td className='border border-gray-300 px-4 py-2 text-right'>
                                     {(
                                         item.price * item.quantity
                                     ).toLocaleString()}{' '}
@@ -144,34 +144,34 @@ function DocumentViewer() {
                     </tbody>
                 </table>
 
-                <div className='row justify-content-end mt-5'>
-                    <div className='col-md-5'>
-                        <div className='d-flex justify-content-between mb-2'>
+                <div className='flex justify-end mt-5'>
+                    <div className='w-full md:w-2/5'>
+                        <div className='flex justify-between mb-2'>
                             <span>Subtotal:</span>
                             <span>{order.total.toLocaleString()} MT</span>
                         </div>
-                        <div className='d-flex justify-content-between mb-2'>
+                        <div className='flex justify-between mb-2'>
                             <span>Entrega:</span>
                             <span>Grátis</span>
                         </div>
-                        <div className='d-flex justify-content-between border-top pt-2 mt-2 fs-4 fw-bold text-primary'>
+                        <div className='flex justify-between border-t pt-2 mt-2 text-2xl font-bold text-blue-600'>
                             <span>Total:</span>
                             <span>{order.total.toLocaleString()} MT</span>
                         </div>
                     </div>
                 </div>
 
-                <div className='mt-5 pt-5 border-top'>
-                    <h6 className='fw-bold mb-3'>
+                <div className='mt-5 pt-5 border-t'>
+                    <h6 className='font-bold mb-3'>
                         Notas & Informações de Pagamento
                     </h6>
-                    <p className='text-muted small'>
+                    <p className='text-gray-500 text-sm'>
                         Este documento foi gerado automaticamente pelo portal
                         DUBANING. Pagamentos aceites via M-Pesa (84/85), e-Mola
                         (86/87) ou no ato da entrega.
                     </p>
                     <div className='text-center mt-5'>
-                        <small className='text-muted'>
+                        <small className='text-gray-500'>
                             Obrigado por utilizar a DUBANING - O Mercado na sua
                             mão.
                         </small>

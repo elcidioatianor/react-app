@@ -2,17 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { xhr } from '../../services/api';
 //import { useNotification } from '../../hooks/useNotification';
-import {
-    Container,
-    Row,
-    Col,
-    Carousel,
-    Card,
-    Button,
-    Form,
-    InputGroup,
-} from 'react-bootstrap';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Home() {
     //const api = useApi();
@@ -23,11 +12,11 @@ function Home() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [index, setIndex] = useState(0);
-
+    /*
     const handleSelect = selectedIndex => {
         setIndex(selectedIndex);
     };
-
+    */
     const cities = [
         'Maputo',
         'Beira',
@@ -141,7 +130,7 @@ function Home() {
                 const res = await xhr.get('/products');
                 let data = [];
                 try {
-                    data = res.json();
+                    data = await res.json();
                 } catch (e) {
                     console.error('Invalid JSON response', e);
                 }
@@ -194,405 +183,375 @@ function Home() {
     };
     */
     return (
-        <div className='bg-light min-vh-100 font-sans pb-5'>
+        <div className='bg-gray-50 min-h-screen font-sans pb-5'>
             {/* Hero Section */}
-            <div
-                className='position-relative bg-dark'
-                style={{ height: '450px', overflow: 'hidden' }}
-            >
-                <Carousel
-                    activeIndex={index}
-                    onSelect={handleSelect}
-                    fade
-                    controls={false}
-                    indicators={false}
-                    interval={5000}
-                >
-                    <Carousel.Item style={{ height: '450px' }}>
+            <div className='relative bg-gray-900 overflow-hidden' style={{ height: '450px' }}>
+                <div className='relative h-full'>
+                    {/* Carousel Item 1 */}
+                    <div className={`absolute inset-0 transition-opacity duration-500 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}>
                         <img
-                            className='d-block w-100 h-100'
+                            className='w-full h-full object-cover'
                             src='/images/banners/black-friday.png'
                             alt='Black Dubaning'
-                            style={{ objectFit: 'cover' }}
                         />
-                        <Carousel.Caption className='hero-caption text-start text-white'>
-                            <h1 className='display-4 fw-bold mb-2'>
-                                BLACK DUBANING
-                            </h1>
-                            <p className='fs-4 mb-4'>
-                                Descontos de até{' '}
-                                <span className='text-warning fw-bold'>
-                                    70%
-                                </span>{' '}
-                                em Tecnologia e Moda.
-                            </p>
-                            <Button
-                                href='#promocoes'
-                                variant='warning'
-                                size='lg'
-                                className='rounded-pill px-5 fw-bold text-dark'
-                            >
-                                Ver Ofertas
-                            </Button>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item style={{ height: '450px' }}>
+                        <div className='absolute inset-0 bg-black bg-opacity-40 flex items-center'>
+                            <div className='container mx-auto px-4'>
+                                <div className='max-w-lg text-white'>
+                                    <h1 className='text-5xl font-bold mb-4'>
+                                        BLACK DUBANING
+                                    </h1>
+                                    <p className='text-xl mb-6'>
+                                        Descontos de até{' '}
+                                        <span className='text-yellow-400 font-bold'>
+                                            70%
+                                        </span>{' '}
+                                        em Tecnologia e Moda.
+                                    </p>
+                                    <a
+                                        href='#promocoes'
+                                        className='inline-block bg-yellow-400 text-gray-900 px-8 py-3 rounded-full font-bold hover:bg-yellow-300 transition-colors'
+                                    >
+                                        Ver Ofertas
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Carousel Item 2 */}
+                    <div className={`absolute inset-0 transition-opacity duration-500 ${index === 1 ? 'opacity-100' : 'opacity-0'}`}>
                         <img
-                            className='d-block w-100 h-100'
+                            className='w-full h-full object-cover'
                             src='/images/banners/agro.png'
                             alt='Agro Moz'
-                            style={{ objectFit: 'cover' }}
                         />
-                        <Carousel.Caption className='hero-caption text-start text-white'>
-                            <h1 className='display-4 fw-bold mb-2 text-success'>
-                                Fresco do Campo
-                            </h1>
-                            <p className='fs-4 mb-4'>
-                                Diretamente dos produtores para a sua mesa.
-                            </p>
-                            <Button
-                                href='#agro'
-                                variant='success'
-                                size='lg'
-                                className='rounded-pill px-5 fw-bold'
-                            >
-                                Comprar Agora
-                            </Button>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item style={{ height: '450px' }}>
+                        <div className='absolute inset-0 bg-black bg-opacity-40 flex items-center'>
+                            <div className='container mx-auto px-4'>
+                                <div className='max-w-lg text-white'>
+                                    <h1 className='text-5xl font-bold mb-4 text-green-400'>
+                                        Fresco do Campo
+                                    </h1>
+                                    <p className='text-xl mb-6'>
+                                        Diretamente dos produtores para a sua mesa.
+                                    </p>
+                                    <a
+                                        href='#agro'
+                                        className='inline-block bg-green-500 text-white px-8 py-3 rounded-full font-bold hover:bg-green-400 transition-colors'
+                                    >
+                                        Comprar Agora
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Carousel Item 3 */}
+                    <div className={`absolute inset-0 transition-opacity duration-500 ${index === 2 ? 'opacity-100' : 'opacity-0'}`}>
                         <img
-                            className='d-block w-100 h-100'
+                            className='w-full h-full object-cover'
                             src='/images/banners/tech.png'
                             alt='Tech Promo'
-                            style={{ objectFit: 'cover' }}
                         />
-                        <Carousel.Caption className='hero-caption text-start text-white'>
-                            <h1 className='display-4 fw-bold mb-2 text-info'>
-                                Tecnologia de Ponta
-                            </h1>
-                            <p className='fs-4 mb-4'>
-                                Os últimos lançamentos em um só lugar.
-                            </p>
-                            <Button
-                                href='#tech'
-                                variant='primary'
-                                size='lg'
-                                className='rounded-pill px-5 fw-bold'
-                            >
-                                Explorar
-                            </Button>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                </Carousel>
+                        <div className='absolute inset-0 bg-black bg-opacity-40 flex items-center'>
+                            <div className='container mx-auto px-4'>
+                                <div className='max-w-lg text-white'>
+                                    <h1 className='text-5xl font-bold mb-4 text-blue-400'>
+                                        Tecnologia de Ponta
+                                    </h1>
+                                    <p className='text-xl mb-6'>
+                                        Os últimos lançamentos em um só lugar.
+                                    </p>
+                                    <a
+                                        href='#tech'
+                                        className='inline-block bg-blue-500 text-white px-8 py-3 rounded-full font-bold hover:bg-blue-400 transition-colors'
+                                    >
+                                        Explorar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Carousel Controls */}
+                <button
+                    className='absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all'
+                    onClick={() => setIndex(index === 0 ? 2 : index - 1)}
+                >
+                    <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 19l-7-7 7-7' />
+                    </svg>
+                </button>
+                <button
+                    className='absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all'
+                    onClick={() => setIndex(index === 2 ? 0 : index + 1)}
+                >
+                    <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
+                    </svg>
+                </button>
+
+                {/* Carousel Indicators */}
+                <div className='absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2'>
+                    {[0, 1, 2].map((slideIndex) => (
+                        <button
+                            key={slideIndex}
+                            className={`w-3 h-3 rounded-full transition-all ${
+                                index === slideIndex ? 'bg-white' : 'bg-white bg-opacity-50'
+                            }`}
+                            onClick={() => setIndex(slideIndex)}
+                        />
+                    ))}
+                </div>
 
                 {/* Overlaid Search Bar */}
-                <Container
-                    className='position-absolute top-0 start-50 translate-middle-x mt-4'
-                    style={{ zIndex: 10 }}
-                >
-                    <Card
-                        className='border-0 shadow-lg'
-                        style={{
-                            background: 'rgba(255,255,255,0.95)',
-                            backdropFilter: 'blur(10px)',
-                        }}
-                    >
-                        <Card.Body className='p-2'>
-                            <Form onSubmit={handleSearch}>
-                                <InputGroup>
-                                    <InputGroup.Text className='bg-transparent border-0'>
-                                        <i className='bi bi-search'></i>
-                                    </InputGroup.Text>
-                                    <Form.Control
-                                        type='text'
-                                        placeholder='O que você procura?'
-                                        className='border-0 bg-transparent shadow-none'
-                                        value={searchQuery}
-                                        onChange={e =>
-                                            setSearchQuery(e.target.value)
-                                        }
-                                    />
-                                    <Form.Select
-                                        className='border-0 bg-transparent shadow-none d-none d-md-block'
-                                        style={{
-                                            maxWidth: '200px',
-                                            borderLeft: '1px solid #dee2e6',
-                                        }}
-                                        value={selectedCity}
-                                        onChange={e =>
-                                            setSelectedCity(e.target.value)
-                                        }
-                                    >
-                                        <option value=''>
-                                            📍 Todas cidades
-                                        </option>
-                                        {cities.map(city => (
-                                            <option key={city} value={city}>
-                                                {city}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
-                                    <Button
-                                        variant='warning'
-                                        type='submit'
-                                        className='px-4 fw-bold text-dark rounded-end'
-                                    >
-                                        Buscar
-                                    </Button>
-                                </InputGroup>
-                            </Form>
-                        </Card.Body>
-                    </Card>
-                </Container>
+                <div className='absolute top-4 left-1/2 transform -translate-x-1/2 z-10 w-full max-w-4xl px-4'>
+                    <div className='bg-white bg-opacity-95 backdrop-blur-md rounded-lg shadow-lg p-2'>
+                        <form onSubmit={handleSearch} className='flex items-center'>
+                            <div className='flex items-center px-3'>
+                                <svg className='w-5 h-5 text-gray-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' />
+                                </svg>
+                            </div>
+                            <input
+                                type='text'
+                                placeholder='O que você procura?'
+                                className='flex-1 bg-transparent border-0 outline-none px-2'
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                            />
+                            <select
+                                className='hidden md:block bg-transparent border-0 border-l border-gray-300 outline-none px-3 max-w-xs'
+                                value={selectedCity}
+                                onChange={e => setSelectedCity(e.target.value)}
+                            >
+                                <option value=''>📍 Todas cidades</option>
+                                {cities.map(city => (
+                                    <option key={city} value={city}>
+                                        {city}
+                                    </option>
+                                ))}
+                            </select>
+                            <button
+                                type='submit'
+                                className='bg-yellow-400 text-gray-900 px-6 py-2 rounded-r-lg font-bold hover:bg-yellow-300 transition-colors'
+                            >
+                                Buscar
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
 
             {/* Campaign Banner Strip */}
-            <div className='bg-dark text-white py-2 shadow-sm mb-5'>
-                <Container className='d-flex justify-content-between align-items-center'>
-                    <div className='d-flex align-items-center gap-3'>
-                        <span className='badge bg-danger rounded-pill px-3 py-2'>
-                            🔥 BLACK DUBANING
-                        </span>
-                        <span className='d-none d-md-inline'>
-                            Até 70% de desconto em milhares de produtos!
-                        </span>
+            <div className='bg-gray-900 text-white py-2 shadow-sm mb-5'>
+                <div className='container mx-auto px-4'>
+                    <div className='flex justify-between items-center'>
+                        <div className='flex items-center gap-3'>
+                            <span className='bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium'>
+                                🔥 BLACK DUBANING
+                            </span>
+                            <span className='hidden md:inline'>
+                                Até 70% de desconto em milhares de produtos!
+                            </span>
+                        </div>
+                        <Link
+                            to='/search?promo=black'
+                            className='text-yellow-400 font-bold hover:text-yellow-300 transition-colors'
+                        >
+                            Ver ofertas →
+                        </Link>
                     </div>
-                    <Link
-                        to='/search?promo=black'
-                        className='text-warning fw-bold text-decoration-none'
-                    >
-                        Ver ofertas <i className='bi bi-arrow-right'></i>
-                    </Link>
-                </Container>
+                </div>
             </div>
 
-            <Container className='py-2'>
+            <div className='container mx-auto px-4 py-2'>
                 {/* Categories */}
                 <div className='mb-5'>
-                    <h2 className='fw-bold mb-4'>Explorar categorias</h2>
-                    <Row xs={2} sm={4} lg={8} className='g-3'>
+                    <h2 className='font-bold text-2xl mb-4'>Explorar categorias</h2>
+                    <div className='grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3'>
                         {categories.map(cat => (
-                            <Col key={cat.name}>
-                                <Link
-                                    to={`/search?category=${cat.name.toLowerCase()}`}
-                                    className='text-decoration-none text-dark d-block text-center hover-lift p-3 rounded-4 bg-white border'
+                            <Link
+                                key={cat.name}
+                                to={`/search?category=${cat.name.toLowerCase()}`}
+                                className='text-decoration-none text-dark block text-center hover:transform hover:scale-105 transition-transform p-3 rounded-lg bg-white border border-gray-200 hover:shadow-md'
+                            >
+                                <div
+                                    className='w-12 h-12 rounded-full flex items-center justify-center text-xl mx-auto mb-2'
+                                    style={{ background: cat.color }}
                                 >
-                                    <div
-                                        className='category-circle'
-                                        style={{ background: cat.color }}
-                                    >
-                                        {cat.emoji}
-                                    </div>
-                                    <span className='fw-semibold small'>
-                                        {cat.name}
-                                    </span>
-                                </Link>
-                            </Col>
+                                    {cat.emoji}
+                                </div>
+                                <span className='font-semibold text-sm'>
+                                    {cat.name}
+                                </span>
+                            </Link>
                         ))}
-                    </Row>
+                    </div>
                 </div>
 
                 {/* Daily Highlights */}
-                <div className='mb-5 bg-white p-4 rounded-4 shadow-sm border'>
-                    <div className='d-flex justify-content-between align-items-center mb-4'>
-                        <div className='d-flex align-items-center gap-3'>
-                            <h2 className='fw-bold m-0 text-dark'>
+                <div className='mb-5 bg-white p-4 rounded-lg shadow-sm border border-gray-200'>
+                    <div className='flex justify-between items-center mb-4'>
+                        <div className='flex items-center gap-3'>
+                            <h2 className='font-bold text-xl m-0 text-gray-900'>
                                 ⚡ Destaques do dia
                             </h2>
-                            <span className='badge bg-danger-subtle text-danger border border-danger p-2 rounded-pill'>
+                            <span className='bg-red-100 text-red-600 border border-red-300 px-3 py-1 rounded-full text-sm'>
                                 ⏰ Termina em 05:22:15
                             </span>
                         </div>
                         <Link
                             to='/search?highlight=true'
-                            className='text-warning fw-bold text-decoration-none'
+                            className='text-yellow-600 font-bold hover:text-yellow-500 transition-colors'
                         >
-                            Ver todos <i className='bi bi-arrow-right'></i>
+                            Ver todos →
                         </Link>
                     </div>
 
-                    <Row className='flex-nowrap overflow-auto scrollbar-hide g-4 pb-2'>
+                    <div className='flex overflow-x-auto scrollbar-hide gap-4 pb-2'>
                         {products.length === 0 && !loading && (
-                            <Col
-                                xs={12}
-                                className='text-center py-5 text-muted'
-                            >
-                                <i className='bi bi-box-seam fs-1 mb-2'></i>
+                            <div className='flex-shrink-0 w-full text-center py-5 text-gray-500'>
+                                <svg className='w-12 h-12 mx-auto mb-2 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4' />
+                                </svg>
                                 <p>Carregando produtos...</p>
-                            </Col>
+                            </div>
                         )}
                         {products.map(product => (
-                            <Col
-                                xs={6}
-                                md={3}
-                                lg={2}
+                            <div
                                 key={product.id}
-                                style={{ minWidth: '200px' }}
+                                className='flex-shrink-0 w-48'
                             >
-                                <Card className='h-100 border-0 shadow-sm hover-lift overflow-hidden rounded-4'>
-                                    <div
-                                        className='position-relative'
-                                        style={{ height: '200px' }}
-                                    >
-                                        <Card.Img
-                                            variant='top'
+                                <div className='bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-200'>
+                                    <div className='relative h-48'>
+                                        <img
+                                            className='w-full h-full object-cover'
                                             src={
                                                 product.images?.[0] ||
                                                 'https://via.placeholder.com/300x300?text=No+Image'
                                             }
-                                            style={{
-                                                height: '100%',
-                                                objectFit: 'cover',
-                                            }}
+                                            alt={product.name}
                                         />
                                         {product.discount > 0 && (
-                                            <span className='position-absolute top-0 start-0 m-2 badge bg-danger rounded-pill'>
-                                                -
-                                                {Math.round(
-                                                    (product.discount /
-                                                        product.price) *
-                                                        100
-                                                )}
-                                                %
+                                            <span className='absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium'>
+                                                -{Math.round((product.discount / product.price) * 100)}%
                                             </span>
                                         )}
                                     </div>
-                                    <Card.Body className='p-3'>
-                                        <small
-                                            className='text-muted text-uppercase'
-                                            style={{ fontSize: '0.75rem' }}
-                                        >
+                                    <div className='p-3'>
+                                        <small className='text-gray-500 uppercase text-xs'>
                                             {product.category || 'Geral'}
                                         </small>
-                                        <Card.Title
-                                            className='fs-6 fw-bold text-dark text-truncate mb-2'
-                                            title={product.name}
-                                        >
+                                        <h3 className='text-sm font-bold text-gray-900 truncate mb-2' title={product.name}>
                                             {product.name}
-                                        </Card.Title>
-                                        <div className='d-flex align-items-baseline gap-2'>
-                                            <span className='text-danger fw-bold fs-5'>
-                                                {(
-                                                    product.price -
-                                                    (product.discount || 0)
-                                                ).toLocaleString()}{' '}
-                                                MT
+                                        </h3>
+                                        <div className='flex items-baseline gap-2'>
+                                            <span className='text-red-600 font-bold text-lg'>
+                                                {(product.price - (product.discount || 0)).toLocaleString()} MT
                                             </span>
                                             {product.discount > 0 && (
-                                                <small
-                                                    className='text-muted text-decoration-line-through'
-                                                    style={{
-                                                        fontSize: '0.8rem',
-                                                    }}
-                                                >
-                                                    {product.price.toLocaleString()}{' '}
-                                                    MT
+                                                <small className='text-gray-500 line-through text-sm'>
+                                                    {product.price.toLocaleString()} MT
                                                 </small>
                                             )}
                                         </div>
-                                    </Card.Body>
+                                    </div>
                                     <Link
                                         to={`/product/${product.id}`}
-                                        className='stretched-link'
+                                        className='absolute inset-0'
                                     ></Link>
-                                </Card>
-                            </Col>
+                                </div>
+                            </div>
                         ))}
-                    </Row>
+                    </div>
                 </div>
 
                 {/* Featured Stores */}
                 <div className='mb-5'>
-                    <div className='d-flex justify-content-between align-items-center mb-4'>
-                        <h2 className='fw-bold mb-0'>🏪 Lojas em destaque</h2>
+                    <div className='flex justify-between items-center mb-4'>
+                        <h2 className='font-bold text-xl'>🏪 Lojas em destaque</h2>
                         <Link
                             to='/stores'
-                            className='text-warning fw-bold text-decoration-none'
+                            className='text-yellow-600 font-bold hover:text-yellow-500 transition-colors'
                         >
-                            Ver todas <i className='bi bi-arrow-right'></i>
+                            Ver todas →
                         </Link>
                     </div>
-                    <Row xs={2} md={3} lg={5} className='g-3'>
+                    <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3'>
                         {featuredStores.map(store => (
-                            <Col key={store.id}>
-                                <Card className='h-100 text-center border-0 shadow-sm hover-lift rounded-4 p-3'>
-                                    <div
-                                        className='category-circle bg-warning bg-gradient mx-auto mb-3'
-                                        style={{
-                                            width: '64px',
-                                            height: '64px',
-                                            fontSize: '2rem',
-                                        }}
-                                    >
+                            <div key={store.id} className='relative'>
+                                <div className='bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 text-center border border-gray-200'>
+                                    <div className='w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center text-2xl mx-auto mb-3'>
                                         {store.emoji}
                                     </div>
-                                    <h6 className='fw-bold mb-1'>
+                                    <h6 className='font-bold mb-1'>
                                         {store.name}
                                     </h6>
-                                    <div className='text-warning mb-2 small'>
-                                        <i className='bi bi-star-fill me-1'></i>
+                                    <div className='text-yellow-500 mb-2 text-sm flex items-center justify-center'>
+                                        <svg className='w-4 h-4 mr-1' fill='currentColor' viewBox='0 0 20 20'>
+                                            <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                        </svg>
                                         {store.rating}
                                         {store.verified && (
-                                            <i
-                                                className='bi bi-patch-check-fill text-primary ms-1'
+                                            <svg
+                                                className='w-4 h-4 ml-1 text-blue-500'
+                                                fill='currentColor'
+                                                viewBox='0 0 20 20'
                                                 title='Verificado'
-                                            ></i>
+                                            >
+                                                <path fillRule='evenodd' d='M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z' clipRule='evenodd' />
+                                            </svg>
                                         )}
                                     </div>
-                                    <small className='text-muted'>
+                                    <small className='text-gray-500'>
                                         {store.products} produtos
                                     </small>
-                                    {/* Make card clickable */}
-                                    <Link
-                                        to={`/store/${store.id}`}
-                                        className='stretched-link'
-                                    ></Link>
-                                </Card>
-                            </Col>
+                                </div>
+                                <Link
+                                    to={`/store/${store.id}`}
+                                    className='absolute inset-0'
+                                ></Link>
+                            </div>
                         ))}
-                    </Row>
+                    </div>
                 </div>
 
                 {/* Seller CTA Banner */}
-                <Card className='border-0 shadow-lg rounded-4 overflow-hidden mb-5 text-white bg-gradient-primary'>
-                    <div className='position-absolute w-100 h-100 opacity-25 pattern-bg'></div>
-                    <Card.Body className='p-5 position-relative d-md-flex justify-content-between align-items-center'>
-                        <div>
-                            <h2 className='fw-bold display-6 mb-2'>
+                <div className='bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg overflow-hidden mb-5 text-white shadow-lg relative'>
+                    <div className='absolute inset-0 bg-black bg-opacity-20'></div>
+                    <div className='relative p-6 md:flex md:justify-between md:items-center'>
+                        <div className='mb-4 md:mb-0'>
+                            <h2 className='font-bold text-3xl mb-2'>
                                 Tem algo para vender?
                             </h2>
-                            <p className='fs-5 opacity-75 mb-4 md-mb-0'>
-                                Registe-se gratuitamente e comece a vender para
-                                milhares de clientes.
+                            <p className='text-xl opacity-90 mb-4 md:mb-0'>
+                                Registe-se gratuitamente e comece a vender para milhares de clientes.
                             </p>
                         </div>
-                        <Button
-                            as={Link}
+                        <Link
                             to='/seller/onboarding'
-                            variant='light'
-                            size='lg'
-                            className='rounded-pill px-5 fw-bold text-warning shadow'
+                            className='inline-block bg-white text-yellow-600 px-6 py-3 rounded-full font-bold shadow-lg hover:bg-gray-100 transition-colors'
                         >
                             Criar Minha Loja Grátis
-                        </Button>
-                    </Card.Body>
-                </Card>
-            </Container>
+                        </Link>
+                    </div>
+                </div>
+            </div>
 
             {/* Footer */}
-            <footer className='bg-dark text-secondary py-5 mt-auto'>
-                <Container>
-                    <Row className='g-4'>
-                        <Col md={3}>
-                            <h5 className='text-white fw-bold mb-3'>
+            <footer className='bg-gray-900 text-gray-400 py-5 mt-auto'>
+                <div className='container mx-auto px-4'>
+                    <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
+                        <div>
+                            <h5 className='text-white font-bold mb-3'>
                                 🧭 DUBANING
                             </h5>
-                            <ul className='list-unstyled'>
+                            <ul className='list-none space-y-2'>
                                 <li>
                                     <Link
                                         to='/about'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Sobre a DUBANING
                                     </Link>
@@ -600,7 +559,7 @@ function Home() {
                                 <li>
                                     <Link
                                         to='/how-it-works'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Como funciona
                                     </Link>
@@ -608,7 +567,7 @@ function Home() {
                                 <li>
                                     <Link
                                         to='/terms'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Termos & Condições
                                     </Link>
@@ -616,22 +575,22 @@ function Home() {
                                 <li>
                                     <Link
                                         to='/privacy'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Política de Privacidade
                                     </Link>
                                 </li>
                             </ul>
-                        </Col>
-                        <Col md={3}>
-                            <h5 className='text-white fw-bold mb-3'>
+                        </div>
+                        <div>
+                            <h5 className='text-white font-bold mb-3'>
                                 🛍️ Compradores
                             </h5>
-                            <ul className='list-unstyled'>
+                            <ul className='list-none space-y-2'>
                                 <li>
                                     <Link
                                         to='/help'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Como comprar
                                     </Link>
@@ -639,7 +598,7 @@ function Home() {
                                 <li>
                                     <Link
                                         to='/help'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Pagamentos
                                     </Link>
@@ -647,22 +606,22 @@ function Home() {
                                 <li>
                                     <Link
                                         to='/help'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Entregas
                                     </Link>
                                 </li>
                             </ul>
-                        </Col>
-                        <Col md={3}>
-                            <h5 className='text-white fw-bold mb-3'>
+                        </div>
+                        <div>
+                            <h5 className='text-white font-bold mb-3'>
                                 🏪 Vendedores
                             </h5>
-                            <ul className='list-unstyled'>
+                            <ul className='list-none space-y-2'>
                                 <li>
                                     <Link
                                         to='/seller/onboarding'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Vender na DUBANING
                                     </Link>
@@ -670,7 +629,7 @@ function Home() {
                                 <li>
                                     <Link
                                         to='/seller/login'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Login Vendedor
                                     </Link>
@@ -678,22 +637,22 @@ function Home() {
                                 <li>
                                     <Link
                                         to='/fees'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Comissões
                                     </Link>
                                 </li>
                             </ul>
-                        </Col>
-                        <Col md={3}>
-                            <h5 className='text-white fw-bold mb-3'>
+                        </div>
+                        <div>
+                            <h5 className='text-white font-bold mb-3'>
                                 📞 Suporte
                             </h5>
-                            <ul className='list-unstyled'>
+                            <ul className='list-none space-y-2'>
                                 <li>
                                     <Link
                                         to='/help'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Central de ajuda
                                     </Link>
@@ -701,26 +660,26 @@ function Home() {
                                 <li>
                                     <Link
                                         to='/contact'
-                                        className='text-secondary text-decoration-none hover-white'
+                                        className='text-gray-400 hover:text-white transition-colors'
                                     >
                                         Contacto
                                     </Link>
                                 </li>
                             </ul>
-                        </Col>
-                    </Row>
-                    <hr className='border-secondary my-4' />
-                    <div className='d-flex flex-column flex-md-row justify-content-between align-items-center'>
+                        </div>
+                    </div>
+                    <hr className='border-gray-600 my-6' />
+                    <div className='flex flex-col md:flex-row justify-between items-center'>
                         <small>
                             © 2026 DUBANING. Todos os direitos reservados.
                         </small>
-                        <div className='d-flex gap-2 mt-3 mt-md-0'>
-                            <span className='badge bg-secondary'>M-Pesa</span>
-                            <span className='badge bg-secondary'>e-Mola</span>
-                            <span className='badge bg-secondary'>mKesh</span>
+                        <div className='flex gap-2 mt-3 md:mt-0'>
+                            <span className='bg-gray-600 text-white px-3 py-1 rounded text-sm'>M-Pesa</span>
+                            <span className='bg-gray-600 text-white px-3 py-1 rounded text-sm'>e-Mola</span>
+                            <span className='bg-gray-600 text-white px-3 py-1 rounded text-sm'>mKesh</span>
                         </div>
                     </div>
-                </Container>
+                </div>
             </footer>
         </div>
     );

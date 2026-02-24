@@ -56,23 +56,23 @@ function ForgotPassword() {
 
     if (submitted) {
         return (
-            <div className='vh-100 d-flex align-items-center justify-content-center' style={{ backgroundColor: '#f8f9fa' }}>
-                <div className='w-100' style={{ maxWidth: '400px' }}>
-                    <div className='bg-white shadow-sm rounded-4 p-5'>
+            <div className='min-h-screen flex items-center justify-center' style={{ backgroundColor: '#f8f9fa' }}>
+                <div className='w-full' style={{ maxWidth: '400px' }}>
+                    <div className='bg-white shadow-md rounded-lg p-20'>
                         <div className='text-center'>
-                            <h2 className='fw-bold mb-3' style={{ fontSize: '1.5rem' }}>
+                            <h2 className='font-bold mb-3' style={{ fontSize: '1.5rem' }}>
                                 Email Enviado
                             </h2>
-                            <p className='text-muted mb-4'>
+                            <p className='text-gray-500 mb-16'>
                                 Verifique seu email para obter instruções sobre como
                                 redefinir sua senha.
                             </p>
-                            <p className='text-muted small mb-4'>
+                            <p className='text-gray-500 text-sm mb-16'>
                                 O link de redefinição expira em 1 hora.
                             </p>
                             <Link
                                 to='/login'
-                                className='btn btn-primary'
+                                className='inline-block bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors'
                                 style={{ backgroundColor: '#FF6000', borderColor: '#FF6000' }}
                             >
                                 Voltar ao Login
@@ -85,16 +85,16 @@ function ForgotPassword() {
     }
 
     return (
-        <div className='vh-100 d-flex align-items-center justify-content-center' style={{ backgroundColor: '#f8f9fa' }}>
-            <div className='w-100' style={{ maxWidth: '400px' }}>
-                <div className='bg-white shadow-sm rounded-4 p-5'>
-                    <h2 className='fw-bold mb-4' style={{ fontSize: '1.5rem' }}>
+        <div className='min-h-screen flex items-center justify-center' style={{ backgroundColor: '#f8f9fa' }}>
+            <div className='w-full' style={{ maxWidth: '400px' }}>
+                <div className='bg-white shadow-md rounded-lg p-20'>
+                    <h2 className='font-bold mb-16' style={{ fontSize: '1.5rem' }}>
                         Recuperar Palavra-Passe
                     </h2>
 
                     <form onSubmit={handleSubmit} className=''>
-                        <div className='mb-4'>
-                            <label className='form-label fw-semibold small text-muted'>
+                        <div className='mb-16'>
+                            <label className='block font-semibold text-sm text-gray-600 mb-2'>
                                 Email ou Telefone
                             </label>
                             <input
@@ -102,10 +102,10 @@ function ForgotPassword() {
                                 value={input}
                                 onChange={handleInputChange}
                                 placeholder='Insira seu email ou número de telefone'
-                                className='form-control form-control-lg bg-light'
+                                className='w-full px-4 py-3 bg-gray-100 border-2 border-gray-200 rounded-lg text-lg focus:outline-none focus:border-blue-500'
                                 disabled={isSubmitting}
                             />
-                            <p className='mt-2 text-muted small'>
+                            <p className='mt-2 text-gray-500 text-sm'>
                                 {inputType === 'email'
                                     ? '📧 Email detectado'
                                     : '📱 Telefone detectado'}
@@ -115,7 +115,7 @@ function ForgotPassword() {
                         <button
                             type='submit'
                             disabled={isSubmitting || !input}
-                            className='btn btn-lg w-100 fw-bold'
+                            className='w-full py-3 px-6 font-bold text-black rounded-lg'
                             style={{
                                 backgroundColor: '#FFD814',
                                 color: '#0F1111',
@@ -126,12 +126,12 @@ function ForgotPassword() {
                         </button>
                     </form>
 
-                    <div className='mt-4 text-center'>
-                        <p className='text-muted small'>
+                    <div className='mt-16 text-center'>
+                        <p className='text-gray-500 text-sm'>
                             Voltou à memória?{' '}
                             <Link
                                 to='/login'
-                                className='text-decoration-none fw-semibold'
+                                className='no-underline font-semibold'
                                 style={{ color: '#FF6000' }}
                             >
                                 Fazer Login
