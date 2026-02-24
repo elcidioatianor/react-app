@@ -86,16 +86,16 @@ function SellerDashboard() {
     };
 
     const StatCard = ({ title, value, icon, color, trend }) => (
-        <div className='bg-white rounded-lg shadow-sm h-full'>
-            <div className='p-6 flex items-center justify-between'>
-                <div>
-                    <h6 className='text-gray-500 text-sm uppercase font-bold mb-1'>
+        <div className='bg-white rounded-lg shadow-sm h-full border border-gray-100 hover:shadow-md transition-shadow'>
+            <div className='p-8 flex items-center justify-between'>
+                <div className='flex-1'>
+                    <h6 className='text-gray-600 text-xs uppercase font-bold mb-2 tracking-wide'>
                         {title}
                     </h6>
-                    <h3 className='mb-0 font-bold'>{value}</h3>
+                    <h3 className='mb-0 font-bold text-2xl text-gray-900'>{value}</h3>
                     {trend && (
                         <small
-                            className={`flex items-center mt-2 ${trend > 0 ? 'text-green-600' : 'text-red-600'}`}
+                            className={`flex items-center mt-3 text-sm font-semibold ${trend > 0 ? 'text-green-600' : 'text-red-600'}`}
                         >
                             {trend > 0 ? (
                                 <ArrowUpRight className='me-1' />
@@ -107,7 +107,7 @@ function SellerDashboard() {
                     )}
                 </div>
                 <div
-                    className={`p-3 rounded-full bg-${color}-100 text-${color}-600`}
+                    className={`p-4 rounded-full bg-${color}-100 text-${color}-600 ml-4`}
                 >
                     {icon}
                 </div>
@@ -116,14 +116,14 @@ function SellerDashboard() {
     );
 
     return (
-        <div className='px-4 py-8 max-w-7xl mx-auto'>
+        <div className='px-6 py-8 md:px-8 max-w-7xl mx-auto'>
             {/* Stats Grid */}
-            <div className='grid grid-cols-1 md:grid-cols-4 gap-6 mb-8'>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12'>
                 <div>
                     <StatCard
                         title='Vendas Totais'
                         value={`${stats.revenue.toLocaleString()} MT`}
-                        icon={<CurrencyDollar size={24} />}
+                        icon={<CurrencyDollar size={28} />}
                         color='success'
                         trend={12.5}
                     />
@@ -132,7 +132,7 @@ function SellerDashboard() {
                     <StatCard
                         title='Pedidos'
                         value={stats.orders}
-                        icon={<CartFill size={24} />}
+                        icon={<CartFill size={28} />}
                         color='primary'
                         trend={5.2}
                     />
@@ -141,7 +141,7 @@ function SellerDashboard() {
                     <StatCard
                         title='Produtos Ativos'
                         value={stats.products}
-                        icon={<BoxSeam size={24} />}
+                        icon={<BoxSeam size={28} />}
                         color='warning'
                         trend={-2.1}
                     />
@@ -150,7 +150,7 @@ function SellerDashboard() {
                     <StatCard
                         title='Visitas da Loja'
                         value={stats.views}
-                        icon={<PeopleFill size={24} />}
+                        icon={<PeopleFill size={28} />}
                         color='info'
                         trend={8.4}
                     />
@@ -158,9 +158,9 @@ function SellerDashboard() {
             </div>
 
             {/* Recent Orders Section */}
-            <div className='bg-white border border-gray-200 rounded-lg shadow'>
-                <div className='bg-white border-b border-gray-200 p-6 flex justify-between items-center'>
-                    <h5 className='mb-0 font-bold text-lg'>Pedidos Recentes</h5>
+            <div className='bg-white border border-gray-200 rounded-lg shadow-sm'>
+                <div className='bg-white border-b border-gray-200 px-8 py-6 flex justify-between items-center'>
+                    <h5 className='mb-0 font-bold text-lg text-gray-900'>Pedidos Recentes</h5>
                     <Link
                         to='/seller/orders'
                         className='border border-blue-600 text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-full font-bold text-sm transition-colors'
@@ -168,49 +168,47 @@ function SellerDashboard() {
                         Ver Todos
                     </Link>
                 </div>
-                <div className='p-0'>
-                    <div className='overflow-x-auto'>
-                        <table className='w-full'>
-                            <thead className='bg-gray-50'>
-                                <tr>
-                                    <th className='border-0 pl-6'>ID</th>
-                                    <th className='border-0'>Cliente</th>
-                                    <th className='border-0'>Data</th>
-                                    <th className='border-0'>Total</th>
-                                    <th className='border-0'>Status</th>
-                                    <th className='border-0 text-right pr-6'>
-                                        Ação
-                                    </th>
+                <div className='overflow-x-auto'>
+                    <table className='w-full'>
+                        <thead className='bg-gray-50 border-t border-b border-gray-200'>
+                            <tr>
+                                <th className='border-0 pl-8 text-left py-4 font-bold text-gray-700 text-sm'>ID</th>
+                                <th className='border-0 text-left py-4 font-bold text-gray-700 text-sm'>Cliente</th>
+                                <th className='border-0 text-left py-4 font-bold text-gray-700 text-sm'>Data</th>
+                                <th className='border-0 text-left py-4 font-bold text-gray-700 text-sm'>Total</th>
+                                <th className='border-0 text-left py-4 font-bold text-gray-700 text-sm'>Status</th>
+                                <th className='border-0 text-right pr-8 py-4 font-bold text-gray-700 text-sm'>
+                                    Ação
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {recentOrders.map((order, idx) => (
+                                <tr key={order.id} className={idx !== recentOrders.length - 1 ? 'border-b border-gray-100' : ''}>
+                                    <td className='pl-8 py-4 font-bold text-blue-600 text-sm'>
+                                        #{order.id}
+                                    </td>
+                                    <td className='py-4 text-gray-800 text-sm'>{order.customer}</td>
+                                    <td className='py-4 text-gray-600 text-sm'>{order.date}</td>
+                                    <td className='py-4 font-bold text-gray-900 text-sm'>
+                                        {order.total.toLocaleString()} MT
+                                    </td>
+                                    <td className='py-4'>
+                                        <StatusBadge
+                                            status={order.status}
+                                        />
+                                    </td>
+                                    <td className='text-right pr-8 py-4'>
+                                        <button
+                                            className='bg-gray-100 hover:bg-gray-200 p-2 rounded-full text-sm transition-colors text-gray-600'
+                                        >
+                                            <i className='bi bi-three-dots-vertical'></i>
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {recentOrders.map(order => (
-                                    <tr key={order.id}>
-                                        <td className='pl-6 font-bold text-blue-600'>
-                                            #{order.id}
-                                        </td>
-                                        <td>{order.customer}</td>
-                                        <td>{order.date}</td>
-                                        <td>
-                                            {order.total.toLocaleString()} MT
-                                        </td>
-                                        <td>
-                                            <StatusBadge
-                                                status={order.status}
-                                            />
-                                        </td>
-                                        <td className='text-right pr-6'>
-                                            <button
-                                                className='bg-gray-100 hover:bg-gray-200 p-2 rounded-full text-sm transition-colors'
-                                            >
-                                                <i className='bi bi-three-dots-vertical'></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

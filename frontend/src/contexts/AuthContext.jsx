@@ -19,7 +19,7 @@ function AuthProvider({ children }) {
             const checkAuthentication = async () => {
                 try {
                     const res = await xhr.post('/auth/profile', {});
-                    const user = res.json();
+                    const user = await res.json();
         
                     if (user) {
                         setUser(user);
@@ -44,7 +44,7 @@ function AuthProvider({ children }) {
     const register = async formData => {
         try {
             const res = await xhr.post('/auth/register', formData);
-            const { user: userData, accessToken } = res.json();
+            const { user: userData, accessToken } = await res.json();
 
             // Validar dados obrigatórios
             if (!userData || !accessToken) {
@@ -54,8 +54,6 @@ function AuthProvider({ children }) {
             //setError(null)
             return { done: true };
         } catch (err) {
-            console.error(err);
-            //setError(err.message)
             setAuthenticated(false);
             return { done: false, error: err.message };
         }
@@ -64,28 +62,14 @@ function AuthProvider({ children }) {
     //LOGIN
     const login = async credentials => {
         try {
-            console.log('=== LOGIN FUNCTION ===');
-            console.log('Credentials being sent:', { phoneNumber: credentials.phoneNumber.substring(0, 5) + '...', password: '***' });
-            
             const res = await xhr.post('/auth/login', credentials);
-            console.log('Login response received:', res);
-            console.log('Login response status:', res.status);
-            
-            const responseData = res.json();
-            console.log('Login response data:', responseData);
+            const responseData = await res.json();
             const { user: userData } = responseData;
-            
-            console.log('User data from login:', userData);
 
             setUser(userData);
             setAuthenticated(true);
-            //setError(null);
             return { done: true, user: userData };
         } catch (err) {
-            console.error('Login error:', err);
-            console.error('Error message:', err.message);
-            //setError(err.message);
-            //setAuthenticated(false);
             return { done: false, error: err.message };
         }
     };

@@ -26,50 +26,30 @@ xhr.defaultOptions.timeout = 30000; // 30 segundos
 
 // Adicionar token automaticamente à requisição
 xhr.transformRequest(async config => {
-    console.log('=== REQUEST INTERCEPTOR ===');
-    console.log('URL:', config.url);
-    console.log('Current accessToken:', accessToken ? accessToken.substring(0, 20) + '...' : 'null');
-    
     const csrfCookie = document.cookie
         .split('; ')
         .find(cookie => cookie.startsWith('csrfToken='));
 
     if (csrfCookie) {
         config.headers['X-CSRF-Token'] = csrfCookie.split('=')[1];
-        console.log('CSRF Token set');
     }
     if (accessToken) {
         config.headers = config.headers || {};
         config.headers['Authorization'] = `Bearer ${accessToken}`;
-        console.log('Authorization header set');
-    } else {
-        console.warn('XHR: Enviando requisição sem token de acesso');
     }
-    console.log('Request headers:', Object.keys(config.headers));
     return config;
 });
 
 xhr.transformResponse(async res => {
-    //TODO: Add next()
-    console.log('=== RESPONSE INTERCEPTOR ===');
-    console.log('Response status:', res.status);
-    console.log('Response URL:', res.url);
-    
     try {
-        const jsonData = res.json();
-        console.log('Response data keys:', Object.keys(jsonData));
+        const jsonData = await res.json();
         const { accessToken: newToken } = jsonData;
         
         if (newToken) {
-            console.log('New accessToken found in response:', newToken.substring(0, 20) + '...');
             accessToken = newToken;
-            console.log('Access token updated. New value:', accessToken.substring(0, 20) + '...');
-        } else {
-            console.log('No accessToken in response');
         }
         return res;
     } catch(err) {
-        console.log('Error parsing response: ' + err.message)
         return res;
     }
 });
@@ -97,7 +77,7 @@ xhr.interceptError(async (error, config) => {
 
         try {
             const response = await xhr.post('/auth/refresh', {});
-            const { accessToken: token } = response.json();
+            const { accessToken: token } = await response.json();
 
             if (token) {
                 accessToken = token;

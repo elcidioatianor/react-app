@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link/*, NavLink*/, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
+import { useCart } from '../hooks/useCart.js';
 //import { PersonCircle, Gear, BoxArrowRight, GraphUp } from './Svg';
 
 export function Navbar() {
     const { user, isAuthenticated, logout } = useAuth();
+    const { cartItems } = useCart();
     const navigate = useNavigate();
-    const [cartCount, setCartCount] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    
+    const cartCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
 
     const categories = [
         'Eletrónicos',
@@ -30,16 +33,6 @@ export function Navbar() {
             params.set('category', selectedCategory);
         navigate(`/search?${params.toString()}`);
     };
-
-    useEffect(() => {
-        const updateCount = () => {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            setCartCount(cart.reduce((acc, item) => acc + item.quantity, 0));
-        };
-        updateCount();
-        window.addEventListener('cartUpdated', updateCount);
-        return () => window.removeEventListener('cartUpdated', updateCount);
-    }, []);
 
     const handleLogout = async () => {
         try {
@@ -136,12 +129,12 @@ export function Navbar() {
                                 <span className="block text-xs lh-1">
                                     Olá, {user.name?.split(' ')[0]}
                                 </span>
-                                <div className="flex items-center lh-1">
+                                <Link to='/profile' className="flex items-center lh-1">
                                     <span className="font-bold text-sm">
                                         Minha Conta
                                     </span>
                                     <i className="bi bi-caret-down-fill text-gray-300 ml-1 mt-1 text-[8px]"></i>
-                                </div>
+                                </Link>
                                 {/* Dropdown can be added with Tailwind group-hover */}
                             </div>
                         ) : (

@@ -1,11 +1,13 @@
-// src/providers/AppProviders.jsx
+// src/contexts/AppContext.jsx
 import { AuthProvider } from './AuthContext';
+import { CartProvider } from './CartContext';
 import { useAuth } from '../hooks/useAuth.js';
 import { NotificationProvider } from './NotificationContext';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 
 function GlobalLoader() {
     const { loading } = useAuth();
+    
     return (
         <LoadingOverlay
             isLoading={loading}
@@ -20,10 +22,12 @@ function GlobalLoader() {
 export const AppProvider = ({ children }) => {
     return (
         <AuthProvider>
-            <NotificationProvider>
-                <GlobalLoader />
-                {children}
-            </NotificationProvider>
+            <CartProvider>
+                <NotificationProvider>
+                    <GlobalLoader />
+                    {children}
+                </NotificationProvider>
+            </CartProvider>
         </AuthProvider>
     );
 };

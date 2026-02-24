@@ -72,74 +72,12 @@ const sendPasswordResetEmail = async (email, resetToken) => {
     }
 };
 
-// middleware requireAuth
-exports.authenticate = (req, res, next) => {
-    try {
-        console.log('=== AUTHENTICATE MIDDLEWARE ===');
-        console.log('Method:', req.method);
-        console.log('URL:', req.url);
-        console.log('Headers:', Object.keys(req.headers));
-        
-        const authHeader = req.headers.authorization;
-        console.log('Authorization header:', authHeader);
-        
-        if (!authHeader) {
-            console.log('No authorization header found');
-            return next(
-                new ResponseError(400, 'Header Authorization não fornecido')
-            );
-        }
 
-        const parts = authHeader.split(' ');
-        console.log('Auth header parts:', parts);
-        console.log('Number of parts:', parts.length);
-        
-        if (parts.length !== 2) {
-            console.log('Invalid number of parts');
-            return next(
-                new ResponseError(400, 'Formato de Authorization inválido')
-            );
-        }
-
-        const [scheme, accessToken] = parts;
-        console.log('Scheme:', scheme);
-        console.log('Token length:', accessToken.length);
-
-        if (!/^Bearer$/i.test(scheme)) {
-            console.log('Invalid scheme:', scheme);
-            return next(
-                new ResponseError(400, 'Esquema de Authorization deve ser Bearer')
-            );
-        }
-
-        if (!accessToken) {
-            console.log('No token provided');
-            return next(
-                new ResponseError(400, 'Token de acesso não fornecido')
-            );
-        }
-        
-        console.log('Verificando token...');
-        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
-        console.log('Token decoded successfully:', decoded);
-        
-        req.payload = decoded; // { sub, role }
-        console.log('req.payload set to:', req.payload);
-        next();
-    } catch (err) {
-        console.error('Token verification error:', err.message);
-        const error = new ResponseError(401, 'Token expirado ou inválido');
-
-        error.code = 'EEXPIRY';
-        next(error);
-    }
-};
 //firstName, lastName, phoneNumber
 exports.register = async (req, res, next) => {
     try {
         const { firstName, lastName, phoneNumber, email, password, role } =
             req.body;
-        console.log(req.body)
         if (!firstName || !lastName || !phoneNumber || !email || !password) {
             //400 (Bad Request)
             return next(
@@ -473,7 +411,21 @@ exports.requireRole = (...allowedRoles) => {
 exports.authenticate = (req, res, next) => {
     return passport.authenticate('jwt', {
         session: false,
-    })(req, res, next);
+    })(req, res, (err) => {
+        if (err) return next(err);
+        
+        // Passport sets req.user to the User object
+        // But auth.profile expects req.payload with sub property
+        // So we need to bridge them
+        if (req.user) {
+            req.payload = {
+                sub: req.user.id,
+                role: req.user.role
+            };
+        }
+        
+        next();
+    });
 };
 
 // Request password reset

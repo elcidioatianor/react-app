@@ -130,7 +130,7 @@ function Home() {
                 const res = await xhr.get('/products');
                 let data = [];
                 try {
-                    data = res.json();
+                    data = await res.json();
                 } catch (e) {
                     console.error('Invalid JSON response', e);
                 }
