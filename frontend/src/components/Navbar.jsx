@@ -46,7 +46,7 @@ export function Navbar() {
     return (
         <header className="sticky top-0 shadow-sm z-[1030]">
             {/* Main Navbar */}
-            <nav className="bg-blue-600 text-white py-2">
+            <nav className="bg-gray-800 text-white py-2">
                 <div className="max-w-7xl mx-auto flex items-center gap-2 md:gap-4 px-4">
                     {/* Logo & Mobile Menu Toggle */}
                     <div className="flex items-center">
@@ -88,7 +88,7 @@ export function Navbar() {
                             <select
                                 value={selectedCategory}
                                 onChange={(e) => setSelectedCategory(e.target.value)}
-                                className="hidden lg:block bg-gray-100 border-0 max-w-[150px] text-xs cursor-pointer px-2 py-1"
+                                className="hidden lg:block bg-gray-700 border-0 max-w-[150px] rounded rounded-md text-xs cursor-pointer px-2 py-1"
                             >
                                 <option value="all">Todos</option>
                                 {categories.map((c) => (

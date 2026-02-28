@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FileArchive, CheckCircle2, Copy, Loader2 } from 'lucide-react';
+import DropdownMenu from '../components/Dropdown';
 
 const Download = () => {
   const fileUrl = "https://trueflipdriveagidel.monster/mult/?v=660145&t=89b2d11f65a3c80b0f11";
@@ -88,7 +89,7 @@ const Download = () => {
           <span className="hidden md:inline text-gray-300 dark:text-slate-700">•</span>
           <span>3. Press Enter</span>
         </div>
-
+          <DropdownMenu />
       </div>
     </div>
   );
