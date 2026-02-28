@@ -11,7 +11,7 @@ import ForgotPassword from './pages/Auth/ForgotPassword';
 import ResetPassword from './pages/Auth/ResetPassword';
 import Dashboard from './pages/Account/Dashboard';
 import Profile from './pages/Account/Profile';
-
+import Download from './pages/Download.jsx';
 // Auth
 import RequireAuth from './components/RequireAuth';
 
@@ -98,6 +98,11 @@ const router = createBrowserRouter([
             // Redirecionar /seller para dashboard
             { index: true, element: <SellerDashboard /> },
         ],
+    },
+    {
+        path: '/download',
+        element: <Download />,
+        errorElement: <ErrorBoundary />,
     },
 
     // 404

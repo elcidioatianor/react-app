@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link/*, NavLink*/, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
 import { useCart } from '../hooks/useCart.js';
 //import { PersonCircle, Gear, BoxArrowRight, GraphUp } from './Svg';

@@ -11,7 +11,7 @@ function AuthProvider({ children }) {
     //TODO: USAR useReducer ou [state, setState] = useState(null) (para evitar múltiplos set...)
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [isAuthenticated, setAuthenticated] = useState(false);
+    //const [isAuthenticated, setAuthenticated] = useState(false);
     const [error, setError] = useState(null);
 
     // Verificar autenticação inicial
@@ -21,24 +21,19 @@ function AuthProvider({ children }) {
                     const res = await xhr.post('/auth/profile', {});
                     const user = await res.json();
         
-                    if (user) {
-                        setUser(user);
-                        setAuthenticated(true);
-                        setLoading(false);
-                    }
+                    setUser(user ?? null);
                 } catch (err) {
                     //TODO: USAR APENAS isAuthenticated PARA CONTROLAR REDIRECT
-                    if (isAuthenticated) setAuthenticated(false);
+                    //if (isAuthenticated) setAuthenticated(false);
                     
                     setLoading(false);
                     setError(err.message);
+                } finally {
+                    setLoading(false);
                 }
             };
         checkAuthentication();
-        return () => {
-            //CLEANUP HERE (LISTENERS, ETC)
-        };
-    }, [isAuthenticated]);
+    }, []);
 
     // Registrar
     const register = async formData => {
@@ -54,7 +49,7 @@ function AuthProvider({ children }) {
             //setError(null)
             return { done: true };
         } catch (err) {
-            setAuthenticated(false);
+            //setAuthenticated(false);
             return { done: false, error: err.message };
         }
     };
@@ -67,7 +62,7 @@ function AuthProvider({ children }) {
             const { user: userData } = responseData;
 
             setUser(userData);
-            setAuthenticated(true);
+            //setAuthenticated(true);
             return { done: true, user: userData };
         } catch (err) {
             return { done: false, error: err.message };
@@ -80,7 +75,7 @@ function AuthProvider({ children }) {
             await xhr.post('/auth/logout', {});
             setUser(null);
             //setError(null);
-            setAuthenticated(false);
+            //setAuthenticated(false);
             // 4. Redirecionar (se estiver usando router)
             // navigate('/login');
             return { done: true };
@@ -99,7 +94,7 @@ function AuthProvider({ children }) {
         register,
         login,
         logout,
-        isAuthenticated,
+        isAuthenticated: !!user // Simples verificação de autenticação baseada na presença do usuário,
     };
 
     //TODO: USAR LOADER APENAS EM COMPONENTES ESPECÍFICOS

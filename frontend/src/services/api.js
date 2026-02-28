@@ -1,105 +1,95 @@
-//import { useNavigate } from 'react-router-dom';
+// services/api.js
 import { XHR } from './xhr';
-// 1 - Criar serviço de API
 
-// Criar instância global do cliente
 const baseURL = import.meta.env.VITE_API_URL;
 const xhr = new XHR(baseURL);
+
 let accessToken = null;
 let isRefreshing = false;
 let failedQueue = [];
 
+// Processa requisições pendentes após refresh
 const processQueue = (error, token = null) => {
-    failedQueue.forEach(prom => {
-        if (error) {
-            prom.reject(error);
-        } else {
-            prom.resolve(token);
-        }
-    });
-    failedQueue = [];
+  failedQueue.forEach(p => {
+    if (error) p.reject(error);
+    else p.resolve(token);
+  });
+  failedQueue = [];
 };
 
-//Evitar loop: refresh lock
-// Configurar opções padrão
-xhr.defaultOptions.timeout = 30000; // 30 segundos
+// OPTIONS padrão
+xhr.defaultOptions.timeout = 30000;
+xhr.defaultOptions.credentials = 'include'; // CRUCIAL para enviar cookie httpOnly
 
-// Adicionar token automaticamente à requisição
+// Adiciona token no header Authorization
 xhr.transformRequest(async config => {
-    const csrfCookie = document.cookie
-        .split('; ')
-        .find(cookie => cookie.startsWith('csrfToken='));
+  const csrfCookie = document.cookie
+    .split('; ')
+    .find(c => c.startsWith('csrfToken='));
+  if (csrfCookie) config.headers['X-CSRF-Token'] = csrfCookie.split('=')[1];
 
-    if (csrfCookie) {
-        config.headers['X-CSRF-Token'] = csrfCookie.split('=')[1];
-    }
-    if (accessToken) {
-        config.headers = config.headers || {};
-        config.headers['Authorization'] = `Bearer ${accessToken}`;
-    }
-    return config;
+  if (accessToken) {
+    config.headers = config.headers || {};
+    config.headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+
+  return config;
 });
 
+// Atualiza accessToken se recebido em qualquer resposta
 xhr.transformResponse(async res => {
-    try {
-        const jsonData = await res.json();
-        const { accessToken: newToken } = jsonData;
-        
-        if (newToken) {
-            accessToken = newToken;
-        }
-        return res;
-    } catch(err) {
-        return res;
-    }
+  try {
+    const data = await res.json();
+    if (data.accessToken) accessToken = data.accessToken;
+    return res;
+  } catch {
+    return res;
+  }
 });
 
-// Interceptor para refresh token
+// Interceptor de erro com refresh automático
 xhr.interceptError(async (error, config) => {
-    // Refresh token code check (adjust based on actual API error code)
-    if (error.status === 401 && (error.code === 'EEXPIRY' || error.message === 'Token expired')) {
-        const originalRequest = config;
+  // Intercepta qualquer 401 (accessToken ausente ou expirado)
+  if (error.status === 401) {
+    const originalRequest = config;
 
-        if (isRefreshing) {
-            return new Promise((resolve, reject) => {
-                failedQueue.push({ resolve, reject });
-            })
-                .then(token => {
-                    originalRequest.headers['Authorization'] = `Bearer ${token}`;
-                    return xhr.request(originalRequest.url, originalRequest);
-                })
-                .catch(err => {
-                    throw err;
-                });
-        }
+    if (isRefreshing) {
+      return new Promise((resolve, reject) =>
+        failedQueue.push({ resolve, reject })
+      )
+        .then(token => {
+          originalRequest.headers['Authorization'] = `Bearer ${token}`;
+          return xhr.request(originalRequest.url, originalRequest);
+        })
+        .catch(err => { throw err; });
+    }
 
-        isRefreshing = true;
+    isRefreshing = true;
 
-        try {
-            const response = await xhr.post('/auth/refresh', {});
-            const { accessToken: token } = await response.json();
+    try {
+      // Faz refresh usando cookie httpOnly
+      const response = await xhr.post('/auth/refresh', {}, { credentials: 'include' });
+      const data = await response.json();
+      const token = data.accessToken;
 
-            if (token) {
-                accessToken = token;
-                processQueue(null, token);
-                
-                // Retry original request
-                originalRequest.headers['Authorization'] = `Bearer ${token}`;
-                return await xhr.request(originalRequest.url, originalRequest);
-            } else {
-                throw new Error('Refresh failed');
-            }
-        } catch (err) {
-            processQueue(err, null);
-            // Optional: Redirect to login or clear storage
-            throw err;
-        } finally {
-            isRefreshing = false;
-        }
-    } 
-    
-    throw error;
+      if (!token) throw new Error('Refresh falhou');
+
+      accessToken = token;
+      processQueue(null, token);
+
+      // Retry da requisição original
+      originalRequest.headers['Authorization'] = `Bearer ${token}`;
+      return await xhr.request(originalRequest.url, originalRequest);
+    } catch (err) {
+      processQueue(err, null);
+      throw err;
+    } finally {
+      isRefreshing = false;
+    }
+  }
+
+  // Para outros erros
+  throw error;
 });
 
 export { xhr };
-//2 - Criar context de autenticação > ../context/authContext.js
